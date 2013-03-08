@@ -26,10 +26,12 @@ Chunk::Chunk(int x, int y, int z) {
 }
 
 void Chunk::init(int startX, int startY, int startZ) {
-	//origin = vec3(x, y, z);
+	x = startX;
+	y = startY;
+	z = startZ;
 	meshID.setColorType(Texture);
 
-	GameWindow::mainRenderer->createMesh(&meshID);
+	Renderer::getMainRenderer().createMesh(&meshID);
 
 	blocks = new Block*[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
@@ -60,7 +62,7 @@ void Chunk::init(int startX, int startY, int startZ) {
 			}
 		}
 	}
-	GameWindow::mainRenderer->endMesh(&meshID);
+	Renderer::getMainRenderer().endMesh(&meshID);
 
 	Shader vertexShader;
 	vertexShader.loadShader("shaders/basicShader.vert", GL_VERTEX_SHADER);
@@ -127,86 +129,85 @@ void Chunk::createCube(int x, int y, int z) {
 	//Front
 	normal = vec3(0, 0, 1);
 
-	v1 = GameWindow::mainRenderer->addVertexToMesh(meshID, p1, normal, u0, vv0);
-	v2 = GameWindow::mainRenderer->addVertexToMesh(meshID, p2, normal, u1, vv0);
-	v3 = GameWindow::mainRenderer->addVertexToMesh(meshID, p3, normal, u1, vv1);
-	v4 = GameWindow::mainRenderer->addVertexToMesh(meshID, p4, normal, u0, vv1);
+	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u0, vv0);
+	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u1, vv0);
+	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u1, vv1);
+	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u0, vv1);
 
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v1, v2, v3);
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v1, v3, v4);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v2, v3);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v3, v4);
 
 	//Right
 	normal = vec3(1, 0, 0);
 
-	v2 = GameWindow::mainRenderer->addVertexToMesh(meshID, p2, normal, u0, vv0);
-	v3 = GameWindow::mainRenderer->addVertexToMesh(meshID, p3, normal, u0, vv1);
-	v6 = GameWindow::mainRenderer->addVertexToMesh(meshID, p6, normal, u1, vv0);
-	v7 = GameWindow::mainRenderer->addVertexToMesh(meshID, p7, normal, u1, vv1);
+	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u0, vv0);
+	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u0, vv1);
+	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u1, vv0);
+	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1, vv1);
 
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v2, v6, v7);
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v2, v7, v3);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v6, v7);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v7, v3);
 
 	//Top
 	normal = vec3(0, 1, 0);
 
-	v3 = GameWindow::mainRenderer->addVertexToMesh(meshID, p3, normal, u1, vv0);
-	v4 = GameWindow::mainRenderer->addVertexToMesh(meshID, p4, normal, u0, vv0);
-	v7 = GameWindow::mainRenderer->addVertexToMesh(meshID, p7, normal, u1, vv1);
-	v8 = GameWindow::mainRenderer->addVertexToMesh(meshID, p8, normal, u0, vv1);
+	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u1, vv0);
+	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u0, vv0);
+	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1, vv1);
+	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u0, vv1);
 
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v3, v7, v8);
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v3, v8, v4);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v7, v8);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v8, v4);
 
 	//Bottom
 	normal = vec3(0, -1, 0);
 
-	v1 = GameWindow::mainRenderer->addVertexToMesh(meshID, p1, normal, u0, vv1);
-	v2 = GameWindow::mainRenderer->addVertexToMesh(meshID, p2, normal, u1, vv1);
-	v5 = GameWindow::mainRenderer->addVertexToMesh(meshID, p5, normal, u0, vv0);
-	v6 = GameWindow::mainRenderer->addVertexToMesh(meshID, p6, normal, u1, vv0);
+	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u0, vv1);
+	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u1, vv1);
+	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u0, vv0);
+	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u1, vv0);
 
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v1, v5, v6);
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v1, v6, v2);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v5, v6);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v6, v2);
 
 	//Left
 	normal = vec3(-1, 0, 0);
 
-	v1 = GameWindow::mainRenderer->addVertexToMesh(meshID, p1, normal, u1, vv0);
-	v4 = GameWindow::mainRenderer->addVertexToMesh(meshID, p4, normal, u1, vv1);
-	v5 = GameWindow::mainRenderer->addVertexToMesh(meshID, p5, normal, u0, vv0);
-	v8 = GameWindow::mainRenderer->addVertexToMesh(meshID, p8, normal, u0, vv1);
+	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u1, vv0);
+	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u1, vv1);
+	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u0, vv0);
+	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u0, vv1);
 
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v1, v4, v8);
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v1, v8, v5);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v4, v8);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v8, v5);
 
 	//Back
 	normal = vec3(0, 0, -1);
 
-	v5 = GameWindow::mainRenderer->addVertexToMesh(meshID, p5, normal, u1, vv0);
-	v6 = GameWindow::mainRenderer->addVertexToMesh(meshID, p6, normal, u0, vv0);
-	v7 = GameWindow::mainRenderer->addVertexToMesh(meshID, p7, normal, u0, vv1);
-	v8 = GameWindow::mainRenderer->addVertexToMesh(meshID, p8, normal, u1, vv1);
+	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u1, vv0);
+	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u0, vv0);
+	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u0, vv1);
+	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u1, vv1);
 
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v5, v8, v7);
-	GameWindow::mainRenderer->addTriangleToMesh(meshID, v5, v7, v6);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v8, v7);
+	Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v7, v6);
 }
 
 Block ** Chunk::blockAt(int x, int y, int z) {
 	return &blocks[(x * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + z];
 }
 
-void Chunk::draw(Renderer * renderer) {
+void Chunk::draw(mat4 * viewMatrix) {
 	shaderProgram.useProgram();
 	Texture::grassTexture->useTexture();
 
-	mat4 modelMatrix(1.f);
-	mat4 viewMatrix = lookAt(vec3(20.f, (float) CHUNK_SIZE / 2, 10.f), vec3((float) CHUNK_SIZE / 2, (float) CHUNK_SIZE / 2, (float) CHUNK_SIZE / 2), vec3(0.f, 1.f, 0.f));
+	mat4 modelMatrix = translate((float) x, (float) y, (float) z);
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", &viewMatrix, 1);
+	shaderProgram.setUniform("viewMatrix", viewMatrix, 1);
 	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
 
-	renderer->renderMesh(meshID);
+	Renderer::getMainRenderer().renderMesh(meshID);
 
 	Texture::unbindTextures();
 }

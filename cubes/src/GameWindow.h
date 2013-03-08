@@ -25,7 +25,6 @@ public:
 
 	void setScene(Scene * scene);
 	Scene * getCurrentScene();//??
-	static Renderer * mainRenderer;//Test
 private:
 	using sf::Window::create;
 	int width, height, fpsCounter;

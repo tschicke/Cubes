@@ -10,20 +10,18 @@
 
 #include <vector>
 
-#include "Drawable.h"
 #include "Common.h"
 
-class Layer : public Drawable {
+class Layer{
 public:
 	Layer();
 	virtual ~Layer();
 
-	void update(time_t dt);
-	void draw(Renderer * renderer);
+	virtual void update(time_t dt) = 0;
+	virtual void draw() = 0;
 
-	void addChild(Drawable * drawable);
 private:
-	std::vector<Drawable *> children;
+//	std::vector<Drawable *> children;
 };
 
 #endif /* LAYER_H_ */

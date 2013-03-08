@@ -45,9 +45,7 @@ private:
 
 class Renderer {
 public:
-	Renderer();
-	Renderer(float fov, float width, float height, float zNear, float zFar);
-	virtual ~Renderer();
+	static Renderer& getMainRenderer();
 
 	void renderMesh(MeshID meshID);
 
@@ -62,6 +60,10 @@ public:
 	static void setProjectionMatrix(float fov, float width, float height, float zNear, float zFar);
 	static glm::mat4* getProjectionMatrix();
 private:
+	Renderer();
+	Renderer(const Renderer  &);
+	Renderer& operator=(Renderer const& copy);
+
 	MeshID currentMeshID; //??
 	std::vector<float> currentData;
 	std::vector<int> currentIndices;

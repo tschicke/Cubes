@@ -15,8 +15,6 @@
 
 using namespace sf;
 
-Renderer * GameWindow::mainRenderer;//Temp??
-
 GameWindow::GameWindow() {
 	currentScene = NULL;
 	title = NULL;
@@ -38,9 +36,8 @@ void GameWindow::create(int w, int h, const char * title) {
 	height = h;
 	this->title = title;
 	running = false;
-	mainRenderer = new Renderer(90.f, w, h, 0.1, 100);
 	create(VideoMode(w, h, 32), title);
- 	setVerticalSyncEnabled(true);
+	setVerticalSyncEnabled(true);
 	initGL();
 }
 
@@ -90,12 +87,10 @@ void GameWindow::handleInput() {
 	while (pollEvent(event)) {
 		if (event.type == Event::Closed) {
 			running = false;
-		} else if (event.type == Event::KeyPressed) {
-			if (event.key.code == Keyboard::Escape) {
-				running = false;
-			}
+		} else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+			running = false;
 		} else {
-			currentScene->handleInput(event);
+			currentScene->handleEvent(event);
 		}
 	}
 }
@@ -107,12 +102,11 @@ void GameWindow::update(time_t dt) {
 void GameWindow::render() { //Watch for too high framerate
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	currentScene->draw(mainRenderer);
+	currentScene->draw();
 
 	display();
 }
 
-void GameWindow::cleanUp(){
-	delete mainRenderer;
+void GameWindow::cleanUp() {
 }
 

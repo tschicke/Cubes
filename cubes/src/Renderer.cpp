@@ -16,15 +16,13 @@ using namespace glm;
 
 mat4 Renderer::projectionMatrix;
 
+Renderer& Renderer::getMainRenderer(){
+	static Renderer renderer;
+	return renderer;
+}
+
 Renderer::Renderer() {
 	setProjectionMatrix(90, 600, 400, 0.1, 100);
-}
-
-Renderer::Renderer(float fov, float width, float height, float zNear, float zFar){
-	setProjectionMatrix(fov, width, height, zNear, zFar);
-}
-
-Renderer::~Renderer() {
 }
 
 void Renderer::createMesh(MeshID * meshID) {

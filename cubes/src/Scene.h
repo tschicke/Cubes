@@ -9,10 +9,8 @@
 #define SCENE_H_
 
 #include <GL/glew.h>
-#include <vector>
 #include <SFML/Window/Event.hpp>
 
-#include "Chunk.h"
 #include "Common.h"
 
 class Scene {//: public Drawable{
@@ -20,13 +18,10 @@ public:
 	Scene();
 	virtual ~Scene();
 
-	void handleInput(sf::Event event);
-	void update(time_t dt);
-	void draw(Renderer * renderer);
-
-	void addChild(Chunk * drawable);
+	virtual void handleEvent(sf::Event event) = 0;
+	virtual void update(time_t dt) = 0;
+	virtual void draw() = 0;
 private:
-	std::vector<Chunk *> children;//TODO necessary in Scene class??
 };
 
 #endif /* SCENE_H_ */
