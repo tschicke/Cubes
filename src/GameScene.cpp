@@ -28,7 +28,6 @@ void GameScene::handleInput() {
 //		dx = (1280 / 2) - event.mouseMove.x;
 //		dy = (720 / 2) - event.mouseMove.y;
 //	}
-	gameLayer.updatePlayer(0, 0);
 }
 
 void GameScene::draw() {

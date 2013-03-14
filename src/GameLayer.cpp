@@ -54,12 +54,3 @@ void GameLayer::handleInput(){
 void GameLayer::draw(){
 	chunk.draw(player.getMainCamera()->getViewMatrix());//Temp
 }
-
-void GameLayer::updatePlayer(int dx, int dy){
-	player.setLookStates(dx, dy);
-}
-
-void GameLayer::setPlayerMoveState(MovementState state, bool value){
-	player.setMovementState(state, value);
-}
-
