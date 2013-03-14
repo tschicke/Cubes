@@ -17,7 +17,7 @@ Keyboard::~Keyboard() {
 }
 
 void Keyboard::setKey(Key key, bool value){
-
+	keys[key] = value;
 }
 
 } /* namespace ts */
