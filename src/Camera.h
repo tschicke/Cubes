@@ -30,7 +30,7 @@ protected:
 	glm::mat4 viewMat;
 	short inverted; //future
 	float lookSpeed;
-	int yaw, pitch;
+	float yaw, pitch;
 	float toRadians(float deg);
 	virtual void update() = 0;
 	bool shouldUpdate;
