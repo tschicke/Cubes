@@ -122,17 +122,15 @@ void Chunk::createCube(int x, int y, int z) {
 //	float g = ((float) (rand() % 10)) / 10;//For colored cubes
 //	float b = ((float) (rand() % 10)) / 10;//For colored cubes
 
-	float u0 = 0, u1 = 0.5f, vv0 = 0.5f, vv1 = 1;
-
 	int v1, v2, v3, v4, v5, v6, v7, v8;
 
 	//Front
 	normal = vec3(0, 0, 1);
 
-	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u0, vv0);
-	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u1, vv0);
-	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u1, vv1);
-	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u0, vv1);
+	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.0f, 0.0f);
+	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 0.5f, 0.0f);
+	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.5f, 0.5f);
+	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.0f, 0.5f);
 
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v2, v3);
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v3, v4);
@@ -140,10 +138,10 @@ void Chunk::createCube(int x, int y, int z) {
 	//Right
 	normal = vec3(1, 0, 0);
 
-	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u0, vv0);
-	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u0, vv1);
-	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u1, vv0);
-	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1, vv1);
+	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 0.0f, 0.0f);
+	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.0f, 0.5f);
+	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 0.5f, 0.0f);
+	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.5f, 0.5f);
 
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v6, v7);
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v7, v3);
@@ -151,10 +149,10 @@ void Chunk::createCube(int x, int y, int z) {
 	//Top
 	normal = vec3(0, 1, 0);
 
-	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u1, vv0);
-	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u0, vv0);
-	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1, vv1);
-	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u0, vv1);
+	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.5f, 0.5f);
+	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.0f, 0.5f);
+	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.5f, 1.0f);
+	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.0f, 1.0f);
 
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v7, v8);
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v8, v4);
@@ -162,10 +160,10 @@ void Chunk::createCube(int x, int y, int z) {
 	//Bottom
 	normal = vec3(0, -1, 0);
 
-	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u0, vv1);
-	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u1, vv1);
-	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u0, vv0);
-	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u1, vv0);
+	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.5f, 1.0f);
+	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 1.0f, 1.0f);
+	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.5f, 0.5f);
+	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 1.0f, 0.5f);
 
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v5, v6);
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v6, v2);
@@ -173,10 +171,10 @@ void Chunk::createCube(int x, int y, int z) {
 	//Left
 	normal = vec3(-1, 0, 0);
 
-	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u1, vv0);
-	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u1, vv1);
-	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u0, vv0);
-	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u0, vv1);
+	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.5f, 0.0f);
+	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.5f, 0.5f);
+	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.0f, 0.0f);
+	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.0f, 0.5f);
 
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v4, v8);
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v8, v5);
@@ -184,10 +182,10 @@ void Chunk::createCube(int x, int y, int z) {
 	//Back
 	normal = vec3(0, 0, -1);
 
-	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u1, vv0);
-	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u0, vv0);
-	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u0, vv1);
-	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u1, vv1);
+	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.5f, 0.0f);
+	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 0.0f, 0.0f);
+	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.0f, 0.5f);
+	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.5f, 0.5f);
 
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v8, v7);
 	Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v7, v6);

@@ -30,6 +30,10 @@ void GameScene::handleEvent(sf::Event event) {
 			gameLayer.setPlayerMoveState(forward, true);
 		} else if (event.key.code == sf::Keyboard::S) {
 			gameLayer.setPlayerMoveState(back, true);
+		} else if (event.key.code == sf::Keyboard::Q) {
+			gameLayer.setPlayerMoveState(up, true);
+		} else if (event.key.code == sf::Keyboard::Z) {
+			gameLayer.setPlayerMoveState(down, true);
 		}
 	} else if (event.type == sf::Event::KeyReleased) {
 		if (event.key.code == sf::Keyboard::A) {
@@ -40,6 +44,10 @@ void GameScene::handleEvent(sf::Event event) {
 			gameLayer.setPlayerMoveState(forward, false);
 		} else if (event.key.code == sf::Keyboard::S) {
 			gameLayer.setPlayerMoveState(back, false);
+		} else if (event.key.code == sf::Keyboard::Q) {
+			gameLayer.setPlayerMoveState(up, false);
+		} else if (event.key.code == sf::Keyboard::Z) {
+			gameLayer.setPlayerMoveState(down, false);
 		}
 	}
 
