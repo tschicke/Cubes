@@ -19,13 +19,3 @@ Scene::Scene() {//Scene class should be pretty empty, subclasses should have act
 
 Scene::~Scene() {
 }
-
-void Scene::handleEvent(sf::Event event) {
-}
-
-void Scene::update(time_t dt) {
-}
-
-void Scene::draw() {
-}
-

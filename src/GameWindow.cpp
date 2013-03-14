@@ -87,25 +87,24 @@ void GameWindow::run() {
 void GameWindow::handleInput() {
 	Event event;
 	while (pollEvent(event)) {
-		if(event.type == sf::Event::KeyPressed){
+		if (event.type == sf::Event::KeyPressed) {
 			ts::Keyboard::setKey(event.key.code, true);
-			ts::Keyboard::setKeyEvent(event.type, ts::Keyboard::keyPressed);
-		} else if (event.type == sf::Event::KeyReleased){
+			ts::Keyboard::setKeyEvent(event.key.code, ts::Keyboard::keyPressed);
+		} else if (event.type == sf::Event::KeyReleased) {
 			ts::Keyboard::setKey(event.key.code, false);
-			ts::Keyboard::setKeyEvent(event.type, ts::Keyboard::keyReleased);
+			ts::Keyboard::setKeyEvent(event.key.code, ts::Keyboard::keyReleased);
 		}
-
 
 		if (event.type == Event::Closed) {
 			running = false;
 		} else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
 			running = false;
-		} else {
-			currentScene->handleEvent(event);
 		}
-
-		ts::Keyboard::clearEvents();
 	}
+
+	currentScene->handleInput();
+
+	ts::Keyboard::clearEvents();
 }
 
 void GameWindow::update(time_t dt) {

@@ -19,6 +19,7 @@ public:
 
 	void draw();
 	void update(time_t dt);
+	void handleInput();
 
 	void updatePlayer(int dx, int dy);//Temp??
 	void setPlayerMoveState(MovementState state, bool value);//Temp?

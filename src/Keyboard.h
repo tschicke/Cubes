@@ -8,7 +8,11 @@
 #ifndef KEYBOARD_H_
 #define KEYBOARD_H_
 
+#include <vector>
+
 namespace ts {
+
+struct KeyEvent;
 
 class Keyboard {
 public:
@@ -117,7 +121,7 @@ public:
 		keyCount
 	};
 
-	enum KeyEvent{
+	enum KeyEventType{
 		defaultEventType,
 		keyPressed,
 		keyReleased
@@ -126,8 +130,11 @@ public:
 	static void setKey(int key, bool value);
 	static bool isKeyPressed(Key key);
 
-	static void setKeyEvent(int key, KeyEvent type);
-	static KeyEvent checkKeyEvent(Key key);
+	static void setKeyEvent(int key, KeyEventType type);
+	static KeyEventType checkKeyEvent(Key key);
+
+	static KeyEvent getEventAt(int index);
+	static void pushKeyEvent(KeyEvent event);
 
 	static void clearEvents();
 
@@ -137,9 +144,16 @@ private:
 	Keyboard& operator=(Keyboard const& copy);
 
 	static bool keys[keyCount];
-	static KeyEvent keyEvents[keyCount];
+	static KeyEventType keyEvents[keyCount];
+//	static std::vector<KeyEvent> keyEvents;
 
 	virtual ~Keyboard();
+};
+
+struct KeyEvent{
+public:
+	Keyboard::Key key;
+	Keyboard::KeyEventType type;
 };
 
 } /* namespace ts */

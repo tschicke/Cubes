@@ -16,7 +16,6 @@ public:
 	GameScene();
 	virtual ~GameScene();
 
-	void handleEvent(sf::Event event);
 	void handleInput();
 	void update(time_t dt);
 	void draw();

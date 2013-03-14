@@ -10,7 +10,7 @@
 namespace ts {
 
 bool Keyboard::keys[];
-Keyboard::KeyEvent Keyboard::keyEvents[];
+Keyboard::KeyEventType Keyboard::keyEvents[];
 
 Keyboard::Keyboard() {
 
@@ -33,11 +33,11 @@ bool Keyboard::isKeyPressed(Key key){
 	return keys[key];
 }
 
-void Keyboard::setKeyEvent(int key, KeyEvent type){
+void Keyboard::setKeyEvent(int key, KeyEventType type){
 	keyEvents[key] = type;
 }
 
-Keyboard::KeyEvent Keyboard::checkKeyEvent(Key key){
+Keyboard::KeyEventType Keyboard::checkKeyEvent(Key key){
 	return keyEvents[key];
 }
 

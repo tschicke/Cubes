@@ -19,6 +19,7 @@ public:
 
 	virtual void update(time_t dt) = 0;
 	virtual void draw() = 0;
+	virtual void handleInput() = 0;
 
 private:
 //	std::vector<Drawable *> children;
