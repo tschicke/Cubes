@@ -21,7 +21,7 @@ public:
 	void update(time_t dt);
 
 	void updatePlayer(int dx, int dy);//Temp??
-	void setPlayerMoveState(int state, bool value);//Temp?
+	void setPlayerMoveState(MovementState state, bool value);//Temp?
 private:
 	Chunk chunk;
 

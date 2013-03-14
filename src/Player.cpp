@@ -14,7 +14,9 @@ using namespace glm;
 Player::Player() {
 	yaw = 0;
 	mainCamera.setPosition(position);
+
 	moveSpeed = 0.05f;
+	lookSpeed = 0.1f;
 
 	movementStates[forward] = false;
 	movementStates[back] = false;
@@ -22,12 +24,14 @@ Player::Player() {
 	movementStates[left] = false;
 	movementStates[up] = false;
 	movementStates[down] = false;
+	lookDX = 0;
+	lookDY = 0;
 }
 
 Player::~Player() {
 }
 
-void Player::update(){//Add shouldUpdate?
+void Player::update(time_t dt){//Add shouldUpdate?
 	move();
 	mainCamera.update();
 }
@@ -56,8 +60,8 @@ void Player::move(){//Clean player, gamelayer, and gamescene classes up
 	setPosition(mainCamera.getPosition());
 }
 
-void Player::look(int dx, int dy){
-	mainCamera.look(dx, dy);
+void Player::look(){
+	mainCamera.look(lookDX, lookDY);
 	setYaw(mainCamera.getYaw());
 }
 
@@ -65,7 +69,12 @@ FirstPersonCamera* Player::getMainCamera(){
 	return &mainCamera;
 }
 
-void Player::setMovementState(int state, bool value){
+void Player::setMovementState(MovementState state, bool value){
 	movementStates[state] = value;
+}
+
+void Player::setLookStates(int dx, int dy){
+	lookDX = dx * lookSpeed;
+	lookDY = dy * lookSpeed;
 }
 
