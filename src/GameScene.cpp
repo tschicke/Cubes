@@ -22,7 +22,6 @@ GameScene::~GameScene() {
 void GameScene::handleEvent(sf::Event event) {
 	int dx = 0, dy = 0;
 	if (event.type == sf::Event::KeyPressed) {
-		std::cout << event.key.code << std::endl;
 		if (event.key.code == sf::Keyboard::A) {
 			gameLayer.setPlayerMoveState(left, true);
 		} else if (event.key.code == sf::Keyboard::D) {

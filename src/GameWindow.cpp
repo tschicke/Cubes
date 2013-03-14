@@ -13,6 +13,8 @@
 #include "Texture.h"
 #include "FirstPersonCamera.h"
 
+#include "Keyboard.h"
+
 using namespace sf;
 
 GameWindow::GameWindow() {
@@ -85,6 +87,15 @@ void GameWindow::run() {
 void GameWindow::handleInput() {
 	Event event;
 	while (pollEvent(event)) {
+		if(event.type == sf::Event::KeyPressed){
+			ts::Keyboard::setKey(event.key.code, true);
+			ts::Keyboard::setKeyEvent(event.type, ts::Keyboard::keyPressed);
+		} else if (event.type == sf::Event::KeyReleased){
+			ts::Keyboard::setKey(event.key.code, false);
+			ts::Keyboard::setKeyEvent(event.type, ts::Keyboard::keyReleased);
+		}
+
+
 		if (event.type == Event::Closed) {
 			running = false;
 		} else if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
@@ -92,6 +103,8 @@ void GameWindow::handleInput() {
 		} else {
 			currentScene->handleEvent(event);
 		}
+
+		ts::Keyboard::clearEvents();
 	}
 }
 
