@@ -16,4 +16,8 @@ Keyboard::Keyboard() {
 Keyboard::~Keyboard() {
 }
 
+void Keyboard::setKey(Key key, bool value){
+
+}
+
 } /* namespace ts */
