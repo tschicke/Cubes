@@ -92,6 +92,7 @@ void GameWindow::run() {
 
 void GameWindow::handleInput() {
 	Event event;
+	ts::Mouse::setLastMove(0, 0); //Temp fix
 	while (pollEvent(event)) {
 		if (event.type == sf::Event::KeyPressed) {
 			ts::Keyboard::setKey(event.key.code, true);
@@ -101,8 +102,8 @@ void GameWindow::handleInput() {
 			ts::Keyboard::setKeyEvent(event.key.code, ts::Keyboard::keyReleased);
 		} else if (event.type == sf::Event::MouseMoved) {
 			int dx = 0, dy = 0;
-			dx = -(event.mouseMove.x - (width / 2));
-			dy = -(event.mouseMove.y - (height / 2));
+			dx = -(event.mouseMove.x - ts::Mouse::getPosition().x);
+			dy = -(event.mouseMove.y - ts::Mouse::getPosition().y);
 			ts::Mouse::setLastMove(dx, dy);
 			if (ts::Mouse::isLocked()) {
 				lockMouse(event.mouseMove.x, event.mouseMove.y);
@@ -135,14 +136,14 @@ void GameWindow::render() { //Watch for too high framerate
 	display();
 }
 
-int counter = 0;
-
 void GameWindow::lockMouse(int mouseX, int mouseY) {
-	counter += 1;
-	if (counter % 3 == 0) {
+	int xDist = mouseX - (width / 2), yDist = mouseY - (height / 2);
+	int distSqr = (xDist * xDist) + (yDist * yDist);
+	if (distSqr >= 90000) {//Temp
 		sf::Mouse::setPosition(sf::Vector2i(width / 2, height / 2), *this);
 		ts::Mouse::setPosition(width / 2, height / 2);
-		counter = 0;
+	} else {
+		ts::Mouse::setPosition(mouseX, mouseY);
 	}
 }
 

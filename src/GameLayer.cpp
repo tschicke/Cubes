@@ -53,6 +53,7 @@ void GameLayer::handleInput() {
 	}
 
 	player.setLookStates(ts::Mouse::getLastMove().x, ts::Mouse::getLastMove().y);
+//	std::cout << ts::Mouse::getLastMove().x << ", " << ts::Mouse::getLastMove().y << '\n';
 }
 
 void GameLayer::draw() {

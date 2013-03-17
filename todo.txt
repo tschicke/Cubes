@@ -1,0 +1,2 @@
+try to organize mouse locking
+	try to not have numbers hard coded/just make it better

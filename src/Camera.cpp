@@ -12,7 +12,7 @@ using namespace glm;
 Camera::Camera() {
 	yaw = 0;
 	pitch = 0;
-	lookSpeed = 0.1f;
+	lookSpeed = 0.2f;
 	inverted = 1;
 	shouldUpdate = false;
 	position = vec3(0, 0, 0);

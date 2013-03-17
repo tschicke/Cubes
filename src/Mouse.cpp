@@ -5,6 +5,8 @@
  *      Author: Tyler
  */
 
+#include <iostream>
+
 #include "Mouse.h"
 
 namespace ts {

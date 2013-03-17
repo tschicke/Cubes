@@ -70,6 +70,7 @@ void Player::move() { //Clean player, gamelayer, and gamescene classes up
 }
 
 void Player::look() {
+//	std::cout << lookDX << ", " << lookDY << '\n';
 	if (lookDX || lookDY) {
 		mainCamera.look(lookDX, lookDY);
 		setYaw(mainCamera.getYaw());
