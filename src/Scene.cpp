@@ -10,7 +10,6 @@
 #include "Scene.h"
 
 #include "Layer.h"
-#include "Sprite3D.h"
 
 #include <vector>
 
