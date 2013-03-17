@@ -31,12 +31,15 @@ private:
 	const char * title;
 	bool running;
 
+	void init();
 	void initGL();
 	void handleInput();
 	void update(time_t dt);
 	void render();
 	
 	void cleanUp();
+
+	void lockMouse(int mouseX, int mouseY);
 
 	Scene * currentScene; //Test
 };

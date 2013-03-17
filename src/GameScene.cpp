@@ -10,10 +10,10 @@
 #include "GameScene.h"
 
 #include "Keyboard.h"
-#include <SFML/Window/Mouse.hpp>
+#include "Mouse.h"
 
 GameScene::GameScene() {
-
+	ts::Mouse::setLocked(true);
 }
 
 GameScene::~GameScene() {
@@ -24,10 +24,6 @@ void GameScene::handleInput() {
 
 	gameLayer.handleInput();
 
-//	if (event.type == sf::Event::MouseMoved) {
-//		dx = (1280 / 2) - event.mouseMove.x;
-//		dy = (720 / 2) - event.mouseMove.y;
-//	}
 }
 
 void GameScene::draw() {

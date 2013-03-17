@@ -19,6 +19,13 @@ Keyboard::Keyboard() {
 Keyboard::~Keyboard() {
 }
 
+void Keyboard::init(){
+	for (int i = 0; i < keyCount; i++){
+		keys[i] = false;
+		keyEvents[i] = defaultEventType;
+	}
+}
+
 void Keyboard::clearEvents(){
 	for (int i = 0; i < keyCount; i++){
 		keyEvents[i] = defaultEventType;

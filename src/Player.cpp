@@ -33,6 +33,7 @@ Player::~Player() {
 
 void Player::update(time_t dt) { //Add shouldUpdate?
 	move();
+	look();
 	mainCamera.update();
 }
 
@@ -62,13 +63,17 @@ void Player::move() { //Clean player, gamelayer, and gamescene classes up
 		y = moveSpeed;
 	if (movementStates[down] && !movementStates[up])
 		y = -moveSpeed;
-	mainCamera.move(x, y, z);
-	setPosition(mainCamera.getPosition());
+	if (x || y || z) {
+		mainCamera.move(x, y, z);
+		setPosition(mainCamera.getPosition());
+	}
 }
 
 void Player::look() {
-	mainCamera.look(lookDX, lookDY);
-	setYaw(mainCamera.getYaw());
+	if (lookDX || lookDY) {
+		mainCamera.look(lookDX, lookDY);
+		setYaw(mainCamera.getYaw());
+	}
 }
 
 FirstPersonCamera* Player::getMainCamera() {

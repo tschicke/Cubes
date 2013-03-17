@@ -14,6 +14,7 @@
 #include "FirstPersonCamera.h"
 
 #include "Keyboard.h"
+#include "Mouse.h"
 
 using namespace sf;
 
@@ -40,7 +41,12 @@ void GameWindow::create(int w, int h, const char * title) {
 	running = false;
 	create(VideoMode(w, h, 32), title);
 	setVerticalSyncEnabled(true);
+	init();
 	initGL();
+}
+
+void GameWindow::init() {
+	ts::Keyboard::init();
 }
 
 void GameWindow::initGL() {
@@ -93,6 +99,16 @@ void GameWindow::handleInput() {
 		} else if (event.type == sf::Event::KeyReleased) {
 			ts::Keyboard::setKey(event.key.code, false);
 			ts::Keyboard::setKeyEvent(event.key.code, ts::Keyboard::keyReleased);
+		} else if (event.type == sf::Event::MouseMoved) {
+			int dx = 0, dy = 0;
+			dx = -(event.mouseMove.x - (width / 2));
+			dy = -(event.mouseMove.y - (height / 2));
+			ts::Mouse::setLastMove(dx, dy);
+			if (ts::Mouse::isLocked()) {
+				lockMouse(event.mouseMove.x, event.mouseMove.y);
+			} else {
+				ts::Mouse::setPosition(event.mouseMove.x, event.mouseMove.y);
+			}
 		}
 
 		if (event.type == Event::Closed) {
@@ -117,6 +133,17 @@ void GameWindow::render() { //Watch for too high framerate
 	currentScene->draw();
 
 	display();
+}
+
+int counter = 0;
+
+void GameWindow::lockMouse(int mouseX, int mouseY) {
+	counter += 1;
+	if (counter % 3 == 0) {
+		sf::Mouse::setPosition(sf::Vector2i(width / 2, height / 2), *this);
+		ts::Mouse::setPosition(width / 2, height / 2);
+		counter = 0;
+	}
 }
 
 void GameWindow::cleanUp() {

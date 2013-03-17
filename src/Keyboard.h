@@ -138,6 +138,8 @@ public:
 
 	static void clearEvents();
 
+	static void init();
+
 private:
 	Keyboard();
 	Keyboard(const Keyboard &);
