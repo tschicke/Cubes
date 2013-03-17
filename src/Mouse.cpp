@@ -21,6 +21,12 @@ Mouse::Mouse() {
 Mouse::~Mouse() {
 }
 
+void Mouse::init(){
+	locked = false;
+	lastDX = 0;
+	lastDY = 0;
+}
+
 void Mouse::setPosition(int x, int y){
 	position = glm::vec2(x, y);
 }

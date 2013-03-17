@@ -10,9 +10,11 @@
 #include "Shader.h"
 #include "Texture.h"
 
-#include "glm/glm.hpp"//Temp??
-#include "glm/gtx/transform.hpp"//Temp??
+#include <glm/glm.hpp>//Temp??
+#include <glm/gtx/transform.hpp>//Temp??
+#include <glm/gtc/noise.hpp>
 #include "GameWindow.h"//Temp
+#include "Noise.h"
 #include <stdlib.h>
 using namespace glm;
 //Temp??
@@ -35,6 +37,8 @@ void Chunk::init(int startX, int startY, int startZ) {
 
 	blocks = new Block*[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
+	Noise noise;
+
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -50,12 +54,11 @@ void Chunk::init(int startX, int startY, int startZ) {
 					*block = new BlockGrass();
 				}
 
-				int height = x + z * 57 + y * 29;
-				height = (height << 13) ^ height;
-				height = 16 * (1.0 - ((height * (height * height * 15731 + 789221) + 1376312589) & 0X7fffffff) / 1073741824.0);
+				int height = (glm::perlin(glm::vec2((x / 32.f), (z / 32.f))) + 1) * CHUNK_SIZE / 2;
+				std::cout << height << '\n';
 
 				if ((*block)->isDrawn()) {
-					if (height <= 0) {
+					if (y <= height) {
 						createCube(x + startX, y + startY, z + startZ);
 					}
 				}

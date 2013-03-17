@@ -28,7 +28,7 @@ public:
 	void update(time_t dt);
 	void draw(glm::mat4* viewMatrix);
 
-	static const int CHUNK_SIZE = 16;
+	static const int CHUNK_SIZE = 32;
 private:
 	Block ** blocks;
 

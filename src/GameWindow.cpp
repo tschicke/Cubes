@@ -47,6 +47,8 @@ void GameWindow::create(int w, int h, const char * title) {
 
 void GameWindow::init() {
 	ts::Keyboard::init();
+	ts::Mouse::init();
+//	setMouseCursorVisible(false);
 }
 
 void GameWindow::initGL() {

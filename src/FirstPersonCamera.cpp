@@ -34,7 +34,7 @@ void FirstPersonCamera::move(float x, float y, float z) {
 		vec3 flatLook; //lookAt with no y component
 		flatLook.x = lookAt.x;
 		flatLook.z = lookAt.z;
-		vec3 forward = glm::normalize(position - lookAt);
+		vec3 forward = glm::normalize(flatPos - flatLook);
 		vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
 //		forward *= moveSpeed;
 //		right *= moveSpeed;
