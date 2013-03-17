@@ -20,17 +20,16 @@ using namespace glm;
 //Temp??
 
 Chunk::Chunk() {
-	init(0, 0, 0);
-}
-
-Chunk::Chunk(int x, int y, int z) {
-	init(x, y, z);
+	chunkX = 0;
+	chunkY = 0;
+	chunkZ = 0;
+	blocks = NULL;
 }
 
 void Chunk::init(int startX, int startY, int startZ) {
-	x = startX;
-	y = startY;
-	z = startZ;
+	chunkX = startX;
+	chunkY = startY;
+	chunkZ = startZ;
 	meshID.setColorType(Texture);
 
 	Renderer::getMainRenderer().createMesh(&meshID);
@@ -53,13 +52,11 @@ void Chunk::init(int startX, int startY, int startZ) {
 				} else {
 					*block = new BlockGrass();
 				}
-
-				int height = (glm::perlin(glm::vec2((x / 32.f), (z / 32.f))) + 1) * CHUNK_SIZE / 2;
-				std::cout << height << '\n';
+				int height = (noise.smoothNoise(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
 
 				if ((*block)->isDrawn()) {
 					if (y <= height) {
-						createCube(x + startX, y + startY, z + startZ);
+						createCube((x * Block::cubeSize) + startX, (y * Block::cubeSize) + startY, (z * Block::cubeSize) + startZ);
 					}
 				}
 			}
@@ -98,13 +95,13 @@ void Chunk::update(time_t dt) {
 
 void Chunk::createCube(int x, int y, int z) {
 	vec3 p1(x + 0, y + 0, z + 0);
-	vec3 p2(x + 1, y + 0, z + 0);
-	vec3 p3(x + 1, y + 1, z + 0);
-	vec3 p4(x + 0, y + 1, z + 0);
-	vec3 p5(x + 0, y + 0, z - 1);
-	vec3 p6(x + 1, y + 0, z - 1);
-	vec3 p7(x + 1, y + 1, z - 1);
-	vec3 p8(x + 0, y + 1, z - 1);
+	vec3 p2(x + Block::cubeSize, y + 0, z + 0);
+	vec3 p3(x + Block::cubeSize, y + Block::cubeSize, z + 0);
+	vec3 p4(x + 0, y + Block::cubeSize, z + 0);
+	vec3 p5(x + 0, y + 0, z - Block::cubeSize);
+	vec3 p6(x + Block::cubeSize, y + 0, z - Block::cubeSize);
+	vec3 p7(x + Block::cubeSize, y + Block::cubeSize, z - Block::cubeSize);
+	vec3 p8(x + 0, y + Block::cubeSize, z - Block::cubeSize);
 
 	/*
 	 *
@@ -202,7 +199,7 @@ void Chunk::draw(mat4 * viewMatrix) {
 	shaderProgram.useProgram();
 	Texture::grassTexture->useTexture();
 
-	mat4 modelMatrix = translate((float) x, (float) y, (float) z);
+	mat4 modelMatrix(1.f); //= translate((float) chunkX, (float) chunkY, (float) chunkZ);
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
 	shaderProgram.setUniform("viewMatrix", viewMatrix, 1);

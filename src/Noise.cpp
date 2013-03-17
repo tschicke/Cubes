@@ -15,8 +15,8 @@ Noise::~Noise() {
 }
 
 double Noise::smoothNoise(double x, double y) {
-	double floorx=(double)((int)x);//This is kinda a cheap way to floor a double integer.
-	 double floory=(double)((int)y);
+	int floorx=x;//This is kinda a cheap way to floor a double integer.
+	 int floory=y;
 	 double s,t,u,v;//Integer declaration
 	 s=noise2D(floorx,floory);
 	 t=noise2D(floorx+1,floory);
@@ -33,8 +33,8 @@ double Noise::interpolate(double a, double b, double x) {
 	return a * (1.0 - f) + b * f;
 }
 
-double Noise::noise2D(double x, double y) {
-	int n = (int) x + (int) y * 57;
+double Noise::noise2D(int x, int y) {
+	int n = x + y * 57;
 	n = (n << 13) ^ n;
 	int nn = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
 	return 1.0 - ((double) nn / 1073741824.0);

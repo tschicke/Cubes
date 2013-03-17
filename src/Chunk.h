@@ -20,7 +20,6 @@
 class Chunk{
 public:
 	Chunk();
-	Chunk(int x, int y, int z);
 	virtual ~Chunk();
 
 	void init(int x, int y, int z);
@@ -38,7 +37,7 @@ private:
 	void createCube(int x, int y, int z);//Temp??
 	Block ** blockAt(int x, int y, int z);//Change to return int?
 
-	int x, y, z;//Should be glm::vec3?
+	int chunkX, chunkY, chunkZ;//Should be glm::vec3?
 };
 
 #endif /* CHUNK_H_ */

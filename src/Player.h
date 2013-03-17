@@ -43,10 +43,22 @@ private:
 	void move();
 	void look();
 
+	void gravity();
+	const float gravityStrength;
+	float gravityDY;
+
+	bool inAir;
+	void setInAir();
+	bool isInAir();
+
+	void checkCollisions();
+
 	float moveSpeed, lookSpeed;
 
 	bool movementStates[movementStatesCount];
 	int lookDX, lookDY;
+
+	int height;
 
 	FirstPersonCamera mainCamera;
 };

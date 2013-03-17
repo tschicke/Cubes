@@ -20,7 +20,9 @@ Camera::Camera() {
 }
 
 void Camera::setPosition(vec3 newPos){
-	position = newPos;
+	vec3 diffVec = newPos - position;
+	position += diffVec;
+	lookAt += diffVec;
 }
 
 Camera::~Camera() {

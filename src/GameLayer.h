@@ -9,7 +9,7 @@
 #define GAMELAYER_H_
 
 #include "Layer.h"
-#include "Chunk.h"
+#include "ChunkManager.h"
 #include "Player.h"
 
 class GameLayer: public Layer {
@@ -21,7 +21,7 @@ public:
 	void update(time_t dt);
 	void handleInput();
 private:
-	Chunk chunk;
+	ChunkManager manager;
 
 	Player player;
 };

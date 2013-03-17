@@ -9,13 +9,16 @@
 
 #include "Player.h"
 
+#include "Chunk.h"
+
 using namespace glm;
 
-Player::Player() {
+Player::Player() :
+		gravityStrength(-0.01f) {
 	yaw = 0;
 	mainCamera.setPosition(position);
 
-	moveSpeed = 0.05f;
+	moveSpeed = 0.1f;
 	lookSpeed = 0.1f;
 
 	movementStates[forward] = false;
@@ -26,12 +29,20 @@ Player::Player() {
 	movementStates[down] = false;
 	lookDX = 0;
 	lookDY = 0;
+
+	height = 2;
+
+	gravityDY = 0;
+
+	inAir = true;
 }
 
 Player::~Player() {
 }
 
 void Player::update(time_t dt) { //Add shouldUpdate?
+	checkCollisions();
+	gravity();
 	move();
 	look();
 	mainCamera.update();
@@ -43,26 +54,49 @@ vec3 Player::getPosition() {
 
 void Player::setPosition(vec3 newPos) {
 	position = newPos;
+	mainCamera.setPosition(newPos);
 }
 
 void Player::setYaw(int newYaw) {
 	yaw = newYaw;
 }
 
+void Player::gravity() {
+	if (inAir) {
+		gravityDY += gravityStrength;
+	} //else {
+//		gravityDY = 0;
+//	}
+}
+
+void Player::checkCollisions(){
+	if(position.y <= 20 && inAir){
+		inAir = false;
+		gravityDY = 0;
+	}
+}
+
 void Player::move() { //Clean player, gamelayer, and gamescene classes up
 	float x = 0, y = 0, z = 0;
-	if (movementStates[forward] && !movementStates[back])
-		z = -moveSpeed;
-	if (movementStates[back] && !movementStates[forward])
-		z = moveSpeed;
-	if (movementStates[left] && !movementStates[right])
-		x = moveSpeed;
-	if (movementStates[right] && !movementStates[left])
-		x = -moveSpeed;
-	if (movementStates[up] && !movementStates[down])
-		y = moveSpeed;
-	if (movementStates[down] && !movementStates[up])
-		y = -moveSpeed;
+	if (movementStates[forward]) {
+		z += -moveSpeed;
+	}
+	if (movementStates[back]) {
+		z += moveSpeed;
+	}
+	if (movementStates[left]) {
+		x += moveSpeed;
+	}
+	if (movementStates[right]) {
+		x += -moveSpeed;
+	}
+	if (movementStates[up]) {
+		y += moveSpeed;
+	}
+	if (movementStates[down]) {
+		y += -moveSpeed;
+	}
+	y += gravityDY;
 	if (x || y || z) {
 		mainCamera.move(x, y, z);
 		setPosition(mainCamera.getPosition());

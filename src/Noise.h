@@ -14,7 +14,7 @@ public:
 	virtual ~Noise();
 	double smoothNoise(double x, double y);
 private:
-	double noise2D(double x, double y);
+	double noise2D(int x, int y);
 	double interpolate(double a, double b, double x);
 };
 
