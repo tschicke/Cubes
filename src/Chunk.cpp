@@ -20,16 +20,11 @@ using namespace glm;
 //Temp??
 
 Chunk::Chunk() {
-	chunkX = 0;
-	chunkY = 0;
-	chunkZ = 0;
 	blocks = NULL;
 }
 
 void Chunk::init(int startX, int startY, int startZ) {
-	chunkX = startX;
-	chunkY = startY;
-	chunkZ = startZ;
+	chunkPosition = glm::vec3(startX, startY, startZ);
 	meshID.setColorType(Texture);
 
 	Renderer::getMainRenderer().createMesh(&meshID);
@@ -88,6 +83,10 @@ Chunk::~Chunk() {
 		}
 	}
 	delete[] blocks;
+}
+
+glm::vec3 Chunk::getChunkPos(){
+	return chunkPosition;
 }
 
 void Chunk::update(time_t dt) {

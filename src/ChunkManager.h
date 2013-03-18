@@ -25,6 +25,8 @@ public:
 
 	void addChunk(int x, int y , int z);
 	void deleteChuck(int index);
+
+	Chunk * getChunkWithCoordinate(int x, int y, int z);
 private:
 	std::vector<Chunk *> chunks;
 };

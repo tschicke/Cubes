@@ -27,6 +27,8 @@ public:
 	void update(time_t dt);
 	void draw(glm::mat4* viewMatrix);
 
+	glm::vec3 getChunkPos();
+
 	static const int CHUNK_SIZE = 32;
 private:
 	Block ** blocks;
@@ -37,7 +39,7 @@ private:
 	void createCube(int x, int y, int z);//Temp??
 	Block ** blockAt(int x, int y, int z);//Change to return int?
 
-	int chunkX, chunkY, chunkZ;//Should be glm::vec3?
+	glm::vec3 chunkPosition;//Should be glm::vec3?
 };
 
 #endif /* CHUNK_H_ */
