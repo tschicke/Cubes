@@ -5,14 +5,32 @@
  *      Author: Tyler
  */
 
+#include <iostream>
+
 #include "GameScene.h"
 
-GameScene::GameScene() {
-	// TODO Auto-generated constructor stub
+#include "Keyboard.h"
+#include "Mouse.h"
 
+GameScene::GameScene() {
+	ts::Mouse::setLocked(true);
 }
 
 GameScene::~GameScene() {
-	// TODO Auto-generated destructor stub
+}
+
+void GameScene::handleInput() {
+	int dx = 0, dy = 0;
+
+	gameLayer.handleInput();
+
+}
+
+void GameScene::draw() {
+	gameLayer.draw();
+}
+
+void GameScene::update(time_t dt) {
+	gameLayer.update(dt);
 }
 
