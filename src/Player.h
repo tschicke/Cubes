@@ -28,7 +28,7 @@ public:
 
 	void setMovementState(MovementState state, bool value);
 	void setLookStates(int dx, int dy);
-
+	void jump();
 
 	void setPosition(glm::vec3 newPosition);//Should be private?
 	glm::vec3 getPosition();//Should be private?
@@ -53,7 +53,7 @@ private:
 
 	void checkCollisions();
 
-	float moveSpeed, lookSpeed;
+	float moveSpeed, jumpStrength;
 
 	bool movementStates[movementStatesCount];
 	int lookDX, lookDY;

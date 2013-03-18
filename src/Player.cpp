@@ -9,8 +9,6 @@
 
 #include "Player.h"
 
-#include "Chunk.h"
-
 using namespace glm;
 
 Player::Player() :
@@ -19,7 +17,7 @@ Player::Player() :
 	mainCamera.setPosition(position);
 
 	moveSpeed = 0.1f;
-	lookSpeed = 0.1f;
+	jumpStrength = 0.2f;
 
 	movementStates[forward] = false;
 	movementStates[back] = false;
@@ -69,10 +67,18 @@ void Player::gravity() {
 //	}
 }
 
+void Player::jump(){
+	if (!inAir){
+		gravityDY = jumpStrength;
+		inAir = true;
+	}
+}
+
 void Player::checkCollisions(){
-	if(position.y <= 20 && inAir){
+	if(position.y + gravityDY < 20 && inAir){
 		inAir = false;
 		gravityDY = 0;
+//		position.y = 20;
 	}
 }
 

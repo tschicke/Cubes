@@ -60,6 +60,10 @@ void GameLayer::handleInput() {
 		player.setMovementState(down, false);
 	}
 
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Space) == ts::Keyboard::keyPressed){
+		player.jump();
+	}
+
 	player.setLookStates(ts::Mouse::getLastMove().x, ts::Mouse::getLastMove().y);
 //	std::cout << ts::Mouse::getLastMove().x << ", " << ts::Mouse::getLastMove().y << '\n';
 }
