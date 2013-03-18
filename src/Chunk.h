@@ -11,24 +11,23 @@
 #include "Common.h"
 
 #include <vector>
+#include <glm/glm.hpp>
 
 #include "BlockTypes.h"
 #include "Renderer.h"
 #include "Shader.h"
 
 class Chunk{
-	//TODO make super typedef??
 public:
 	Chunk();
-	Chunk(int x, int y, int z);
 	virtual ~Chunk();
 
 	void init(int x, int y, int z);
 
 	void update(time_t dt);
-	void draw(Renderer * renderer);
+	void draw(glm::mat4* viewMatrix);
 
-	static const int CHUNK_SIZE = 16;
+	static const int CHUNK_SIZE = 32;
 private:
 	Block ** blocks;
 
@@ -37,6 +36,8 @@ private:
 
 	void createCube(int x, int y, int z);//Temp??
 	Block ** blockAt(int x, int y, int z);//Change to return int?
+
+	int chunkX, chunkY, chunkZ;//Should be glm::vec3?
 };
 
 #endif /* CHUNK_H_ */

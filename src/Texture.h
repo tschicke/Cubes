@@ -8,7 +8,7 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
-class Texture {
+class Texture {//TODO Make spritesheet class?
 public:
 	Texture();
 	Texture(const char * texturePath);

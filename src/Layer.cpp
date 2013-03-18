@@ -16,10 +16,3 @@ Layer::Layer() {
 Layer::~Layer() {
 }
 
-void Layer::update(time_t dt){
-}
-
-void Layer::draw(Renderer * renderer){
-
-}
-

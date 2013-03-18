@@ -28,6 +28,8 @@ public:
 
 	void setBlockType(BlockType type);
 	BlockType getBlockType();
+
+	static const float cubeSize = 1.f;
 protected:
 	bool drawn;
 	BlockType blockType;

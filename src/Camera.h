@@ -19,12 +19,17 @@ public:
 	virtual void look(int dx, int dy) = 0;
 
 	void setPosition(glm::vec3 newPos);
+	glm::vec3 getPosition();
+
+	int getYaw();
+
+	glm::mat4* getViewMatrix();
 
 protected:
 	glm::vec3 position, lookAt;
 	glm::mat4 viewMat;
 	short inverted; //future
-	float moveSpeed, lookSpeed;
+	float lookSpeed;
 	float yaw, pitch;
 	float toRadians(float deg);
 	virtual void update() = 0;
