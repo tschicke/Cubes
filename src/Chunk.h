@@ -30,6 +30,8 @@ public:
 	glm::vec3 getChunkPos();
 
 	static const int CHUNK_SIZE = 32;
+
+	Block * getBlockAtCoordinate(int x, int y, int z);
 private:
 	Block ** blocks;
 

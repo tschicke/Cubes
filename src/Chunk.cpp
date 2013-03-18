@@ -37,22 +37,26 @@ void Chunk::init(int startX, int startY, int startZ) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
 				Block ** block = blockAt(x, y, z); //Change blockAt to return array index instead of Block **??
-				int i = rand();
-				if (i % 4 == 0) {
-					*block = new BlockStone();
-				} else if (i % 4 == 1) {
-					*block = new BlockDirt();
-				} else if (i % 4 == 2) {
-					*block = new BlockGrass();
-				} else {
-					*block = new BlockGrass();
-				}
 				int height = (noise.smoothNoise(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
 
-				if ((*block)->isDrawn()) {
-					if (y <= height) {
-						createCube((x * Block::cubeSize) + startX, (y * Block::cubeSize) + startY, (z * Block::cubeSize) + startZ);
+				if (y <= height) {
+
+					int i = rand();
+					if (i % 4 == 0) {
+						*block = new BlockStone;
+					} else if (i % 4 == 1) {
+						*block = new BlockDirt;
+					} else if (i % 4 == 2) {
+						*block = new BlockGrass;
+					} else {
+						*block = new BlockGrass;
 					}
+				} else {
+					*block = new BlockAir;
+				}
+
+				if ((*block)->isDrawn()) {
+					createCube((x * Block::cubeSize) + startX, (y * Block::cubeSize) + startY, (z * Block::cubeSize) + startZ);
 				}
 			}
 		}
@@ -85,8 +89,15 @@ Chunk::~Chunk() {
 	delete[] blocks;
 }
 
-glm::vec3 Chunk::getChunkPos(){
+glm::vec3 Chunk::getChunkPos() {
 	return chunkPosition;
+}
+
+Block * Chunk::getBlockAtCoordinate(int x, int y, int z) {
+	x %= CHUNK_SIZE;
+	y %= CHUNK_SIZE;
+	z %= CHUNK_SIZE;
+	return *blockAt(x, y, z);
 }
 
 void Chunk::update(time_t dt) {

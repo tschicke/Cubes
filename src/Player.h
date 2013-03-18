@@ -18,11 +18,14 @@ enum MovementState {
 	forward, back, left, right, up, down, movementStatesCount//Up and down are temp/noclip
 };
 
+class GameLayer;
+
 class Player {
 public:
 	Player();
 	virtual ~Player();
 
+	void setParent(GameLayer * parent);
 
 	void update(time_t dt);
 
@@ -39,6 +42,8 @@ public:
 private:
 	glm::vec3 position;
 	float yaw;
+
+	GameLayer * parentLayer;
 
 	void move();
 	void look();

@@ -21,6 +21,7 @@ GameLayer::GameLayer() {
 	manager.addChunk(2 * Chunk::CHUNK_SIZE, 0, 0);
 	manager.addChunk(0, 0, 2 * Chunk::CHUNK_SIZE);
 	manager.addChunk(2 * Chunk::CHUNK_SIZE, 0, 2 * Chunk::CHUNK_SIZE);
+	player.setParent(this);
 	player.setPosition(glm::vec3((float) Chunk::CHUNK_SIZE, 30, 0));
 }
 
@@ -70,4 +71,8 @@ void GameLayer::handleInput() {
 
 void GameLayer::draw() {
 	manager.draw(player.getMainCamera()->getViewMatrix()); //Temp
+}
+
+ChunkManager * GameLayer::getManagerPointer(){
+	return &manager;
 }

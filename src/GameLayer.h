@@ -20,6 +20,8 @@ public:
 	void draw();
 	void update(time_t dt);
 	void handleInput();
+
+	ChunkManager * getManagerPointer();
 private:
 	ChunkManager manager;
 

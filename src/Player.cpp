@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "Player.h"
+#include "GameLayer.h"
 
 using namespace glm;
 
@@ -33,9 +34,15 @@ Player::Player() :
 	gravityDY = 0;
 
 	inAir = true;
+
+	parentLayer = NULL;
 }
 
 Player::~Player() {
+}
+
+void Player::setParent(GameLayer * parent) {
+	parentLayer = parent;
 }
 
 void Player::update(time_t dt) { //Add shouldUpdate?
@@ -67,18 +74,41 @@ void Player::gravity() {
 //	}
 }
 
-void Player::jump(){
-	if (!inAir){
+void Player::jump() {
+	if (!inAir) {
 		gravityDY = jumpStrength;
 		inAir = true;
 	}
 }
 
-void Player::checkCollisions(){
-	if(position.y + gravityDY < 20 && inAir){
-		inAir = false;
-		gravityDY = 0;
-//		position.y = 20;
+void Player::checkCollisions() {
+	float 	nextPlayerX = position.x,
+			nextPlayerY = position.y + gravityDY - height,
+			nextPlayerZ = position.z;
+//	if(position.y - height + gravityDY < 5 && inAir){
+//		inAir = false;
+//		gravityDY = 0;
+//		position.y = 5;
+//	}
+
+	if (parentLayer != NULL) {
+		ChunkManager * manager = parentLayer->getManagerPointer();
+		if (manager != NULL) {
+			Chunk * chunk = manager->getChunkWithCoordinate(nextPlayerX, nextPlayerY, nextPlayerZ);
+			if (chunk != NULL) {
+				Block * block = chunk->getBlockAtCoordinate(nextPlayerX, nextPlayerY, nextPlayerZ);
+				if (block != NULL && block->isDrawn()) {
+					inAir = false;
+					gravityDY = 0;
+					std::cout << "block\n";
+				} else {
+					std::cout << block << '\n';
+				}
+//				std::cout << block << '\n';
+			}
+//			std::cout << "manager\n";
+		}
+//		std::cout << "parent\n";
 	}
 }
 
