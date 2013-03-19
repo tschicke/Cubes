@@ -16,9 +16,10 @@ ChunkManager::ChunkManager() {
 ChunkManager::~ChunkManager() {
 }
 
-void ChunkManager::addChunk(int x, int y, int z) {
+void ChunkManager::addChunk(int x, int y, int z, float r, float g, float b) {
 	Chunk *chunk = new Chunk;
 	chunk->init(x, y, z);
+	chunk->setTestColor(r, g, b);
 	chunks.push_back(chunk);
 }
 

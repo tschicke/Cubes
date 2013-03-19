@@ -23,7 +23,7 @@ public:
 	void update(time_t dt);
 	void draw(glm::mat4 *viewMat);
 
-	void addChunk(int x, int y , int z);
+	void addChunk(int x, int y , int z, float r, float g, float b);
 	void deleteChuck(int index);
 
 	Chunk * getChunkWithCoordinate(int x, int y, int z);

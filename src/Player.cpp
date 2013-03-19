@@ -82,14 +82,12 @@ void Player::jump() {
 }
 
 void Player::checkCollisions() {
-	float 	nextPlayerX = position.x,
-			nextPlayerY = position.y + gravityDY - height,
-			nextPlayerZ = position.z;
-//	if(position.y - height + gravityDY < 5 && inAir){
-//		inAir = false;
-//		gravityDY = 0;
-//		position.y = 5;
-//	}
+	float nextPlayerX = position.x, nextPlayerY = position.y + gravityDY - height, nextPlayerZ = position.z;
+
+	if (nextPlayerY < 0 && inAir) {
+		gravityDY = 0;
+		setPosition(glm::vec3(position.x, 32, position.z));
+	}
 
 	if (parentLayer != NULL) {
 		ChunkManager * manager = parentLayer->getManagerPointer();
@@ -100,11 +98,10 @@ void Player::checkCollisions() {
 				if (block != NULL && block->isDrawn()) {
 					inAir = false;
 					gravityDY = 0;
-					std::cout << "block\n";
 				} else {
-					std::cout << block << '\n';
+					inAir = true;
 				}
-//				std::cout << block << '\n';
+//				std::cout << block << ", " << (block == NULL ? -1 : block->isDrawn()) << '\n';
 			}
 //			std::cout << "manager\n";
 		}

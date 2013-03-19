@@ -32,6 +32,8 @@ public:
 	static const int CHUNK_SIZE = 32;
 
 	Block * getBlockAtCoordinate(int x, int y, int z);
+
+	void setTestColor(float r, float b, float g);
 private:
 	Block ** blocks;
 
@@ -42,6 +44,7 @@ private:
 	Block ** blockAt(int x, int y, int z);//Change to return int?
 
 	glm::vec3 chunkPosition;//Should be glm::vec3?
+	glm::vec3 testColor;
 };
 
 #endif /* CHUNK_H_ */

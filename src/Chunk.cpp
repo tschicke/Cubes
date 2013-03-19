@@ -215,8 +215,14 @@ void Chunk::draw(mat4 * viewMatrix) {
 	shaderProgram.setUniform("viewMatrix", viewMatrix, 1);
 	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
 
+	shaderProgram.setUniform("testColor", &testColor, 1);
+
 	Renderer::getMainRenderer().renderMesh(meshID);
 
 	Texture::unbindTextures();
+}
+
+void Chunk::setTestColor(float r, float g, float b){
+	testColor = glm::vec3(r, g, b);
 }
 
