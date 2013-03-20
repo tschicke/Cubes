@@ -34,13 +34,14 @@ public:
 	void jump();
 
 	void setPosition(glm::vec3 newPosition);//Should be private?
+	void setX(float x), setY(float y), setZ(float z);
 	glm::vec3 getPosition();//Should be private?
 
 	void setYaw(int newYaw);//Should be private?
 
 	FirstPersonCamera* getMainCamera();
 private:
-	glm::vec3 position;
+	glm::vec3 position, cameraPosition, moveVector;
 	float yaw;
 
 	GameLayer * parentLayer;
@@ -56,6 +57,7 @@ private:
 	void setInAir();
 	bool isInAir();
 
+	void updateMoveVec();
 	void checkCollisions();
 
 	float moveSpeed, jumpStrength;

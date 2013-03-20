@@ -26,7 +26,7 @@ void FirstPersonCamera::update() {
 	shouldUpdate = false;
 }
 
-void FirstPersonCamera::move(float x, float y, float z) {
+glm::vec3 FirstPersonCamera::getMoveVector(float x, float y, float z) {
 	if (!(x == 0 && y == 0 && z == 0)) {
 		vec3 flatPos; //position with no y component
 		flatPos.x = position.x;
@@ -42,16 +42,21 @@ void FirstPersonCamera::move(float x, float y, float z) {
 		float moveX = (forward.x * z) + (right.x * x);
 		float moveZ = (forward.z * z) + (right.z * x);
 
-		position.x += moveX;
-		lookAt.x += moveX;
-		position.z += moveZ;
-		lookAt.z += moveZ;
+		vec3 moveVector(moveX, y, moveZ);
 
-		position.y += y;
-		lookAt.y += y;
+//		position.x += moveX;
+//		lookAt.x += moveX;
+//		position.z += moveZ;
+//		lookAt.z += moveZ;
+
+//		position.y += y;
+//		lookAt.y += y;
 
 		shouldUpdate = true;
+
+		return moveVector;
 	}
+	return vec3();
 }
 
 void FirstPersonCamera::look(int dx, int dy) {

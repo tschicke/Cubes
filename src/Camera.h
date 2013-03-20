@@ -15,7 +15,7 @@ public:
 	Camera();
 	virtual ~Camera();
 
-	virtual void move(float x, float y, float z) = 0;
+	virtual glm::vec3 getMoveVector(float x, float y, float z) = 0;
 	virtual void look(int dx, int dy) = 0;
 
 	void setPosition(glm::vec3 newPos);

@@ -15,7 +15,10 @@ using namespace glm;
 Player::Player() :
 		gravityStrength(-0.01f) {
 	yaw = 0;
-	mainCamera.setPosition(position);
+
+	cameraPosition = position;
+	cameraPosition.y += height;
+	mainCamera.setPosition(cameraPosition);
 
 	moveSpeed = 0.1f;
 	jumpStrength = 0.2f;
@@ -46,6 +49,7 @@ void Player::setParent(GameLayer * parent) {
 }
 
 void Player::update(time_t dt) { //Add shouldUpdate?
+	updateMoveVec();
 	checkCollisions();
 	gravity();
 	move();
@@ -59,7 +63,27 @@ vec3 Player::getPosition() {
 
 void Player::setPosition(vec3 newPos) {
 	position = newPos;
-	mainCamera.setPosition(newPos);
+	cameraPosition = newPos;
+	cameraPosition.y += height;
+	mainCamera.setPosition(cameraPosition);
+}
+
+void Player::setX(float x) {
+	glm::vec3 newPlayerPos = position;
+	newPlayerPos.x = x;
+	setPosition(newPlayerPos);
+}
+
+void Player::setY(float y) {
+	glm::vec3 newPlayerPos = position;
+	newPlayerPos.y = y;
+	setPosition(newPlayerPos);
+}
+
+void Player::setZ(float z) {
+	glm::vec3 newPlayerPos = position;
+	newPlayerPos.z = z;
+	setPosition(newPlayerPos);
 }
 
 void Player::setYaw(int newYaw) {
@@ -78,38 +102,11 @@ void Player::jump() {
 	if (!inAir) {
 		gravityDY = jumpStrength;
 		inAir = true;
+		std::cout << position.x << ", " << position.y << ", " << position.z << "\n";
 	}
 }
 
-void Player::checkCollisions() {
-	float nextPlayerX = position.x, nextPlayerY = position.y + gravityDY - height, nextPlayerZ = position.z;
-
-	if (nextPlayerY < 0 && inAir) {
-		gravityDY = 0;
-		setPosition(glm::vec3(position.x, 32, position.z));
-	}
-
-	if (parentLayer != NULL) {
-		ChunkManager * manager = parentLayer->getManagerPointer();
-		if (manager != NULL) {
-			Chunk * chunk = manager->getChunkWithCoordinate(nextPlayerX, nextPlayerY, nextPlayerZ);
-			if (chunk != NULL) {
-				Block * block = chunk->getBlockAtCoordinate(nextPlayerX, nextPlayerY, nextPlayerZ);
-				if (block != NULL && block->isDrawn()) {
-					inAir = false;
-					gravityDY = 0;
-				} else {
-					inAir = true;
-				}
-//				std::cout << block << ", " << (block == NULL ? -1 : block->isDrawn()) << '\n';
-			}
-//			std::cout << "manager\n";
-		}
-//		std::cout << "parent\n";
-	}
-}
-
-void Player::move() { //Clean player, gamelayer, and gamescene classes up
+void Player::updateMoveVec() {
 	float x = 0, y = 0, z = 0;
 	if (movementStates[forward]) {
 		z += -moveSpeed;
@@ -131,9 +128,45 @@ void Player::move() { //Clean player, gamelayer, and gamescene classes up
 	}
 	y += gravityDY;
 	if (x || y || z) {
-		mainCamera.move(x, y, z);
-		setPosition(mainCamera.getPosition());
+		moveVector = mainCamera.getMoveVector(x, y, z);
+		std::cout << moveVector.x << ' ' << moveVector.y << ' ' << moveVector.z << '\n';
 	}
+}
+
+void Player::checkCollisions() {
+	float nextPlayerX = position.x, nextPlayerY = position.y + gravityDY, nextPlayerZ = position.z;
+
+	if (nextPlayerY < 0 && inAir) {
+		gravityDY = 0;
+		setY(32);
+	}
+
+	if (parentLayer != NULL) {
+		ChunkManager * manager = parentLayer->getManagerPointer();
+		if (manager != NULL) {
+			Chunk * chunk = manager->getChunkWithCoordinate(nextPlayerX, nextPlayerY, nextPlayerZ);
+			if (chunk != NULL) {
+				Block * block = chunk->getBlockAtCoordinate(nextPlayerX, nextPlayerY, nextPlayerZ);
+				if (block != NULL && block->isDrawn()) {
+					inAir = false;
+					gravityDY = 0;
+					setY((int) nextPlayerY + Block::cubeSize);
+				} else {
+					inAir = true;
+				}
+
+//				std::cout << block << ", " << (block == NULL ? -1 : block->isDrawn()) << '\n';
+			}
+//			std::cout << "manager\n";
+		}
+//		std::cout << "parent\n";
+	}
+}
+
+void Player::move() { //Clean player, gamelayer, and gamescene classes up
+	position += moveVector;
+	cameraPosition += moveVector;
+	mainCamera.setPosition(cameraPosition);
 }
 
 void Player::look() {
@@ -144,7 +177,7 @@ void Player::look() {
 	}
 }
 
-FirstPersonCamera* Player::getMainCamera() {
+FirstPersonCamera * Player::getMainCamera() {
 	return &mainCamera;
 }
 

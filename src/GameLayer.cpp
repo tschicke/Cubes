@@ -13,10 +13,10 @@
 #include "Mouse.h"
 
 GameLayer::GameLayer() {
-	manager.addChunk(0, 0, 0, 1, 0, 0);
+	manager.addChunk(0, 0, 0, 1, 0.5, 0);
 	manager.addChunk(Chunk::CHUNK_SIZE, 0, 0, 1, 1, 1);
-	manager.addChunk(0, 0, Chunk::CHUNK_SIZE, 1, 0, 1);
-	manager.addChunk(Chunk::CHUNK_SIZE, 0, Chunk::CHUNK_SIZE, 0, 0, 1);
+	manager.addChunk(0, 0, Chunk::CHUNK_SIZE, 0.5, 1, 0);
+	manager.addChunk(Chunk::CHUNK_SIZE, 0, Chunk::CHUNK_SIZE, 0, 0.5, 1);
 	manager.addChunk(Chunk::CHUNK_SIZE, 0, 2 * Chunk::CHUNK_SIZE, 0, 1, 0);
 	manager.addChunk(2 * Chunk::CHUNK_SIZE, 0, 0, 0, 0.5f, 0);
 	manager.addChunk(0, 0, 2 * Chunk::CHUNK_SIZE, 1, 0, 1);

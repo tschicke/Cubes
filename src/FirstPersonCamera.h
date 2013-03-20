@@ -16,7 +16,7 @@ public:
 	virtual ~FirstPersonCamera();
 
 	void look(int dx, int dy);
-	void move(float x, float y, float z);
+	glm::vec3 getMoveVector(float x, float y, float z);
 	void update();
 private:
 };
