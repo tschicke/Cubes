@@ -1,24 +1,28 @@
 /*
  * FirstPersonCamera.h
  *
- *  Created on: Mar 2, 2013
+ *  Created on: Mar 21, 2013
  *      Author: Tyler
  */
 
 #ifndef FIRSTPERSONCAMERA_H_
 #define FIRSTPERSONCAMERA_H_
 
-#include "Camera.h"
+#include "Vectors.h"
 
-class FirstPersonCamera : public Camera{
+namespace ts {
+
+class FirstPersonCamera {
 public:
 	FirstPersonCamera();
 	virtual ~FirstPersonCamera();
 
-	void look(int dx, int dy);
-	void move(float x, float y, float z);
-	void update();
+	ts::vec3 getMoveVector(int dx, int dy, int dz);
+
 private:
+	ts::vec3 position;
+	int yaw, pitch;
 };
 
+} /* namespace ts */
 #endif /* FIRSTPERSONCAMERA_H_ */

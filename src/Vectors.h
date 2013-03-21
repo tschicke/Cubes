@@ -14,19 +14,38 @@ namespace ts {
 //TODO move to .cpp file
 
 template<typename T = float>
-class vec2 {
+class Vector2;
+template<typename T = float>
+class Vector3;
+template<typename T = float>
+class Vector4;
+
+typedef Vector2<float> vec2;
+typedef Vector3<float> vec3;
+typedef Vector4<float> vec4;
+
+typedef Vector2<int> vec2i;
+typedef Vector3<int> vec3i;
+typedef Vector4<int> vec4i;
+
+typedef Vector2<double> vec2d;
+typedef Vector3<double> vec3d;
+typedef Vector4<double> vec4d;
+
+template<typename T>
+class Vector2 {
 public:
-	vec2() {
+	Vector2() {
 		x = 0;
 		y = 0;
 	}
-	vec2(T x, T y) {
+	Vector2(T x, T y) {
 		this->x = x;
 		this->y = y;
 	}
-	virtual ~vec2();
+	virtual ~Vector2();
 
-	vec2& operator=(vec2 const& other) {
+	Vector2& operator=(Vector2 const& other) {
 		if (this != &other) {
 			x = other.x;
 			y = other.y;
@@ -34,37 +53,37 @@ public:
 		return *this;
 	}
 
-	vec2 operator+(vec2 const& other) {
+	Vector2 operator+(Vector2 const& other) {
 		T newX = x + other.x;
 		T newY = y + other.y;
-		return vec2(newX, newY);
+		return Vector2(newX, newY);
 	}
 
-	vec2 operator-(vec2 const& other) {
+	Vector2 operator-(Vector2 const& other) {
 		T newX = x - other.x;
 		T newY = y - other.y;
-		return vec2(newX, newY);
+		return Vector2(newX, newY);
 	}
 
 	T x, y;
 };
 
-template<typename T = float>
-class vec3 {
+template<typename T>
+class Vector3 {
 public:
-	vec3() {
+	Vector3() {
 		x = 0;
 		y = 0;
 		z = 0;
 	}
-	vec3(T x, T y, T z) {
+	Vector3(T x, T y, T z) {
 		this->x = x;
 		this->y = y;
 		this->z = z;
 	}
-	virtual ~vec3();
+	virtual ~Vector3();
 
-	vec3& operator=(vec3 const& other) {
+	Vector3& operator=(Vector3 const& other) {
 		if (this != &other) {
 			x = other.x;
 			y = other.y;
@@ -73,63 +92,63 @@ public:
 		return *this;
 	}
 
-	vec3& operator+=(const vec3& other) {
+	Vector3& operator+=(const Vector3& other) {
 		x += other.x;
 		y += other.y;
 		z += other.z;
 		return *this;
 	}
 
-	vec3& operator-=(const vec3& other) {
+	Vector3& operator-=(const Vector3& other) {
 		x -= other.x;
 		y -= other.y;
 		z -= other.z;
 		return *this;
 	}
 
-	vec3 operator+(vec3 const& other) {
+	Vector3 operator+(Vector3 const& other) {
 		T newX = x + other.x;
 		T newY = y + other.y;
 		T newZ = z + other.z;
-		return vec3(newX, newY, newZ);
+		return Vector3(newX, newY, newZ);
 	}
 
-	vec3 operator-(vec3 const& other) {
+	Vector3 operator-(Vector3 const& other) {
 		T newX = x - other.x;
 		T newY = y - other.y;
 		T newZ = z - other.z;
-		return vec3(newX, newY, newZ);
+		return Vector3(newX, newY, newZ);
 	}
 
 	template <typename U>
-	vec3 operator*(U factor){
+	Vector3 operator*(U factor){
 		T newX = x * factor;
 		T newY = y * factor;
 		T newZ = z * factor;
-		return vec3(newX, newY, newZ);
+		return Vector3(newX, newY, newZ);
 	}
 
 	T x, y, z;
 };
 
-template<typename T = float>
-class vec4 {
+template<typename T>
+class Vector4 {
 public:
-	vec4() {
+	Vector4() {
 		x = 0;
 		y = 0;
 		z = 0;
 		w = 0;
 	}
-	vec4(T x, T y, T z, T w) {
+	Vector4(T x, T y, T z, T w) {
 		this->x = x;
 		this->y = y;
 		this->z = z;
 		this->w = w;
 	}
-	virtual ~vec4();
+	virtual ~Vector4();
 
-	vec4& operator=(vec4 const& other) {
+	Vector4& operator=(Vector4 const& other) {
 		if (this != &other) {
 			x = other.x;
 			y = other.y;
@@ -138,20 +157,20 @@ public:
 		return *this;
 	}
 
-	vec4 operator+(vec4 const& other) {
+	Vector4 operator+(Vector4 const& other) {
 		T newX = x + other.x;
 		T newY = y + other.y;
 		T newZ = z + other.z;
 		T newW = w + other.w;
-		return vec4(newX, newY, newZ, newW);
+		return Vector4(newX, newY, newZ, newW);
 	}
 
-	vec4 operator-(vec4 const& other) {
+	Vector4 operator-(Vector4 const& other) {
 		T newX = x - other.x;
 		T newY = y - other.y;
 		T newZ = z - other.z;
 		T newW = w - other.w;
-		return vec4(newX, newY, newZ, newW);
+		return Vector4(newX, newY, newZ, newW);
 	}
 
 	T x, y, z, w;

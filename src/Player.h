@@ -25,12 +25,12 @@ public:
 
 //	void draw();
 
-	ts::vec3<float> getPosition();
-	void setPosition(ts::vec3<float> newPos);
+	ts::vec3 getPosition();
+	void setPosition(ts::vec3 newPos);
 private:
-	FirstPersonCamera camera;
+	ts::FirstPersonCamera camera;
 
-	ts::vec3<float> position, moveVector;
+	ts::vec3 position, moveVector;
 	float yaw, pitch;
 
 	void jump();
