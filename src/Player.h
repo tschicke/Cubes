@@ -8,7 +8,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include "Vectors.h"
+#include <glm/glm.hpp>
 
 #include "Common.h"
 
@@ -25,17 +25,17 @@ public:
 
 //	void draw();
 
-	ts::vec3 getPosition();
-	void setPosition(ts::vec3 newPos);
+	glm::vec3 getPosition();
+	void setPosition(glm::vec3 newPos);
 private:
 	ts::FirstPersonCamera camera;
 
-	ts::vec3 position, moveVector;
+	glm::vec3 position, moveVector;
 	float yaw, pitch;
 
 	void jump();
 
-	static const float height;
+	static const float playerHeight;
 };
 
 #endif /* PLAYER_H_ */

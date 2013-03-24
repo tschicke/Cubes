@@ -47,7 +47,7 @@ void Player::update(time_t dt) {
 	moveVector = ts::vec3();//Reset move vector every frame;
 }
 
-ts::vec3 Player::getPosition() {
+glm::vec3 Player::getPosition() {
 	return position;
 }
 

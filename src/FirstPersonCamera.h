@@ -8,20 +8,29 @@
 #ifndef FIRSTPERSONCAMERA_H_
 #define FIRSTPERSONCAMERA_H_
 
-#include "Vectors.h"
+#include <glm/glm.hpp>
 
 namespace ts {
 
 class FirstPersonCamera {
 public:
 	FirstPersonCamera();
+	FirstPersonCamera(glm::vec3 position);
 	virtual ~FirstPersonCamera();
+	void init(glm::vec3 position);
 
-	ts::vec3 getMoveVector(int dx, int dy, int dz);
+	void setPosition(glm::vec3 newPosition);
+
+	glm::vec3 getMoveVector(int dx, int dy, int dz);
+	void rotateWithMove(int dx, int dy);
+
+	void move(int x, int y, int z);
+	void move(glm::vec3 moveVector);
 
 private:
-	ts::vec3 position;
-	int yaw, pitch;
+	glm::vec3 position, lookAt;
+	float yaw, pitch;
+	float lookSpeed;
 };
 
 } /* namespace ts */
