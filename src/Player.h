@@ -35,6 +35,9 @@ private:
 
 	void jump();
 
+	void move(glm::vec3 moveVector);//On axis, not directional
+	void move(float x, float y, float z);//On axis, not directional
+
 	static const float playerHeight;
 };
 

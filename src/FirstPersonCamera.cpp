@@ -44,13 +44,24 @@ void FirstPersonCamera::move(glm::vec3 moveVector) {
 	lookAt += moveVector;
 }
 
-glm::vec3 FirstPersonCamera::getMoveVector(int dx, int dy, int dz) {
+glm::vec3 FirstPersonCamera::getMoveVector(float dx, float dy, float dz) {
 	glm::vec3 moveVector;
+	if (dx || dy || dz) {
+		glm::vec3 flatPosition(position.x, 0, position.z);
+		glm::vec3 flatLookAt(lookAt.x, 0, lookAt.z);
 
+		glm::vec3 forwardVector = glm::normalize(flatLookAt - flatPosition);
+		glm::vec3 rightVector = glm::normalize(glm::cross(forwardVector, glm::vec3(0, 1, 0)));
+
+		moveVector.x = rightVector.x * dx + forwardVector.x * dz;
+		moveVector.y = dy;
+		moveVector.z = rightVector.z * dx + forwardVector.z * dz;
+	}
+	return glm::normalize(moveVector);
 }
 
 void FirstPersonCamera::rotateWithMove(int dx, int dy) {
-	yaw += dx;
+	yaw += (dx * lookSpeed);
 	yaw = fmodf(yaw, 360);
 
 	float newPitch = pitch + (dy * lookSpeed);
@@ -61,6 +72,20 @@ void FirstPersonCamera::rotateWithMove(int dx, int dy) {
 	} else {
 		pitch = newPitch;
 	}
+
+	glm::vec3 lookDirection;
+
+	float yawR = toRadians(yaw), pitchR = toRadians(pitch);
+
+	lookDirection.x = sinf(yawR) * cosf(pitchR);
+	lookDirection.y = sinf(pitchR);
+	lookDirection.z = cosf(yawR) * cosf(pitchR);
+
+	lookAt = position + lookDirection;
 }
 
 } /* namespace ts */
+
+float toRadians(float degrees) {
+	return (degrees * 3.141592) / 180.f;
+}

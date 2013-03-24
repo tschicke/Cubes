@@ -51,6 +51,18 @@ glm::vec3 Player::getPosition() {
 	return position;
 }
 
-void Player::setPosition(ts::vec3 newPos) {
-	position = newPos;
+void Player::setPosition(glm::vec3 newPos) {
+	glm::vec3 moveVector = newPos - position;
+	move(moveVector);
+}
+
+void Player::move(glm::vec3 moveVector) {
+	position += moveVector;
+	camera.move(moveVector);
+}
+
+void Player::move(float x, float y, float z) {
+	glm::vec3 moveVector(x, y, z);
+	position += moveVector;
+	camera.move(moveVector);
 }
