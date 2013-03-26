@@ -27,6 +27,8 @@ public:
 
 	glm::vec3 getPosition();
 	void setPosition(glm::vec3 newPos);
+
+	glm::mat4 * getCameraViewMatrix();//should be different??
 private:
 	ts::FirstPersonCamera camera;
 
@@ -39,6 +41,7 @@ private:
 	void move(float x, float y, float z);//On axis, not directional
 
 	static const float playerHeight;
+	float moveSpeed;
 };
 
 #endif /* PLAYER_H_ */

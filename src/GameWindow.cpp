@@ -104,7 +104,7 @@ void GameWindow::handleInput() {
 			ts::Keyboard::setKeyEvent(event.key.code, ts::Keyboard::keyReleased);
 		} else if (event.type == sf::Event::MouseMoved) {
 			int dx = 0, dy = 0;
-			dx = -(event.mouseMove.x - ts::Mouse::getPosition().x);
+			dx = (event.mouseMove.x - ts::Mouse::getPosition().x);
 			dy = -(event.mouseMove.y - ts::Mouse::getPosition().y);
 			ts::Mouse::setLastMove(dx, dy);
 			if (ts::Mouse::isLocked()) {

@@ -9,42 +9,50 @@
 
 #include "Player.h"
 #include "GameLayer.h"
+
 #include "Keyboard.h"
+#include "Mouse.h"
 
 Player::Player() {
 	yaw = 0;
 	pitch = 0;
+	moveSpeed = 0.3f;
 }
 
 Player::~Player() {
 }
 
 void Player::input() {
-	int x = 0, y = 0, z = 0;
+	float x = 0, y = 0, z = 0;
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::A)) {
-		x += -1;
+		x += -moveSpeed;
 	}
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::D)) {
-		x += 1;
+		x += moveSpeed;
 	}
 
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::W)) {
-		z += -1;
+		z += moveSpeed;
 	}
 	if (ts::Keyboard::isKeyPressed(ts::Keyboard::S)) {
-		z += 1;
+		z += -moveSpeed;
 	}
 
 	moveVector = camera.getMoveVector(x, y, z);
+
+	int mouseDX, mouseDY;
+	mouseDX = ts::Mouse::getLastMove().x;
+	mouseDY = ts::Mouse::getLastMove().y;
+	camera.rotateWithMove(mouseDX, mouseDY);
 }
 
 void Player::update(time_t dt) {
 	//TODO check collisions
 	//TODO make world class
 
-	position += moveVector;
+	move(moveVector);
 
-	moveVector = ts::vec3();//Reset move vector every frame;
+	moveVector = glm::vec3();//Reset move vector every frame;
 }
 
 glm::vec3 Player::getPosition() {
@@ -65,4 +73,8 @@ void Player::move(float x, float y, float z) {
 	glm::vec3 moveVector(x, y, z);
 	position += moveVector;
 	camera.move(moveVector);
+}
+
+glm::mat4 * Player::getCameraViewMatrix(){
+	return camera.getViewMatrix();
 }

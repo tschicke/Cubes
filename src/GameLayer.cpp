@@ -21,7 +21,6 @@ GameLayer::GameLayer() {
 	manager.addChunk(2 * Chunk::CHUNK_SIZE, 0, 0, 0, 0.5f, 0);
 	manager.addChunk(0, 0, 2 * Chunk::CHUNK_SIZE, 1, 0, 1);
 	manager.addChunk(2 * Chunk::CHUNK_SIZE, 0, 2 * Chunk::CHUNK_SIZE, 0, 1, 1);
-	player.setParent(this);
 	player.setPosition(glm::vec3((float) Chunk::CHUNK_SIZE, 30, 5));
 }
 
@@ -33,11 +32,12 @@ void GameLayer::update(time_t dt) {
 }
 
 void GameLayer::handleInput() {
-//	std::cout << ts::Mouse::getLastMove().x << ", " << ts::Mouse::getLastMove().y << '\n';
+	player.input();
+	//	std::cout << ts::Mouse::getLastMove().x << ", " << ts::Mouse::getLastMove().y << '\n';
 }
 
 void GameLayer::draw() {
-	manager.draw(player.getMainCamera()->getViewMatrix()); //Temp
+	manager.draw(player.getCameraViewMatrix()); //Temp
 }
 
 ChunkManager * GameLayer::getManagerPointer(){

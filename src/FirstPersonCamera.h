@@ -27,10 +27,17 @@ public:
 	void move(int x, int y, int z);
 	void move(glm::vec3 moveVector);
 
+	glm::mat4 * getViewMatrix();
+
 private:
 	glm::vec3 position, lookAt;
+	glm::mat4 viewMatrix;//Temp??
 	float yaw, pitch;
 	float lookSpeed;
+
+	float toRadians(float degrees);
+
+	bool flag_shouldUpdate;
 };
 
 } /* namespace ts */
