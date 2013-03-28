@@ -14,6 +14,9 @@
 
 #include "FirstPersonCamera.h"
 
+#include "Renderer.h"
+#include "Shader.h"
+
 class Player {
 public:
 	Player();
@@ -23,7 +26,7 @@ public:
 
 	void update(time_t dt);
 
-//	void draw();
+	void draw(glm::mat4 * viewMat);
 
 	glm::vec3 getPosition();
 	void setPosition(glm::vec3 newPos);
@@ -42,6 +45,11 @@ private:
 
 	static const float playerHeight;
 	float moveSpeed;
+
+	MeshID playerModelID;
+	ShaderProgram shaderProgram;
+
+	void loadPlayerModel();
 };
 
 #endif /* PLAYER_H_ */

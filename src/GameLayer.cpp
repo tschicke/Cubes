@@ -38,6 +38,7 @@ void GameLayer::handleInput() {
 
 void GameLayer::draw() {
 	manager.draw(player.getCameraViewMatrix()); //Temp
+	player.draw(player.getCameraViewMatrix());
 }
 
 ChunkManager * GameLayer::getManagerPointer(){
