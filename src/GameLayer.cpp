@@ -13,6 +13,7 @@
 #include "Mouse.h"
 
 GameLayer::GameLayer() {
+	player = Player(new ts::World);
 	manager.addChunk(0, 0, 0, 1, 0, 0);
 	manager.addChunk(Chunk::CHUNK_SIZE, 0, 0, 1, 1, 1);
 	manager.addChunk(0, 0, Chunk::CHUNK_SIZE, 1, 0, 1);

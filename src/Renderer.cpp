@@ -16,7 +16,7 @@ using namespace glm;
 
 mat4 Renderer::projectionMatrix;
 
-Renderer& Renderer::getMainRenderer(){
+Renderer& Renderer::getMainRenderer() {
 	static Renderer renderer;
 	return renderer;
 }
@@ -44,23 +44,23 @@ void Renderer::endMesh(MeshID * meshID) {
 		meshID->setNumVertices(currentIndices.size());
 
 		/* Print data in current data with labels
-		for (unsigned int i = 0; i < currentData.size(); i++) {
-			float data = currentData.at(i);
-			float counter = i / 3.f;
+		 for (unsigned int i = 0; i < currentData.size(); i++) {
+		 float data = currentData.at(i);
+		 float counter = i / 3.f;
 
-			if (fmodf(counter, 3) == 0) {
-				std::cout << "\nvertex: ";
-			}
+		 if (fmodf(counter, 3) == 0) {
+		 std::cout << "\nvertex: ";
+		 }
 
-			if (fmodf(counter - 1, 3) == 0) {
-				std::cout << "\ncolor: ";
-			}
+		 if (fmodf(counter - 1, 3) == 0) {
+		 std::cout << "\ncolor: ";
+		 }
 
-			if (fmodf(counter - 2, 3) == 0) {
-				std::cout << "\nnormal: ";
-			}
-			std::cout << data << ' ';
-		}*/
+		 if (fmodf(counter - 2, 3) == 0) {
+		 std::cout << "\nnormal: ";
+		 }
+		 std::cout << data << ' ';
+		 }*/
 
 		currentMeshID.reset();
 		currentData.clear();
@@ -69,7 +69,7 @@ void Renderer::endMesh(MeshID * meshID) {
 }
 
 int Renderer::addVertexToMesh(MeshID meshID, vec3 position, vec3 normal, float r, float g, float b) {
-	if (currentMeshID == meshID && meshID.getColorType()  == Color) {
+	if (currentMeshID == meshID && meshID.getColorType() == Color) {
 		int vertexIndex = std::distance(currentData.begin(), currentData.end()) / 9; // /9 temp
 
 		//Add Vertex
@@ -129,6 +129,39 @@ void Renderer::addTriangleToMesh(MeshID meshID, int v1, int v2, int v3) {
 	}
 }
 
+void Renderer::createRectangle(MeshID meshID, glm::vec3 origin, float dx, float dy, float dz, float r, float g, float b) {//r, g, b temp
+	glm::vec3 normal; //temp
+
+	int v1, v2, v3, v4;
+
+	normal = glm::vec3(0, 0, 0); //temp
+
+	if (dy == 0) {
+		v1 = addVertexToMesh(meshID, origin, normal, r, g, b);
+		v2 = addVertexToMesh(meshID, origin + glm::vec3(dx, 0, 0), normal, r, g, b);
+		v3 = addVertexToMesh(meshID, origin + glm::vec3(dx, 0, dz), normal, r, g, b);
+		v4 = addVertexToMesh(meshID, origin + glm::vec3(0, 0, dz), normal, r, g, b);
+		addTriangleToMesh(meshID, v1, v2, v3);
+		addTriangleToMesh(meshID, v1, v3, v4);
+	} else {
+		v1 = addVertexToMesh(meshID, origin, normal, r, g, b);
+		v2 = addVertexToMesh(meshID, origin + glm::vec3(dx, 0, dz), normal, r, g, b);
+		v3 = addVertexToMesh(meshID, origin + glm::vec3(dx, dy, dz), normal, r, g, b);
+		v4 = addVertexToMesh(meshID, origin + glm::vec3(0, dy, 0), normal, r, g, b);
+		addTriangleToMesh(meshID, v1, v2, v3);
+		addTriangleToMesh(meshID, v1, v3, v4);
+	}
+}
+
+void Renderer::createPrism(MeshID meshID, glm::vec3 origin, float dx, float dy, float dz) {
+	createRectangle(meshID, origin, dx, dy, 0, 1, 0, 0); //Front
+	createRectangle(meshID, origin + glm::vec3(0, 0, dz), 0, dy, -dz, 0, 1, 0); //Left
+	createRectangle(meshID, origin + glm::vec3(dx, 0, dz), -dx, dy, 0, 0, 0, 0.5f); //Back
+	createRectangle(meshID, origin + glm::vec3(dx, 0, 0), 0, dy, dz, 0, 1, 1); //Right
+	createRectangle(meshID, origin + glm::vec3(0, dy, 0), dx, 0, dz, 1, 0, 1); //Top
+	createRectangle(meshID, origin + glm::vec3(0, 0, dz), dx, 0, -dz, 1, 1, 0); //Bottom
+}
+
 void Renderer::deleteMesh(MeshID * meshID) {
 	glDeleteBuffers(1, meshID->getVertexIDAddress());
 	glDeleteBuffers(1, meshID->getIndexIDAddress());
@@ -161,11 +194,11 @@ void Renderer::renderMesh(MeshID meshID) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Renderer::setProjectionMatrix(float fov, float width, float height, float zNear, float zFar){
+void Renderer::setProjectionMatrix(float fov, float width, float height, float zNear, float zFar) {
 	projectionMatrix = perspective(fov, width / height, zNear, zFar);
 }
 
-glm::mat4* Renderer::getProjectionMatrix(){
+glm::mat4* Renderer::getProjectionMatrix() {
 	return &projectionMatrix;
 }
 
@@ -173,7 +206,7 @@ MeshID::MeshID() {
 	reset();
 }
 
-MeshID::MeshID(ColorType t){
+MeshID::MeshID(ColorType t) {
 	reset();
 	type = t;
 }
@@ -181,61 +214,65 @@ MeshID::MeshID(ColorType t){
 MeshID::~MeshID() {
 }
 
-void MeshID::reset(){
+void MeshID::reset() {
 	vertexID = 0;
 	indexID = 0;
 	numOfVertices = 0;
 	type = Default;
 }
 
-uint* MeshID::getVertexIDAddress(){
+uint* MeshID::getVertexIDAddress() {
 	return &vertexID;
 }
 
-uint* MeshID::getIndexIDAddress(){
+uint* MeshID::getIndexIDAddress() {
 	return &indexID;
 }
 
-uint MeshID::getVertexID(){
+uint MeshID::getVertexID() {
 	return vertexID;
 }
 
-uint MeshID::getIndexID(){
+uint MeshID::getIndexID() {
 	return indexID;
 }
 
-void MeshID::setNumVertices(uint numV){
+void MeshID::setNumVertices(uint numV) {
 	numOfVertices = numV;
 }
 
-uint MeshID::getNumVertices(){
+uint MeshID::getNumVertices() {
 	return numOfVertices;
 }
 
-bool MeshID::setColorType(ColorType t){
-	if(numOfVertices == 0){
+bool MeshID::setColorType(ColorType t) {
+	if (numOfVertices == 0) {
 		type = t;
 		return true;
 	}
 	return false;
 }
 
-ColorType MeshID::getColorType(){
+ColorType MeshID::getColorType() {
 	return type;
 }
 
-void MeshID::operator =(MeshID meshID){
+void MeshID::operator =(MeshID meshID) {
 	vertexID = meshID.vertexID;
 	indexID = meshID.indexID;
 	numOfVertices = meshID.numOfVertices;
 	type = meshID.getColorType();
 }
 
-bool MeshID::operator ==(MeshID meshID){
-	if(meshID.vertexID != vertexID)return false;
-	if(meshID.indexID != indexID)return false;
-	if(meshID.numOfVertices != numOfVertices)return false;
-	if(meshID.getColorType() != type)return false;
+bool MeshID::operator ==(MeshID meshID) {
+	if (meshID.vertexID != vertexID)
+		return false;
+	if (meshID.indexID != indexID)
+		return false;
+	if (meshID.numOfVertices != numOfVertices)
+		return false;
+	if (meshID.getColorType() != type)
+		return false;
 
 	return true;
 }

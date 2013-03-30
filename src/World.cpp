@@ -7,6 +7,8 @@
 
 #include "World.h"
 
+#include "Player.h"
+
 namespace ts {
 
 World::World() {

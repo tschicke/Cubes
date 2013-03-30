@@ -12,8 +12,8 @@
 
 #include "Common.h"
 #include "ChunkManager.h"
-#include "Player.h"
 
+class Player;
 namespace ts {
 
 class World {

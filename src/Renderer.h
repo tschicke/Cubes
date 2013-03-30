@@ -57,6 +57,9 @@ public:
 	int addVertexToMesh(MeshID meshID, glm::vec3 position, glm::vec3 normal, float u, float v);
 	void addTriangleToMesh(MeshID meshID, int vIndex1, int vIndex2, int vIndex3);
 
+	void createRectangle(MeshID meshID, glm::vec3 origin, float dx, float dy, float dz, float r, float g, float b);
+	void createPrism(MeshID meshID, glm::vec3 origin, float dx, float dy, float dz);
+
 	static void setProjectionMatrix(float fov, float width, float height, float zNear, float zFar);
 	static glm::mat4* getProjectionMatrix();
 private:

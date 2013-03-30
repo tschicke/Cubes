@@ -11,6 +11,7 @@
 #include "Layer.h"
 #include "ChunkManager.h"
 #include "Player.h"
+#include "World.h"
 
 class GameLayer: public Layer {
 public:

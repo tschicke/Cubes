@@ -17,9 +17,12 @@
 #include "Renderer.h"
 #include "Shader.h"
 
+#include "World.h"
+
 class Player {
 public:
 	Player();
+	Player(ts::World * world);
 	virtual ~Player();
 
 	void input();
@@ -35,8 +38,12 @@ public:
 private:
 	ts::FirstPersonCamera camera;
 
+	ts::World * world;
+
 	glm::vec3 position, moveVector;
 	float yaw, pitch;
+
+	void init(ts::World * world);
 
 	void jump();
 
