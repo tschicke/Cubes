@@ -9,6 +9,7 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
 
 #include "Player.h"
 #include "GameLayer.h"
@@ -28,10 +29,10 @@ Player::~Player() {
 
 void Player::loadPlayerModel() {
 	Shader vertexShader;
-	vertexShader.loadShader("shaders/basicShader.vert", GL_VERTEX_SHADER);
+	vertexShader.loadShader("shaders/colorShader.vert", GL_VERTEX_SHADER);
 
 	Shader fragmentShader;
-	fragmentShader.loadShader("shaders/basicShader.frag", GL_FRAGMENT_SHADER);
+	fragmentShader.loadShader("shaders/colorShader.frag", GL_FRAGMENT_SHADER);
 
 	shaderProgram.createProgram();
 	shaderProgram.addShader(&vertexShader);
@@ -47,13 +48,77 @@ void Player::loadPlayerModel() {
 	renderer.createMesh(&playerModelID);
 	std::cout << "player " << playerModelID.getVertexID() << '\n';
 
-	int v1, v2, v3;
+	int v1, v2, v3, v4;
+	glm::vec3 normal;
+	float r, g, b;
 
-	v1 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 30, 0), glm::vec3(0, 0, -1), 1, 1, 1);
-	v2 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 30, 0), glm::vec3(0, 0, -1), 1, 1, 1);
-	v3 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 31, 0), glm::vec3(0, 0, -1), 1, 1, 1);
-
+	normal = glm::vec3(0, 0, 1);
+	r = 1;
+	g = 1;
+	b = 1;
+	v1 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 0, 0), normal, r, g, b);
+	v2 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 0, 0), normal, r, g, b);
+	v3 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 1, 0), normal, r, g, b);
+	v4 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 1, 0), normal, r, g, b);
 	renderer.addTriangleToMesh(playerModelID, v1, v2, v3);
+	renderer.addTriangleToMesh(playerModelID, v1, v3, v4);
+
+	normal = glm::vec3(-1, 0, 0);
+	r = 0;
+	g = 1;
+	b = 0.5f;
+	v1 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 0, -1), normal, r, g, b);
+	v2 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 0, 0), normal, r, g, b);
+	v3 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 1, 0), normal, r, g, b);
+	v4 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 1, -1), normal, r, g, b);
+	renderer.addTriangleToMesh(playerModelID, v1, v2, v3);
+	renderer.addTriangleToMesh(playerModelID, v1, v3, v4);
+
+	normal = glm::vec3(1, 0, 0);
+	r = 1;
+	g = 0;
+	b = 0;
+	v1 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 0, 0), normal, r, g, b);
+	v2 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 0, -1), normal, r, g, b);
+	v3 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 1, -1), normal, r, g, b);
+	v4 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 1, 0), normal, r, g, b);
+	renderer.addTriangleToMesh(playerModelID, v1, v2, v3);
+	renderer.addTriangleToMesh(playerModelID, v1, v3, v4);
+
+	normal = glm::vec3(0, 0, -1);
+	r = 0;
+	g = 1;
+	b = 0;
+	v1 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 0, -1), normal, r, g, b);
+	v2 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 0, -1), normal, r, g, b);
+	v3 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 1, -1), normal, r, g, b);
+	v4 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 1, -1), normal, r, g, b);
+	renderer.addTriangleToMesh(playerModelID, v1, v2, v3);
+	renderer.addTriangleToMesh(playerModelID, v1, v3, v4);
+
+	normal = glm::vec3(0, 1, 0);
+	r = 1;
+	g = 0.5f;
+	b = 0;
+	v1 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 1, 0), normal, r, g, b);
+	v2 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 1, 0), normal, r, g, b);
+	v3 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 1, -1), normal, r, g, b);
+	v4 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 1, -1), normal, r, g, b);
+	renderer.addTriangleToMesh(playerModelID, v1, v2, v3);
+	renderer.addTriangleToMesh(playerModelID, v1, v3, v4);
+
+	normal = glm::vec3(0, -1, 0);
+	r = 0.5f;
+	g = 0;
+	b = 1;
+	v1 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 0, -1), normal, r, g, b);
+	v2 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 0, -1), normal, r, g, b);
+	v3 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 0, 0), normal, r, g, b);
+	v4 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 0, 0), normal, r, g, b);
+	renderer.addTriangleToMesh(playerModelID, v1, v2, v3);
+	renderer.addTriangleToMesh(playerModelID, v1, v3, v4);
+
+	renderer.endMesh(&playerModelID);
 }
 
 void Player::input() {
@@ -99,7 +164,7 @@ void Player::update(time_t dt) {
 void Player::draw(glm::mat4 * viewMat) {
 	shaderProgram.useProgram();
 
-	glm::mat4 modelMatrix(1.f); //= translate((float) chunkX, (float) chunkY, (float) chunkZ);
+	glm::mat4 modelMatrix = glm::translate(32.f, 30.f, 10.f) * glm::rotate(180.f, 0.f, 1.f, 0.f);
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
 	shaderProgram.setUniform("viewMatrix", viewMat, 1);

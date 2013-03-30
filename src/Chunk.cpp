@@ -67,10 +67,10 @@ void Chunk::init(int startX, int startY, int startZ) {
 	Renderer::getMainRenderer().endMesh(&meshID);
 
 	Shader vertexShader;
-	vertexShader.loadShader("shaders/basicShader.vert", GL_VERTEX_SHADER);
+	vertexShader.loadShader("shaders/textureShader.vert", GL_VERTEX_SHADER);
 
 	Shader fragmentShader;
-	fragmentShader.loadShader("shaders/basicShader.frag", GL_FRAGMENT_SHADER);
+	fragmentShader.loadShader("shaders/textureShader.frag", GL_FRAGMENT_SHADER);
 
 	shaderProgram.createProgram();
 	shaderProgram.addShader(&vertexShader);
