@@ -93,12 +93,16 @@ void Player::input() {
 }
 
 void Player::update(time_t dt) {
-	//TODO check collisions
 	//TODO make world class
+	checkCollisions();
 
 	move(moveVector);
 
 	moveVector = glm::vec3();	//Reset move vector every frame;
+}
+
+void Player::checkCollisions() {
+
 }
 
 void Player::draw(glm::mat4 * viewMat) {

@@ -45,6 +45,7 @@ private:
 
 	void init(ts::World * world);
 
+	void checkCollisions();
 	void jump();
 
 	void move(glm::vec3 moveVector);//On axis, not directional

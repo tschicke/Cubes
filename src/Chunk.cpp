@@ -30,7 +30,6 @@ void Chunk::init(int startX, int startY, int startZ) {
 	meshID.setColorType(Texture);
 
 	Renderer::getMainRenderer().createMesh(&meshID);
-	std::cout << "chunk " << meshID.getVertexID() << '\n';
 
 	blocks = new Block*[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
