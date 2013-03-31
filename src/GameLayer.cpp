@@ -29,19 +29,12 @@ GameLayer::~GameLayer() {
 }
 
 void GameLayer::update(time_t dt) {
-	player.update(dt);
+	world.update(dt);
 }
 
 void GameLayer::handleInput() {
-	player.input();
-	//	std::cout << ts::Mouse::getLastMove().x << ", " << ts::Mouse::getLastMove().y << '\n';
+	world.handleInput();
 }
 
 void GameLayer::draw() {
-	manager.draw(player.getCameraViewMatrix()); //Temp
-	player.draw(player.getCameraViewMatrix());
-}
-
-ChunkManager * GameLayer::getManagerPointer(){
-	return &manager;
 }

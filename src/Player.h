@@ -8,22 +8,24 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include <glm/glm.hpp>
-
-#include "Common.h"
+#include "Character.h"
 
 #include "FirstPersonCamera.h"
 
 #include "Renderer.h"
 #include "Shader.h"
 
-#include "World.h"
+namespace ts {
+class World;
+}
 
-class Player {
+class Player : public Character{
 public:
 	Player();
 	Player(ts::World * world);
 	virtual ~Player();
+
+	void init(ts::World * world);
 
 	void input();
 
@@ -34,22 +36,17 @@ public:
 	glm::vec3 getPosition();
 	void setPosition(glm::vec3 newPos);
 
-	glm::mat4 * getCameraViewMatrix();//should be different??
+	glm::mat4 * getCameraViewMatrix(); //should be different??
 private:
 	ts::FirstPersonCamera camera;
 
 	ts::World * world;
 
-	glm::vec3 position, moveVector;
-	float yaw, pitch;
-
-	void init(ts::World * world);
-
 	void checkCollisions();
 	void jump();
 
-	void move(glm::vec3 moveVector);//On axis, not directional
-	void move(float x, float y, float z);//On axis, not directional
+	void move(glm::vec3 moveVector); //On axis, not directional
+	void move(float x, float y, float z); //On axis, not directional
 
 	static const float playerHeight;
 	float moveSpeed;

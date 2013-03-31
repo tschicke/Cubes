@@ -9,8 +9,6 @@
 #define GAMELAYER_H_
 
 #include "Layer.h"
-#include "ChunkManager.h"
-#include "Player.h"
 #include "World.h"
 
 class GameLayer: public Layer {
@@ -21,12 +19,8 @@ public:
 	void draw();
 	void update(time_t dt);
 	void handleInput();
-
-	ChunkManager * getManagerPointer();
 private:
-	ChunkManager manager;
-
-	Player player;
+	ts::World world;
 };
 
 #endif /* GAMELAYER_H_ */

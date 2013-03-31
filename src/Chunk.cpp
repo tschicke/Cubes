@@ -58,7 +58,7 @@ void Chunk::init(int startX, int startY, int startZ) {
 				}
 
 				if ((*block)->isDrawn()) {
-					createCube((x * Block::cubeSize) + startX, (y * Block::cubeSize) + startY, (z * Block::cubeSize) + startZ);
+					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize));
 				}
 			}
 		}
@@ -211,7 +211,7 @@ void Chunk::draw(mat4 * viewMatrix) {
 	shaderProgram.useProgram();
 	Texture::grassTexture->useTexture();
 
-	mat4 modelMatrix(1.f); //= translate((float) chunkX, (float) chunkY, (float) chunkZ);
+	mat4 modelMatrix = translate(chunkPosition);
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
 	shaderProgram.setUniform("viewMatrix", viewMatrix, 1);

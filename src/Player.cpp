@@ -12,13 +12,15 @@
 #include <glm/gtx/transform.hpp>
 
 #include "Player.h"
-#include "GameLayer.h"
 
 #include "Keyboard.h"
 #include "Mouse.h"
 
 Player::Player() {
-	init(NULL);
+	yaw = 0;
+	pitch = 0;
+	moveSpeed = 0.0f;
+	world = NULL;
 }
 
 Player::Player(ts::World * world) {
