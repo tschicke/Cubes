@@ -21,6 +21,7 @@ public:
 
 	virtual void handleInput() = 0;
 	virtual void update(time_t dt) = 0;
+	virtual void draw() = 0;
 
 private:
 };

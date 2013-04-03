@@ -41,7 +41,7 @@ void Chunk::init(int startX, int startY, int startZ) {
 				Block ** block = blockAt(x, y, z); //Change blockAt to return array index instead of Block **??
 				int height = (noise.smoothNoise(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
 
-				if (y <= height) {
+				if (y + startY <= height) {
 
 					int i = rand();
 					if (i % 4 == 0) {

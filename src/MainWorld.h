@@ -10,6 +10,8 @@
 
 #include "World.h"
 #include "ChunkManager.h"
+
+#include "Character.h"
 #include "Player.h"
 
 namespace ts {
@@ -21,8 +23,12 @@ public:
 
 	void handleInput();
 	void update(time_t dt);
+	void draw();
 
 private:
+	ChunkManager chunkManager;
+	std::vector<Character *> characters;
+	Player * mainPlayer;
 };
 
 } /* namespace ts */

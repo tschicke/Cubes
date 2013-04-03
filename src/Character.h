@@ -18,6 +18,7 @@ public:
 	virtual ~Character();
 
 	virtual void update(time_t dt) = 0;
+	virtual void draw(glm::mat4 * viewMatrix) = 0;
 
 protected:
 	glm::vec3 position, moveVector;

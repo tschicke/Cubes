@@ -20,7 +20,7 @@ public:
 	void update(time_t dt);
 	void handleInput();
 private:
-	ts::World world;
+	ts::World * world;
 };
 
 #endif /* GAMELAYER_H_ */
