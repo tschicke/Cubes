@@ -6,12 +6,13 @@
  */
 
 #include "Character.h"
+#include <iostream>
 
 Character::Character() {
-	// TODO Auto-generated constructor stub
-
+	pitch = 0;
+	yaw = 0;
 }
 
 Character::~Character() {
-	// TODO Auto-generated destructor stub
 }
+

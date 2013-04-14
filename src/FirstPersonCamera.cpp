@@ -37,17 +37,26 @@ void FirstPersonCamera::setPosition(glm::vec3 newPosition) {
 	glm::vec3 moveVector = newPosition - position;
 	position += moveVector;
 	lookAt += moveVector;
+	if (moveVector.x || moveVector.y || moveVector.z) {
+		flag_shouldUpdate = true;
+	}
 }
 
 void FirstPersonCamera::move(int x, int y, int z) {
 	glm::vec3 moveVector(x, y, z);
 	position += moveVector;
 	lookAt += moveVector;
+	if (moveVector.x || moveVector.y || moveVector.z) {
+		flag_shouldUpdate = true;
+	}
 }
 
 void FirstPersonCamera::move(glm::vec3 moveVector) {
 	position += moveVector;
 	lookAt += moveVector;
+	if (moveVector.x || moveVector.y || moveVector.z) {
+		flag_shouldUpdate = true;
+	}
 }
 
 glm::vec3 FirstPersonCamera::getMoveVector(float dx, float dy, float dz) {
@@ -62,8 +71,6 @@ glm::vec3 FirstPersonCamera::getMoveVector(float dx, float dy, float dz) {
 		moveVector.x = rightVector.x * dx + forwardVector.x * dz;
 		moveVector.y = dy;
 		moveVector.z = rightVector.z * dx + forwardVector.z * dz;
-
-		flag_shouldUpdate = true;
 	}
 	return moveVector;
 }
@@ -96,8 +103,8 @@ void FirstPersonCamera::rotateWithMove(int dx, int dy) {
 	}
 }
 
-glm::mat4 * FirstPersonCamera::getViewMatrix(){
-	if(flag_shouldUpdate){
+glm::mat4 * FirstPersonCamera::getViewMatrix() {
+	if (flag_shouldUpdate) {
 		viewMatrix = glm::lookAt(position, lookAt, glm::vec3(0, 1, 0));
 		flag_shouldUpdate = false;
 	}

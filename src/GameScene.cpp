@@ -20,8 +20,6 @@ GameScene::~GameScene() {
 }
 
 void GameScene::handleInput() {
-	int dx = 0, dy = 0;
-
 	gameLayer.handleInput();
 
 }

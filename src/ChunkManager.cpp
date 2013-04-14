@@ -50,7 +50,7 @@ Chunk * ChunkManager::getChunkWithCoordinate(int x, int y, int z) {
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
 		Chunk *chunk = *iterator;
 		glm::vec3 chunkPos = chunk->getChunkPos();
-		bool inChunk = (x > chunkPos.x && x < (chunkPos.x + Chunk::CHUNK_SIZE)) && (y > chunkPos.y && y < (chunkPos.y + Chunk::CHUNK_SIZE)) && (z > chunkPos.z && z < (chunkPos.z + Chunk::CHUNK_SIZE));
+		bool inChunk = (x >= chunkPos.x && x < (chunkPos.x + Chunk::CHUNK_SIZE)) && (y >= chunkPos.y && y < (chunkPos.y + Chunk::CHUNK_SIZE)) && (z >= chunkPos.z && z < (chunkPos.z + Chunk::CHUNK_SIZE));
 		if (inChunk) {
 			returnChunk = chunk;
 			break;

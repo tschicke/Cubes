@@ -42,6 +42,10 @@ private:
 
 	ts::World * world;
 
+	void gravity();
+	float gravityStrength, currentGravity;
+	bool onGround;
+
 	void checkCollisions();
 	void jump();
 

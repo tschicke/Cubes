@@ -6,11 +6,13 @@
  */
 
 #include "MainWorld.h"
+#include <iostream>
 
 namespace ts {
 
 MainWorld::MainWorld() {
 	mainPlayer = new Player(this);
+	mainPlayer->setPosition(glm::vec3(0, 32, 0));
 	characters.push_back(mainPlayer);
 
 	//Temp
@@ -24,12 +26,11 @@ MainWorld::~MainWorld() {
 }
 
 void MainWorld::handleInput() {
-	mainPlayer->input();
+	//TODO move all input functions into update
 }
 
 void MainWorld::update(time_t dt) {
-	std::vector<Character *>::iterator iterator;
-	for (iterator = characters.begin(); iterator != characters.end(); iterator++) { //TODO add max limit per frame
+	for (std::vector<Character *>::iterator iterator = characters.begin(); iterator != characters.end(); iterator++) { //TODO add max limit per frame
 		Character *character = *iterator;
 		character->update(dt);
 	}
@@ -37,8 +38,7 @@ void MainWorld::update(time_t dt) {
 }
 
 void MainWorld::draw() {
-	std::vector<Character *>::iterator iterator;
-	for (iterator = characters.begin(); iterator != characters.end(); iterator++) { //TODO add max limit per frame
+	for (std::vector<Character *>::iterator iterator = characters.begin(); iterator != characters.end(); iterator++) { //TODO add max limit per frame
 		Character *character = *iterator;
 		character->draw(mainPlayer->getCameraViewMatrix());
 	}

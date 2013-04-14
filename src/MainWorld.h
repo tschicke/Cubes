@@ -9,7 +9,6 @@
 #define MAINWORLD_H_
 
 #include "World.h"
-#include "ChunkManager.h"
 
 #include "Character.h"
 #include "Player.h"
@@ -26,7 +25,6 @@ public:
 	void draw();
 
 private:
-	ChunkManager chunkManager;
 	std::vector<Character *> characters;
 	Player * mainPlayer;
 };

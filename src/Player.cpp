@@ -13,6 +13,8 @@
 
 #include "Player.h"
 
+#include "World.h"
+
 #include "Keyboard.h"
 #include "Mouse.h"
 
@@ -21,6 +23,9 @@ Player::Player() {
 	pitch = 0;
 	moveSpeed = 0.0f;
 	world = NULL;
+	gravityStrength = 0.05f;
+	currentGravity = 0;
+	onGround = false;
 }
 
 Player::Player(ts::World * world) {
@@ -35,7 +40,10 @@ void Player::init(ts::World * world) {
 	pitch = 0;
 	moveSpeed = 0.3f;
 	this->world = world;
-	loadPlayerModel();//TODO add loaded bool
+	gravityStrength = 0.01f;
+	currentGravity = 0;
+	onGround = false;
+	loadPlayerModel(); //TODO add loaded bool
 }
 
 void Player::loadPlayerModel() {
@@ -94,8 +102,28 @@ void Player::input() {
 	camera.rotateWithMove(mouseDX, mouseDY);
 }
 
+void Player::gravity() {
+	if (!onGround) {
+		currentGravity += gravityStrength;
+		moveVector.y -= currentGravity;
+	} else {
+		currentGravity = 0;
+	}
+}
+
+void Player::checkCollisions() {
+	glm::vec3 nextPosition = position + moveVector;
+	Chunk * currentChunk = world->getChunkAt(nextPosition.x, nextPosition.y, nextPosition.z);
+	Block * currentBlock = (currentChunk ? currentChunk->getBlockAtCoordinate(nextPosition.x, nextPosition.y, nextPosition.z) : NULL);
+	if(currentBlock && currentBlock->isDrawn()){
+		moveVector.y = 0;//TODO use player height
+		onGround = true;
+	}
+}
+
 void Player::update(time_t dt) {
-	//TODO make world class
+	input();
+	gravity();
 	checkCollisions();
 
 	move(moveVector);
@@ -103,14 +131,10 @@ void Player::update(time_t dt) {
 	moveVector = glm::vec3();	//Reset move vector every frame;
 }
 
-void Player::checkCollisions() {
-
-}
-
 void Player::draw(glm::mat4 * viewMat) {
 	shaderProgram.useProgram();
 
-	glm::mat4 modelMatrix = glm::translate(position.x, position.y, position.z);// * glm::rotate(yaw, 0.f, 1.f, 0.f);
+	glm::mat4 modelMatrix = glm::translate(position.x, position.y, position.z);	// * glm::rotate(yaw, 0.f, 1.f, 0.f);
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
 	shaderProgram.setUniform("viewMatrix", viewMat, 1);
