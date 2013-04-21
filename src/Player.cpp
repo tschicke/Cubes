@@ -23,8 +23,9 @@ Player::Player() {
 	pitch = 0;
 	moveSpeed = 0.0f;
 	world = NULL;
-	gravityStrength = 0.05f;
-	currentGravity = 0;
+	gravityStrength = 0.f;
+	jumpStrength = 0.f;
+	gravityVel = 0;
 	onGround = false;
 }
 
@@ -41,8 +42,10 @@ void Player::init(ts::World * world) {
 	moveSpeed = 0.3f;
 	this->world = world;
 	gravityStrength = 0.01f;
-	currentGravity = 0;
+	jumpStrength = 0.3f;
+	gravityVel = 0;
 	onGround = false;
+	camera.setPosition(glm::vec3(position.x, position.y + PLAYER_HEIGHT, position.z));
 	loadPlayerModel(); //TODO add loaded bool
 }
 
@@ -96,6 +99,10 @@ void Player::input() {
 
 	moveVector = camera.getMoveVector(x, y, z);
 
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Space) == ts::Keyboard::keyPressed) {
+		jump();
+	}
+
 	int mouseDX, mouseDY;
 	mouseDX = ts::Mouse::getLastMove().x;
 	mouseDY = ts::Mouse::getLastMove().y;
@@ -104,27 +111,55 @@ void Player::input() {
 
 void Player::gravity() {
 	if (!onGround) {
-		currentGravity += gravityStrength;
-		moveVector.y -= currentGravity;
-	} else {
-		currentGravity = 0;
+		velocity.y -= gravityStrength;
 	}
 }
 
+void Player::jump() {
+	if (onGround) {
+		velocity.y += jumpStrength;
+	}
+}
 void Player::checkCollisions() {
-	glm::vec3 nextPosition = position + moveVector;
-	Chunk * currentChunk = world->getChunkAt(nextPosition.x, nextPosition.y, nextPosition.z);
-	Block * currentBlock = (currentChunk ? currentChunk->getBlockAtCoordinate(nextPosition.x, nextPosition.y, nextPosition.z) : NULL);
-	if(currentBlock && currentBlock->isDrawn()){
-		moveVector.y = 0;//TODO use player height
+	glm::vec3 nextPosition = position + moveVector + velocity;
+	nextPosition.y -= gravityVel;
+
+	std::cout << position.y << '\n';
+
+	Chunk * nextChunkX = world->getChunkAt(nextPosition.x, position.y, position.z);
+	Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(nextPosition.x, position.y, position.z) : NULL);
+	if (nextBlockX && nextBlockX->isDrawn()) {
+		moveVector.x = 0;
+		velocity.x = 0;
+	}
+
+	Chunk * nextChunkY = world->getChunkAt(position.x, nextPosition.y, position.z);
+	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(position.x, nextPosition.y, position.z) : NULL);//TODO change bounds of getblockat(swap inclusive and exclusive)
+	if (nextBlockY && nextBlockY->isDrawn()) {
+//		std::cout << nextBlockY->isDrawn() << '\n';
+//		moveVector.y -= position.y - ((int)nextPosition.y + 1);
+		velocity.y = 0;
+//		gravityVel = 0;
 		onGround = true;
+	} else {
+		onGround = false;
+	}
+
+	Chunk * nextChunkZ = world->getChunkAt(position.x, position.y, nextPosition.z);
+	Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(position.x, position.y, nextPosition.z) : NULL);
+	if (nextBlockZ && nextBlockZ->isDrawn()) {
+		moveVector.z = 0;
+		velocity.z = 0;
 	}
 }
 
 void Player::update(time_t dt) {
 	input();
-	gravity();
 	checkCollisions();
+	gravity(); //TODO tweak order of these three function calls
+
+	moveVector += velocity;
+	moveVector.y -= gravityVel;
 
 	move(moveVector);
 
@@ -160,8 +195,7 @@ void Player::move(glm::vec3 moveVector) {
 
 void Player::move(float x, float y, float z) {
 	glm::vec3 moveVector(x, y, z);
-	position += moveVector;
-	camera.move(moveVector);
+	move(moveVector);
 }
 
 glm::mat4 * Player::getCameraViewMatrix() {

@@ -7,6 +7,8 @@
 
 #include "Keyboard.h"
 
+#include <iostream>
+
 namespace ts {
 
 bool Keyboard::keys[];

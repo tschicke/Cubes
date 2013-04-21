@@ -42,17 +42,21 @@ private:
 
 	ts::World * world;
 
+	glm::vec3 velocity;
+
 	void gravity();
-	float gravityStrength, currentGravity;
+	float gravityStrength, gravityVel;
 	bool onGround;
 
-	void checkCollisions();
 	void jump();
+	float jumpStrength;
+
+	void checkCollisions();
 
 	void move(glm::vec3 moveVector); //On axis, not directional
 	void move(float x, float y, float z); //On axis, not directional
 
-	static const float playerHeight;
+	static const float PLAYER_HEIGHT = 1.5f;
 	float moveSpeed;
 
 	MeshID playerModelID;

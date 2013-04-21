@@ -83,6 +83,7 @@ void GameWindow::run() {
 		handleInput();
 		update(dt);
 		render();
+		ts::Keyboard::clearEvents();
 		fpsCounter += dt;
 		if (fpsCounter >= 1000) {
 			std::cout << 1000.f / dt << std::endl;
@@ -122,8 +123,6 @@ void GameWindow::handleInput() {
 	}
 
 	currentScene->handleInput();
-
-	ts::Keyboard::clearEvents();
 }
 
 void GameWindow::update(time_t dt) {
