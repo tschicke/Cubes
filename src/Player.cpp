@@ -69,7 +69,7 @@ void Player::loadPlayerModel() {
 	Renderer& renderer = Renderer::getMainRenderer();
 	renderer.createMesh(&playerModelID);
 
-	renderer.createPrism(playerModelID, glm::vec3(-0.25f, 0.f, 0.25f), 0.5f, 0.5f, -0.5f);
+	renderer.createPrism(playerModelID, glm::vec3(-0.5f, 0.f, -0.5f), 1.f, 0.5f,1.f);
 
 	renderer.endMesh(&playerModelID);
 }
@@ -111,44 +111,51 @@ void Player::input() {
 
 void Player::gravity() {
 //	if (!onGround) {
-		velocity.y -= gravityStrength;
+	velocity.y -= gravityStrength;
 //	}
 }
 
 void Player::jump() {
 	if (onGround) {
 		velocity.y += jumpStrength;
-		std::cout << "jump\n";
-	} else {
-		std::cout << "no jump\n";
 	}
-	std::cout << "onground = " << onGround << '\n';
 }
 void Player::checkCollisions() {
 	glm::vec3 nextPosition = position + moveVector + velocity;
-//	nextPosition.y -= gravityVel;
 
-	std::cout << position.y << '\n';
-
-	Chunk * nextChunkX = world->getChunkAt(nextPosition.x, position.y, position.z);
-	Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(nextPosition.x, position.y, position.z) : NULL);
+	Chunk * nextChunkX = world->getChunkAt(nextPosition.x + PLAYER_WIDTH, position.y, position.z);
+	Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(nextPosition.x + PLAYER_WIDTH, position.y, position.z) : NULL);
 	if (nextBlockX && nextBlockX->isDrawn()) {
-		moveVector.x = 0;
+		moveVector.x = -(position.x - (int) nextPosition.x - PLAYER_WIDTH);
 		velocity.x = 0;
 	}
 
-	Chunk * nextChunkZ = world->getChunkAt(position.x, position.y, nextPosition.z);
-	Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(position.x, position.y, nextPosition.z) : NULL);
+	Chunk * nextChunkXC2 = world->getChunkAt(nextPosition.x - PLAYER_WIDTH, position.y, position.z);
+	Block * nextBlockXC2 = (nextChunkXC2 ? nextChunkXC2->getBlockAtCoordinate(nextPosition.x - PLAYER_WIDTH, position.y, position.z) : NULL);
+	if (nextBlockXC2 && nextBlockXC2->isDrawn()) {
+		moveVector.x = -(position.x - (int) nextPosition.x - PLAYER_WIDTH);
+		velocity.x = 0;
+	}
+
+	Chunk * nextChunkZ = world->getChunkAt(position.x, position.y, nextPosition.z + PLAYER_WIDTH);
+	Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(position.x, position.y, nextPosition.z + PLAYER_WIDTH) : NULL);
 	if (nextBlockZ && nextBlockZ->isDrawn()) {
-		moveVector.z = 0;
+		moveVector.z = -(position.z - (int) nextPosition.z - PLAYER_WIDTH);
 		velocity.z = 0;
 	}
 
-	Chunk * nextChunkY = world->getChunkAt(position.x, nextPosition.y, position.z);//TODO add getcubeat function to world?
-	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(position.x, nextPosition.y, position.z) : NULL);//TODO change bounds of getblockat(swap inclusive and exclusive)
+	Chunk * nextChunkZC2 = world->getChunkAt(position.x, position.y, nextPosition.z - PLAYER_WIDTH);
+	Block * nextBlockZC2 = (nextChunkZC2 ? nextChunkZ->getBlockAtCoordinate(position.x, position.y, nextPosition.z - PLAYER_WIDTH) : NULL);
+	if (nextBlockZC2 && nextBlockZC2->isDrawn()) {
+		moveVector.z = -(position.z - (int) nextPosition.z - PLAYER_WIDTH);
+		velocity.z = 0;
+	}
+
+	Chunk * nextChunkY = world->getChunkAt(position.x, nextPosition.y, position.z); //TODO add getcubeat function to world?
+	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(position.x, nextPosition.y, position.z) : NULL); //TODO change bounds of getblockat(swap inclusive and exclusive)
 	if (nextBlockY && nextBlockY->isDrawn()) {
 //		std::cout << "next block drawn, onground -> true" << '\n';
-		moveVector.y = -(position.y - ((int)nextPosition.y + 1));
+		moveVector.y = -(position.y - ((int) nextPosition.y + 1));
 		velocity.y = 0;
 //		gravityVel = 0;
 		onGround = true;
@@ -157,7 +164,7 @@ void Player::checkCollisions() {
 	}
 
 	//Temp "falling off map" fix
-	if(position.y < 0){
+	if (position.y < 0) {
 		move(glm::vec3(0, 32, 0));
 		velocity.y = 0;
 	}
@@ -166,10 +173,9 @@ void Player::checkCollisions() {
 void Player::update(time_t dt) {
 	input();
 	gravity(); //TODO tweak order of these three function calls
-	checkCollisions();//Check collisions last, after movevector and velocity have been completely changed... should be able to get rid of gravityVel
+	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed... should be able to get rid of gravityVel
 
 	moveVector += velocity;
-//	moveVector.y -= gravityVel;
 
 	move(moveVector);
 

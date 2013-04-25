@@ -106,14 +106,14 @@ void Chunk::update(time_t dt) {
 }
 
 void Chunk::createCube(int x, int y, int z) {
-	vec3 p1(x + 0, y + 0, z + 0);
-	vec3 p2(x + Block::cubeSize, y + 0, z + 0);
-	vec3 p3(x + Block::cubeSize, y + Block::cubeSize, z + 0);
-	vec3 p4(x + 0, y + Block::cubeSize, z + 0);
-	vec3 p5(x + 0, y + 0, z - Block::cubeSize);
-	vec3 p6(x + Block::cubeSize, y + 0, z - Block::cubeSize);
-	vec3 p7(x + Block::cubeSize, y + Block::cubeSize, z - Block::cubeSize);
-	vec3 p8(x + 0, y + Block::cubeSize, z - Block::cubeSize);
+	vec3 p1(x + 0, y + 0, z + Block::cubeSize);
+	vec3 p2(x + Block::cubeSize, y + 0, z + Block::cubeSize);
+	vec3 p3(x + Block::cubeSize, y + Block::cubeSize, z + Block::cubeSize);
+	vec3 p4(x + 0, y + Block::cubeSize, z + Block::cubeSize);
+	vec3 p5(x + 0, y + 0, z + 0);
+	vec3 p6(x + Block::cubeSize, y + 0, z + 0);
+	vec3 p7(x + Block::cubeSize, y + Block::cubeSize, z + 0);
+	vec3 p8(x + 0, y + Block::cubeSize, z + 0);
 
 	/*
 	 *

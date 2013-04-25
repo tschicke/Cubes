@@ -138,16 +138,16 @@ void Renderer::createRectangle(MeshID meshID, glm::vec3 origin, float dx, float 
 
 	if (dy == 0) {
 		v1 = addVertexToMesh(meshID, origin, normal, r, g, b);
-		v2 = addVertexToMesh(meshID, origin + glm::vec3(dx, 0, 0), normal, r, g, b);
+		v2 = addVertexToMesh(meshID, origin + glm::vec3(0, 0, dz), normal, r, g, b);
 		v3 = addVertexToMesh(meshID, origin + glm::vec3(dx, 0, dz), normal, r, g, b);
-		v4 = addVertexToMesh(meshID, origin + glm::vec3(0, 0, dz), normal, r, g, b);
+		v4 = addVertexToMesh(meshID, origin + glm::vec3(dx, 0, 0), normal, r, g, b);
 		addTriangleToMesh(meshID, v1, v2, v3);
 		addTriangleToMesh(meshID, v1, v3, v4);
 	} else {
 		v1 = addVertexToMesh(meshID, origin, normal, r, g, b);
-		v2 = addVertexToMesh(meshID, origin + glm::vec3(dx, 0, dz), normal, r, g, b);
+		v2 = addVertexToMesh(meshID, origin + glm::vec3(0, dy, 0), normal, r, g, b);
 		v3 = addVertexToMesh(meshID, origin + glm::vec3(dx, dy, dz), normal, r, g, b);
-		v4 = addVertexToMesh(meshID, origin + glm::vec3(0, dy, 0), normal, r, g, b);
+		v4 = addVertexToMesh(meshID, origin + glm::vec3(dx, 0, dz), normal, r, g, b);
 		addTriangleToMesh(meshID, v1, v2, v3);
 		addTriangleToMesh(meshID, v1, v3, v4);
 	}
