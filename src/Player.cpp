@@ -45,7 +45,7 @@ void Player::init(ts::World * world) {
 	jumpStrength = 0.3f;
 	gravityVel = 0;
 	onGround = false;
-	camera.setPosition(glm::vec3(position.x, position.y + PLAYER_HEIGHT, position.z));
+	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
 	loadPlayerModel(); //TODO add loaded bool
 }
 
@@ -69,7 +69,7 @@ void Player::loadPlayerModel() {
 	Renderer& renderer = Renderer::getMainRenderer();
 	renderer.createMesh(&playerModelID);
 
-	renderer.createPrism(playerModelID, glm::vec3(-0.5f, 0.f, -0.5f), 1.f, 0.5f,1.f);
+	renderer.createPrism(playerModelID, glm::vec3(-0.375f, 0.f, -0.375f), 0.75f, 0.5f, 0.75f);
 
 	renderer.endMesh(&playerModelID);
 }
@@ -121,40 +121,77 @@ void Player::jump() {
 	}
 }
 void Player::checkCollisions() {
-	glm::vec3 nextPosition = position + moveVector + velocity;
+	glm::vec3 nextPosition = position + moveVector + velocity; // add if nextposition.x, y, or z != position.x, y, or z checks
 
-	Chunk * nextChunkX = world->getChunkAt(nextPosition.x + PLAYER_WIDTH, position.y, position.z);
-	Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(nextPosition.x + PLAYER_WIDTH, position.y, position.z) : NULL);
-	if (nextBlockX && nextBlockX->isDrawn()) {
-		moveVector.x = -(position.x - (int) nextPosition.x - PLAYER_WIDTH);
-		velocity.x = 0;
+	//X checks
+//	Chunk * nextChunkX = world->getChunkAt(nextPosition.x + (PLAYER_WIDTH / 2), position.y, position.z);
+//	Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(nextPosition.x + (PLAYER_WIDTH / 2), position.y, position.z) : NULL);
+//	if (nextBlockX && nextBlockX->isDrawn()) {
+//		moveVector.x = -(position.x - (int) nextPosition.x - (PLAYER_WIDTH / 2));
+//		velocity.x = 0;
+//	}
+//
+//	Chunk * nextChunkXC2 = world->getChunkAt(nextPosition.x - (PLAYER_WIDTH / 2), position.y, position.z);
+//	Block * nextBlockXC2 = (nextChunkXC2 ? nextChunkXC2->getBlockAtCoordinate(nextPosition.x - (PLAYER_WIDTH / 2), position.y, position.z) : NULL);
+//	if (nextBlockXC2 && nextBlockXC2->isDrawn()) {
+//		moveVector.x = -(position.x - (int) nextPosition.x - (PLAYER_WIDTH / 2));
+//		velocity.x = 0;
+//	}
+
+	if (nextPosition.x != position.x) {
+		for (int c = 0; c < 4; ++c) {
+			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+
+//			std::cout << "x: " << c << ": (" << xt << ", " << zt << ")\n";
+
+			Chunk * nextChunkX = world->getChunkAt(xt, position.y, zt);
+			Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(xt, position.y, zt) : NULL);
+			if (nextBlockX && nextBlockX->isDrawn()) {
+				moveVector.x = (int) xt - position.x - (c % 2 * PLAYER_WIDTH) + (PLAYER_WIDTH / 2);
+//				moveVector.x = 0;
+				velocity.x = 0;
+			}
+		}
 	}
 
-	Chunk * nextChunkXC2 = world->getChunkAt(nextPosition.x - PLAYER_WIDTH, position.y, position.z);
-	Block * nextBlockXC2 = (nextChunkXC2 ? nextChunkXC2->getBlockAtCoordinate(nextPosition.x - PLAYER_WIDTH, position.y, position.z) : NULL);
-	if (nextBlockXC2 && nextBlockXC2->isDrawn()) {
-		moveVector.x = -(position.x - (int) nextPosition.x - PLAYER_WIDTH);
-		velocity.x = 0;
-	}
+	//Z checks
+//	Chunk * nextChunkZ = world->getChunkAt(position.x, position.y, nextPosition.z + (PLAYER_WIDTH / 2));
+//	Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(position.x, position.y, nextPosition.z + (PLAYER_WIDTH / 2)) : NULL);
+//	if (nextBlockZ && nextBlockZ->isDrawn()) {
+//		moveVector.z = -(position.z - (int) nextPosition.z - (PLAYER_WIDTH / 2));
+//		velocity.z = 0;
+//	}
+//
+//	Chunk * nextChunkZC2 = world->getChunkAt(position.x, position.y, nextPosition.z - (PLAYER_WIDTH / 2));
+//	Block * nextBlockZC2 = (nextChunkZC2 ? nextChunkZC2->getBlockAtCoordinate(position.x, position.y, nextPosition.z - (PLAYER_WIDTH / 2)) : NULL);
+//	if (nextBlockZC2 && nextBlockZC2->isDrawn()) {
+//		moveVector.z = -(position.z - (int) nextPosition.z - (PLAYER_WIDTH / 2));
+//		velocity.z = 0;
+//	}
 
-	Chunk * nextChunkZ = world->getChunkAt(position.x, position.y, nextPosition.z + PLAYER_WIDTH);
-	Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(position.x, position.y, nextPosition.z + PLAYER_WIDTH) : NULL);
-	if (nextBlockZ && nextBlockZ->isDrawn()) {
-		moveVector.z = -(position.z - (int) nextPosition.z - PLAYER_WIDTH);
-		velocity.z = 0;
-	}
+	if (nextPosition.z != position.z) {
+		for (int c = 0; c < 4; ++c) {
+			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 
-	Chunk * nextChunkZC2 = world->getChunkAt(position.x, position.y, nextPosition.z - PLAYER_WIDTH);
-	Block * nextBlockZC2 = (nextChunkZC2 ? nextChunkZ->getBlockAtCoordinate(position.x, position.y, nextPosition.z - PLAYER_WIDTH) : NULL);
-	if (nextBlockZC2 && nextBlockZC2->isDrawn()) {
-		moveVector.z = -(position.z - (int) nextPosition.z - PLAYER_WIDTH);
-		velocity.z = 0;
+//			std::cout << "z: " << c << ": (" << xt << ", " << zt << ")\n";
+
+			Chunk * nextChunkZ = world->getChunkAt(xt, position.y, zt);
+			Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(xt, position.y, zt) : NULL);
+			if (nextBlockZ && nextBlockZ->isDrawn()) {
+				moveVector.z = (int) zt - position.z - (c % 2 * PLAYER_WIDTH) + (PLAYER_WIDTH / 2);
+//				std::cout << zt << ", " << (int) zt << ", " << position.z << '\n';
+//				std::cout << (int) zt - position.z - (c % 2 * PLAYER_WIDTH) + (PLAYER_WIDTH / 2) << '\n';
+//				moveVector.z = 0;
+				velocity.z = 0;
+			}
+		}
 	}
 
 	Chunk * nextChunkY = world->getChunkAt(position.x, nextPosition.y, position.z); //TODO add getcubeat function to world?
 	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(position.x, nextPosition.y, position.z) : NULL); //TODO change bounds of getblockat(swap inclusive and exclusive)
 	if (nextBlockY && nextBlockY->isDrawn()) {
-//		std::cout << "next block drawn, onground -> true" << '\n';
 		moveVector.y = -(position.y - ((int) nextPosition.y + 1));
 		velocity.y = 0;
 //		gravityVel = 0;

@@ -52,7 +52,7 @@ void GameWindow::init() {
 }
 
 void GameWindow::initGL() {
-	glClearColor(0.f, 0.0f, 0.4f, 1.f);
+	glClearColor(0.45f, 0.55f, 1.f, 1.f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 

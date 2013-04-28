@@ -56,7 +56,7 @@ private:
 	void move(glm::vec3 moveVector); //On axis, not directional
 	void move(float x, float y, float z); //On axis, not directional
 
-	static const float PLAYER_HEIGHT = 1.5f, PLAYER_WIDTH = 0.5f;
+	static const float CAMERA_HEIGHT = 1.5f, PLAYER_WIDTH = 0.75f, PLAYER_HEIGHT = 2.f;
 	float moveSpeed;
 
 	MeshID playerModelID;
