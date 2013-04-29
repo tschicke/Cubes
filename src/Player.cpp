@@ -18,6 +18,8 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 
+#include <math.h>//Temp?
+
 Player::Player() {
 	yaw = 0;
 	pitch = 0;
@@ -121,23 +123,14 @@ void Player::jump() {
 	}
 }
 void Player::checkCollisions() {
-	glm::vec3 nextPosition = position + moveVector + velocity; // add if nextposition.x, y, or z != position.x, y, or z checks
+	glm::vec3 nextPosition = position + moveVector + velocity;
+
+	//TODO fix corner collisions
+	//TODO fix false positive collisions due to overlap in corner and next block
+
+//	std::cout << position.x << ", " << position.z << "\n";
 
 	//X checks
-//	Chunk * nextChunkX = world->getChunkAt(nextPosition.x + (PLAYER_WIDTH / 2), position.y, position.z);
-//	Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(nextPosition.x + (PLAYER_WIDTH / 2), position.y, position.z) : NULL);
-//	if (nextBlockX && nextBlockX->isDrawn()) {
-//		moveVector.x = -(position.x - (int) nextPosition.x - (PLAYER_WIDTH / 2));
-//		velocity.x = 0;
-//	}
-//
-//	Chunk * nextChunkXC2 = world->getChunkAt(nextPosition.x - (PLAYER_WIDTH / 2), position.y, position.z);
-//	Block * nextBlockXC2 = (nextChunkXC2 ? nextChunkXC2->getBlockAtCoordinate(nextPosition.x - (PLAYER_WIDTH / 2), position.y, position.z) : NULL);
-//	if (nextBlockXC2 && nextBlockXC2->isDrawn()) {
-//		moveVector.x = -(position.x - (int) nextPosition.x - (PLAYER_WIDTH / 2));
-//		velocity.x = 0;
-//	}
-
 	if (nextPosition.x != position.x) {
 		for (int c = 0; c < 4; ++c) {
 			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
@@ -148,28 +141,14 @@ void Player::checkCollisions() {
 			Chunk * nextChunkX = world->getChunkAt(xt, position.y, zt);
 			Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(xt, position.y, zt) : NULL);
 			if (nextBlockX && nextBlockX->isDrawn()) {
-				moveVector.x = (int) xt - position.x - (c % 2 * PLAYER_WIDTH) + (PLAYER_WIDTH / 2);
-//				moveVector.x = 0;
+				moveVector.x = roundf(xt) - (position.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 				velocity.x = 0;
+				break;
 			}
 		}
 	}
 
 	//Z checks
-//	Chunk * nextChunkZ = world->getChunkAt(position.x, position.y, nextPosition.z + (PLAYER_WIDTH / 2));
-//	Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(position.x, position.y, nextPosition.z + (PLAYER_WIDTH / 2)) : NULL);
-//	if (nextBlockZ && nextBlockZ->isDrawn()) {
-//		moveVector.z = -(position.z - (int) nextPosition.z - (PLAYER_WIDTH / 2));
-//		velocity.z = 0;
-//	}
-//
-//	Chunk * nextChunkZC2 = world->getChunkAt(position.x, position.y, nextPosition.z - (PLAYER_WIDTH / 2));
-//	Block * nextBlockZC2 = (nextChunkZC2 ? nextChunkZC2->getBlockAtCoordinate(position.x, position.y, nextPosition.z - (PLAYER_WIDTH / 2)) : NULL);
-//	if (nextBlockZC2 && nextBlockZC2->isDrawn()) {
-//		moveVector.z = -(position.z - (int) nextPosition.z - (PLAYER_WIDTH / 2));
-//		velocity.z = 0;
-//	}
-
 	if (nextPosition.z != position.z) {
 		for (int c = 0; c < 4; ++c) {
 			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
@@ -180,11 +159,9 @@ void Player::checkCollisions() {
 			Chunk * nextChunkZ = world->getChunkAt(xt, position.y, zt);
 			Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(xt, position.y, zt) : NULL);
 			if (nextBlockZ && nextBlockZ->isDrawn()) {
-				moveVector.z = (int) zt - position.z - (c % 2 * PLAYER_WIDTH) + (PLAYER_WIDTH / 2);
-//				std::cout << zt << ", " << (int) zt << ", " << position.z << '\n';
-//				std::cout << (int) zt - position.z - (c % 2 * PLAYER_WIDTH) + (PLAYER_WIDTH / 2) << '\n';
-//				moveVector.z = 0;
+				moveVector.z = roundf(zt) - (position.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 				velocity.z = 0;
+				break;
 			}
 		}
 	}
