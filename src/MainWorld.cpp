@@ -15,11 +15,13 @@ MainWorld::MainWorld() {
 	mainPlayer->setPosition(glm::vec3(0, 32, 0));
 	characters.push_back(mainPlayer);
 
-	//Temp
-	chunkManager.addChunk(0, 0, 0, 1, 1, 1);
-	chunkManager.addChunk(Chunk::CHUNK_SIZE, 0, 0, 1, 0, 0);
-	chunkManager.addChunk(Chunk::CHUNK_SIZE, 0, Chunk::CHUNK_SIZE, 0, 1, 0);
-	chunkManager.addChunk(0, 0, Chunk::CHUNK_SIZE, 0, 0, 1);
+	//TODO fix negative terrain generation and collision detection
+	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 2); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 2; ++x){//TODO should be in chunkmanager class not world class
+		int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 1;//TODO make this a for loop
+		for(int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE - 2); z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 2; ++z){
+			chunkManager.addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
+		}
+	}
 }
 
 MainWorld::~MainWorld() {

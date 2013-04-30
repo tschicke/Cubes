@@ -1,3 +1,4 @@
 change everything to be controlled by framerate/framerate regulate everything
 try to organize mouse locking
 	try to not have numbers hard coded/just make it better
+implement occlusion culling

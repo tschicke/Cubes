@@ -42,23 +42,13 @@ void Chunk::init(int startX, int startY, int startZ) {
 				int height = (noise.smoothNoise(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
 
 				if (y + startY <= height) {
-
-					int i = rand();
-					if (i % 4 == 0) {
-						*block = new BlockStone;
-					} else if (i % 4 == 1) {
-						*block = new BlockDirt;
-					} else if (i % 4 == 2) {
-						*block = new BlockGrass;
-					} else {
-						*block = new BlockGrass;
-					}
+					*block = new BlockDirt;
 				} else {
 					*block = new BlockAir;
 				}
 
 				if ((*block)->isDrawn()) {
-					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize));
+					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize));//TODO occlusion culling
 				}
 			}
 		}
@@ -97,8 +87,11 @@ glm::vec3 Chunk::getChunkPos() {
 
 Block * Chunk::getBlockAtCoordinate(int x, int y, int z) {
 	x %= CHUNK_SIZE;
+	x = (x < 0 ? x + CHUNK_SIZE : x);
 	y %= CHUNK_SIZE;
+	y = (y < 0 ? y + CHUNK_SIZE : y);
 	z %= CHUNK_SIZE;
+	z = (z < 0 ? y + CHUNK_SIZE : z);
 	return *blockAt(x, y, z);
 }
 

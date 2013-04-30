@@ -8,23 +8,25 @@
 #include "Noise.h"
 #include <math.h>
 
+#include <iostream>
+
 Noise::Noise() {
 }
 
 Noise::~Noise() {
 }
 
-double Noise::smoothNoise(double x, double y) {
-	int floorx=x;//This is kinda a cheap way to floor a double integer.
-	 int floory=y;
-	 double s,t,u,v;//Integer declaration
-	 s=noise2D(floorx,floory);
-	 t=noise2D(floorx+1,floory);
-	 u=noise2D(floorx,floory+1);//Get the surrounding pixels to calculate the transition.
-	 v=noise2D(floorx+1,floory+1);
-	 double int1=interpolate(s,t,x-floorx);//Interpolate between the values.
-	 double int2=interpolate(u,v,x-floorx);//Here we use x-floorx, to get 1st dimension. Don't mind the x-floorx thingie, it's part of the cosine formula.
-	 return interpolate(int1,int2,y-floory);
+double Noise::smoothNoise(double x, double y) {//TODO make noise function better
+	int floorx = floor(x); //This is kinda a cheap way to floor a double integer.
+	int floory = floor(y);
+	double s, t, u, v; //Integer declaration
+	s = noise2D(floorx, floory);
+	t = noise2D(floorx + 1, floory);
+	u = noise2D(floorx, floory + 1); //Get the surrounding pixels to calculate the transition.
+	v = noise2D(floorx + 1, floory + 1);
+	double int1 = interpolate(s, t, x - floorx); //Interpolate between the values.
+	double int2 = interpolate(u, v, x - floorx); //Here we use x-floorx, to get 1st dimension. Don't mind the x-floorx thingie, it's part of the cosine formula.
+	return interpolate(int1, int2, y - floory);
 }
 
 double Noise::interpolate(double a, double b, double x) {
@@ -34,9 +36,13 @@ double Noise::interpolate(double a, double b, double x) {
 }
 
 double Noise::noise2D(int x, int y) {
-	int n = x + y * 37;
-	n = (n << 13) ^ n;
-	int nn = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
-	return 1.0 - ((double) nn / 1073741824.0);
+//	int n = x + y * 43;
+//	n = (n << 13) ^ n;
+//	int nn = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
+//	return 1.0 - ((double) nn / 1073741824.0);
+
+	double number = (((x * 60493 + y * 72091 + 104369) ^ 104729) % 500000) / 500000.f;//TODO fix random functions
+
+	return number;
 }
 

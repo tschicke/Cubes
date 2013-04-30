@@ -19,7 +19,6 @@
 #include "Mouse.h"
 
 #include <math.h>//Temp?
-
 Player::Player() {
 	yaw = 0;
 	pitch = 0;
@@ -128,19 +127,17 @@ void Player::checkCollisions() {
 	//TODO fix corner collisions
 	//TODO fix false positive collisions due to overlap in corner and next block
 
-//	std::cout << position.x << ", " << position.z << "\n";
-
 	//X checks
 	if (nextPosition.x != position.x) {
 		for (int c = 0; c < 4; ++c) {
 			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));//(c / 2 * -0.01) is temp
 
 //			std::cout << "x: " << c << ": (" << xt << ", " << zt << ")\n";
 
 			Chunk * nextChunkX = world->getChunkAt(xt, position.y, zt);
 			Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(xt, position.y, zt) : NULL);
-			if (nextBlockX && nextBlockX->isDrawn()) {
+			if (nextBlockX != NULL && nextBlockX->isDrawn()) {
 				moveVector.x = roundf(xt) - (position.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 				velocity.x = 0;
 				break;
@@ -152,13 +149,13 @@ void Player::checkCollisions() {
 	if (nextPosition.z != position.z) {
 		for (int c = 0; c < 4; ++c) {
 			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));//(c / 2 * -0.01) is temp
 
 //			std::cout << "z: " << c << ": (" << xt << ", " << zt << ")\n";
 
 			Chunk * nextChunkZ = world->getChunkAt(xt, position.y, zt);
 			Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(xt, position.y, zt) : NULL);
-			if (nextBlockZ && nextBlockZ->isDrawn()) {
+			if (nextBlockZ != NULL && nextBlockZ->isDrawn()) {
 				moveVector.z = roundf(zt) - (position.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 				velocity.z = 0;
 				break;
@@ -167,8 +164,8 @@ void Player::checkCollisions() {
 	}
 
 	Chunk * nextChunkY = world->getChunkAt(position.x, nextPosition.y, position.z); //TODO add getcubeat function to world?
-	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(position.x, nextPosition.y, position.z) : NULL); //TODO change bounds of getblockat(swap inclusive and exclusive)
-	if (nextBlockY && nextBlockY->isDrawn()) {
+	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(position.x, nextPosition.y, position.z) : NULL);
+	if (nextBlockY != NULL && nextBlockY->isDrawn()) {
 		moveVector.y = -(position.y - ((int) nextPosition.y + 1));
 		velocity.y = 0;
 //		gravityVel = 0;
