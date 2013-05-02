@@ -91,7 +91,7 @@ Block * Chunk::getBlockAtCoordinate(int x, int y, int z) {
 	y %= CHUNK_SIZE;
 	y = (y < 0 ? y + CHUNK_SIZE : y);
 	z %= CHUNK_SIZE;
-	z = (z < 0 ? y + CHUNK_SIZE : z);
+	z = (z < 0 ? z + CHUNK_SIZE : z);
 	return *blockAt(x, y, z);
 }
 

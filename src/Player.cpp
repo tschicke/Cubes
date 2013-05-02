@@ -131,14 +131,14 @@ void Player::checkCollisions() {
 	if (nextPosition.x != position.x) {
 		for (int c = 0; c < 4; ++c) {
 			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));//(c / 2 * -0.01) is temp
+			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));// - (c / 2 * -0.01) is temp
 
 //			std::cout << "x: " << c << ": (" << xt << ", " << zt << ")\n";
 
-			Chunk * nextChunkX = world->getChunkAt(xt, position.y, zt);
-			Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(xt, position.y, zt) : NULL);
+			Chunk * nextChunkX = world->getChunkAt(floorf(xt), floorf(position.y), floorf(zt));
+			Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(floorf(xt), floorf(position.y), floorf(zt)) : NULL);
 			if (nextBlockX != NULL && nextBlockX->isDrawn()) {
-				moveVector.x = roundf(xt) - (position.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.x = 0;
 				break;
 			}
@@ -146,25 +146,25 @@ void Player::checkCollisions() {
 	}
 
 	//Z checks
-	if (nextPosition.z != position.z) {
+//	if (nextPosition.z != position.z) {
 		for (int c = 0; c < 4; ++c) {
 			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));//(c / 2 * -0.01) is temp
+			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));// - (c / 2 * -0.01) is temp
 
 //			std::cout << "z: " << c << ": (" << xt << ", " << zt << ")\n";
 
-			Chunk * nextChunkZ = world->getChunkAt(xt, position.y, zt);
-			Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(xt, position.y, zt) : NULL);
+			Chunk * nextChunkZ = world->getChunkAt(floorf(xt), floorf(position.y), floorf(zt));
+			Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(floorf(xt), floorf(position.y), floorf(zt)) : NULL);
 			if (nextBlockZ != NULL && nextBlockZ->isDrawn()) {
-				moveVector.z = roundf(zt) - (position.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.z = 0;
 				break;
 			}
 		}
-	}
+//	}
 
-	Chunk * nextChunkY = world->getChunkAt(position.x, nextPosition.y, position.z); //TODO add getcubeat function to world?
-	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(position.x, nextPosition.y, position.z) : NULL);
+	Chunk * nextChunkY = world->getChunkAt(floorf(position.x), floorf(nextPosition.y), floorf(position.z)); //TODO add getcubeat function to world?
+	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(floorf(position.x), floorf(nextPosition.y), floorf(position.z)) : NULL);//TODO add corner check to y collisions
 	if (nextBlockY != NULL && nextBlockY->isDrawn()) {
 		moveVector.y = -(position.y - ((int) nextPosition.y + 1));
 		velocity.y = 0;

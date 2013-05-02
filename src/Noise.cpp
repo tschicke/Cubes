@@ -36,13 +36,13 @@ double Noise::interpolate(double a, double b, double x) {
 }
 
 double Noise::noise2D(int x, int y) {
-//	int n = x + y * 43;
-//	n = (n << 13) ^ n;
-//	int nn = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
-//	return 1.0 - ((double) nn / 1073741824.0);
+	int n = x + y * 43;
+	n = (n << 13) ^ n;
+	int nn = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
+	return 1.0 - ((double) nn / 1073741824.0);
 
-	double number = (((x * 60493 + y * 72091 + 104369) ^ 104729) % 500000) / 500000.f;//TODO fix random functions
+//	double number = (((x * 60493 + y * 72091 + 104369) ^ 104729) % 500000) / 500000.f;//TODO fix random functions
 
-	return number;
+//	return number;
 }
 
