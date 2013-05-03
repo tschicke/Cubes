@@ -23,6 +23,7 @@ using namespace glm;
 
 Chunk::Chunk() {
 	blocks = NULL;
+	loaded = false;
 }
 
 void Chunk::init(int startX, int startY, int startZ) {
@@ -38,17 +39,23 @@ void Chunk::init(int startX, int startY, int startZ) {
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
-				Block ** block = blockAt(x, y, z); //Change blockAt to return array index instead of Block **??
 				int height = (noise.smoothNoise(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
 
 				if (y + startY <= height) {
-					*block = new BlockDirt;
+					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
 				} else {
-					*block = new BlockAir;
+					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
 				}
+			}
+		}
+	}
 
-				if ((*block)->isDrawn()) {
-					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize));//TODO occlusion culling
+	for (int x = 0; x < CHUNK_SIZE; x++) {
+		for (int y = 0; y < CHUNK_SIZE; y++) {
+			for (int z = 0; z < CHUNK_SIZE; z++) {
+				Block * block = blocks[indexOfBlockAt(x, y, z)];
+				if (block->isDrawn()) {
+					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize)); //FIXME fix occlusion culling between chunks, and organize it better
 				}
 			}
 		}
@@ -74,7 +81,7 @@ Chunk::~Chunk() {
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
-				delete blockAt(x, y, z);
+				delete blocks[indexOfBlockAt(x, y, z)];
 			}
 		}
 	}
@@ -92,7 +99,7 @@ Block * Chunk::getBlockAtCoordinate(int x, int y, int z) {
 	y = (y < 0 ? y + CHUNK_SIZE : y);
 	z %= CHUNK_SIZE;
 	z = (z < 0 ? z + CHUNK_SIZE : z);
-	return *blockAt(x, y, z);
+	return blocks[indexOfBlockAt(x, y, z)];
 }
 
 void Chunk::update(time_t dt) {
@@ -121,7 +128,7 @@ void Chunk::createCube(int x, int y, int z) {
 
 	vec3 normal;
 
-	Block ** block = blockAt(x, y, z);
+	Block * block = blocks[indexOfBlockAt(x, y, z)];
 
 //	float r = ((float) (rand() % 10)) / 10;//For colored cubes
 //	float g = ((float) (rand() % 10)) / 10;//For colored cubes
@@ -130,74 +137,90 @@ void Chunk::createCube(int x, int y, int z) {
 	int v1, v2, v3, v4, v5, v6, v7, v8;
 
 	//Front
-	normal = vec3(0, 0, 1);
+	if ((z != CHUNK_SIZE - 1 && !(blocks[indexOfBlockAt(x, y, z + 1)]->isDrawn())) || z == CHUNK_SIZE - 1) {
+		normal = vec3(0, 0, 1);
 
-	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.0f, 0.0f);
-	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 0.5f, 0.0f);
-	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.5f, 0.5f);
-	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.0f, 0.5f);
+		v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.0f, 0.0f);
+		v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 0.5f, 0.0f);
+		v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.5f, 0.5f);
+		v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.0f, 0.5f);
 
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v2, v3);
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v3, v4);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v2, v3);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v3, v4);
+	}
 
 	//Right
-	normal = vec3(1, 0, 0);
+	if ((x != CHUNK_SIZE - 1 && !(blocks[indexOfBlockAt(x + 1, y, z)]->isDrawn())) || x == CHUNK_SIZE - 1) {
+		normal = vec3(1, 0, 0);
 
-	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 0.0f, 0.0f);
-	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.0f, 0.5f);
-	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 0.5f, 0.0f);
-	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.5f, 0.5f);
+		v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 0.0f, 0.0f);
+		v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.0f, 0.5f);
+		v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 0.5f, 0.0f);
+		v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.5f, 0.5f);
 
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v6, v7);
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v7, v3);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v6, v7);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v7, v3);
+	}
 
 	//Top
-	normal = vec3(0, 1, 0);
+	if ((y != CHUNK_SIZE - 1 && !(blocks[indexOfBlockAt(x, y + 1, z)]->isDrawn())) || y == CHUNK_SIZE - 1) {
+		normal = vec3(0, 1, 0);
 
-	v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.5f, 0.5f);
-	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.0f, 0.5f);
-	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.5f, 1.0f);
-	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.0f, 1.0f);
+		v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.5f, 0.5f);
+		v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.0f, 0.5f);
+		v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.5f, 1.0f);
+		v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.0f, 1.0f);
 
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v7, v8);
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v8, v4);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v7, v8);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v8, v4);
+	}
 
 	//Bottom
-	normal = vec3(0, -1, 0);
+	if ((y != 0 && !(blocks[indexOfBlockAt(x, y - 1, z)]->isDrawn())) || y == 0) {
+		normal = vec3(0, -1, 0);
 
-	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.5f, 1.0f);
-	v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 1.0f, 1.0f);
-	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.5f, 0.5f);
-	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 1.0f, 0.5f);
+		v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.5f, 1.0f);
+		v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 1.0f, 1.0f);
+		v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.5f, 0.5f);
+		v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 1.0f, 0.5f);
 
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v5, v6);
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v6, v2);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v5, v6);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v6, v2);
+	}
 
 	//Left
-	normal = vec3(-1, 0, 0);
+	if ((x != 0 && !(blocks[indexOfBlockAt(x - 1, y, z)]->isDrawn())) || x == 0) {
+		normal = vec3(-1, 0, 0);
 
-	v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.5f, 0.0f);
-	v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.5f, 0.5f);
-	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.0f, 0.0f);
-	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.0f, 0.5f);
+		v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.5f, 0.0f);
+		v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.5f, 0.5f);
+		v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.0f, 0.0f);
+		v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.0f, 0.5f);
 
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v4, v8);
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v8, v5);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v4, v8);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v8, v5);
+	}
 
 	//Back
-	normal = vec3(0, 0, -1);
+	if ((z != 0 && !(blocks[indexOfBlockAt(x, y, z - 1)]->isDrawn())) || z == 0) {
+		normal = vec3(0, 0, -1);
 
-	v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.5f, 0.0f);
-	v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 0.0f, 0.0f);
-	v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.0f, 0.5f);
-	v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.5f, 0.5f);
+		v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.5f, 0.0f);
+		v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 0.0f, 0.0f);
+		v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.0f, 0.5f);
+		v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.5f, 0.5f);
 
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v8, v7);
-	Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v7, v6);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v8, v7);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v7, v6);
+	}
 }
 
-Block ** Chunk::blockAt(int x, int y, int z) {
-	return &blocks[(x * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + z];
+int Chunk::indexOfBlockAt(int x, int y, int z) {
+	return (x * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + z;
+}
+
+bool Chunk::isLoaded(){
+	return loaded;
 }
 
 void Chunk::draw(mat4 * viewMatrix) {
@@ -217,7 +240,7 @@ void Chunk::draw(mat4 * viewMatrix) {
 	Texture::unbindTextures();
 }
 
-void Chunk::setTestColor(float r, float g, float b){
+void Chunk::setTestColor(float r, float g, float b) {
 	testColor = glm::vec3(r, g, b);
 }
 

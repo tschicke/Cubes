@@ -131,7 +131,7 @@ void Player::checkCollisions() {
 	if (nextPosition.x != position.x) {
 		for (int c = 0; c < 4; ++c) {
 			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));// - (c / 2 * -0.01) is temp
+			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 //			std::cout << "x: " << c << ": (" << xt << ", " << zt << ")\n";
 
@@ -146,10 +146,10 @@ void Player::checkCollisions() {
 	}
 
 	//Z checks
-//	if (nextPosition.z != position.z) {
+	if (nextPosition.z != position.z) {
 		for (int c = 0; c < 4; ++c) {
 			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));// - (c / 2 * -0.01) is temp
+			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 //			std::cout << "z: " << c << ": (" << xt << ", " << zt << ")\n";
 
@@ -161,17 +161,24 @@ void Player::checkCollisions() {
 				break;
 			}
 		}
-//	}
+	}
 
-	Chunk * nextChunkY = world->getChunkAt(floorf(position.x), floorf(nextPosition.y), floorf(position.z)); //TODO add getcubeat function to world?
-	Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(floorf(position.x), floorf(nextPosition.y), floorf(position.z)) : NULL);//TODO add corner check to y collisions
-	if (nextBlockY != NULL && nextBlockY->isDrawn()) {
-		moveVector.y = -(position.y - ((int) nextPosition.y + 1));
-		velocity.y = 0;
+	//Y checks
+	for (int c = 0; c < 4; ++c) {
+		float zt = (position.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+		float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+
+		Chunk * nextChunkY = world->getChunkAt(floorf(xt), floorf(nextPosition.y), floorf(zt)); //TODO add getcubeat function to world?
+		Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(floorf(xt), floorf(nextPosition.y), floorf(zt)) : NULL); //TODO add corner check to y collisions
+		if (nextBlockY != NULL && nextBlockY->isDrawn()) {
+			moveVector.y = -(position.y - ((int) nextPosition.y + 1));
+			velocity.y = 0;
 //		gravityVel = 0;
-		onGround = true;
-	} else {
-		onGround = false;
+			onGround = true;
+			break;
+		} else {
+			onGround = false;
+		}
 	}
 
 	//Temp "falling off map" fix
@@ -203,7 +210,6 @@ void Player::draw(glm::mat4 * viewMat) {
 	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
 
 	Renderer::getMainRenderer().renderMesh(playerModelID);
-	//FIXME create color shader and rename basicShader to textureShader
 }
 
 glm::vec3 Player::getPosition() {

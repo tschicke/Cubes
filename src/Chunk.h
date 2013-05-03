@@ -33,6 +33,8 @@ public:
 
 	Block * getBlockAtCoordinate(int x, int y, int z);
 
+	bool isLoaded();
+
 	void setTestColor(float r, float b, float g);
 private:
 	Block ** blocks;
@@ -41,10 +43,12 @@ private:
 	ShaderProgram shaderProgram;
 
 	void createCube(int x, int y, int z);//Temp??
-	Block ** blockAt(int x, int y, int z);//Change to return int?
+	int indexOfBlockAt(int x, int y, int z);//Change to return int?
 
 	glm::vec3 chunkPosition;//Should be glm::vec3?
 	glm::vec3 testColor;
+
+	bool loaded;
 };
 
 #endif /* CHUNK_H_ */

@@ -15,10 +15,9 @@ MainWorld::MainWorld() {
 	mainPlayer->setPosition(glm::vec3(0, 32, 0));
 	characters.push_back(mainPlayer);
 
-	//TODO fix negative terrain generation and collision detection
-	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 2); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 2; ++x){//TODO should be in chunkmanager class not world class
+	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 4); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 4; ++x){//TODO should be in chunkmanager class not world class
 		int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 1;//TODO make this a for loop
-		for(int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE - 2); z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 2; ++z){
+		for(int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE - 4); z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 4; ++z){
 			chunkManager.addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
 		}
 	}
@@ -32,7 +31,7 @@ void MainWorld::handleInput() {
 }
 
 void MainWorld::update(time_t dt) {
-	for (std::vector<Character *>::iterator iterator = characters.begin(); iterator != characters.end(); iterator++) { //TODO add max limit per frame
+	for (std::vector<Character *>::iterator iterator = characters.begin(); iterator != characters.end(); iterator++) {
 		Character *character = *iterator;
 		character->update(dt);
 	}
@@ -40,7 +39,7 @@ void MainWorld::update(time_t dt) {
 }
 
 void MainWorld::draw() {
-	for (std::vector<Character *>::iterator iterator = characters.begin(); iterator != characters.end(); iterator++) { //TODO add max limit per frame
+	for (std::vector<Character *>::iterator iterator = characters.begin(); iterator != characters.end(); iterator++) {
 		Character *character = *iterator;
 		character->draw(mainPlayer->getCameraViewMatrix());
 	}
