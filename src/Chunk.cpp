@@ -75,6 +75,8 @@ void Chunk::init(int startX, int startY, int startZ) {
 
 	vertexShader.deleteShader();
 	fragmentShader.deleteShader();
+
+	loaded = true;
 }
 
 Chunk::~Chunk() {

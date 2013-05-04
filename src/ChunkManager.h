@@ -15,9 +15,12 @@
 
 #include <vector>
 
+class Player;
+
 class ChunkManager {
 public:
 	ChunkManager();
+	ChunkManager(Player * mainPlayer);
 	virtual ~ChunkManager();
 
 	void update(time_t dt);
@@ -29,6 +32,10 @@ public:
 	Chunk * getChunkWithCoordinate(int x, int y, int z);
 private:
 	std::vector<Chunk *> chunks;
+	Player * mainPlayer;
+
+	void loadChunks();
+	void unloadChunks();
 };
 
 #endif /* CHUNKMANAGER_H_ */

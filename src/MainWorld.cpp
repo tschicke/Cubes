@@ -15,12 +15,14 @@ MainWorld::MainWorld() {
 	mainPlayer->setPosition(glm::vec3(0, 32, 0));
 	characters.push_back(mainPlayer);
 
-	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 4); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 4; ++x){//TODO should be in chunkmanager class not world class
-		int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 1;//TODO make this a for loop
-		for(int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE - 4); z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 4; ++z){
-			chunkManager.addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
-		}
-	}
+	chunkManager = ChunkManager(mainPlayer);
+
+//	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 4); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 4; ++x){//TODO should be in chunkmanager class not world class
+//		int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 1;//TODO make this a for loop
+//		for(int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE - 4); z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 4; ++z){
+//			chunkManager.addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
+//		}
+//	}
 }
 
 MainWorld::~MainWorld() {
