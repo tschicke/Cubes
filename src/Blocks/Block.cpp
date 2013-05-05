@@ -20,7 +20,6 @@ Block::Block(BlockType type){
 }
 
 Block::~Block() {
-	std::cout << "Dealloc\n";
 }
 
 bool Block::isDrawn(){

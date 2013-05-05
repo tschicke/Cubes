@@ -18,7 +18,7 @@ public:
 	static void initTextures();
 	static void unbindTextures();
 
-	void useTexture();//TODO should be static useTexture(Texture *texture)?
+	void useTexture();
 
 private:
 	bool loadDDS(const char * texturePath);

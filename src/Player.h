@@ -63,6 +63,7 @@ private:
 	ShaderProgram shaderProgram;
 
 	void loadPlayerModel();
+	bool loaded;
 };
 
 #endif /* PLAYER_H_ */

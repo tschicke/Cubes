@@ -26,9 +26,11 @@ Renderer::Renderer() {
 }
 
 void Renderer::createMesh(MeshID * meshID) {
-	glGenBuffers(1, meshID->getVertexIDAddress());
-	glGenBuffers(1, meshID->getIndexIDAddress());
-	currentMeshID = *meshID;
+	if (currentData.empty() && currentIndices.empty()) {
+		glGenBuffers(1, meshID->getVertexIDAddress());
+		glGenBuffers(1, meshID->getIndexIDAddress());
+		currentMeshID = *meshID;
+	}
 }
 
 void Renderer::endMesh(MeshID * meshID) {
@@ -65,12 +67,14 @@ void Renderer::endMesh(MeshID * meshID) {
 		currentMeshID.reset();
 		currentData.clear();
 		currentIndices.clear();
+
+		currentMeshID = MeshID();
 	}
 }
 
 int Renderer::addVertexToMesh(MeshID meshID, vec3 position, vec3 normal, float r, float g, float b) {
-	if (currentMeshID == meshID && meshID.getColorType() == Color) {
-		int vertexIndex = std::distance(currentData.begin(), currentData.end()) / 9; // /9 temp
+	if (currentMeshID == meshID && meshID.getColorType() == ColorType_Color) {
+		int vertexIndex = std::distance(currentData.begin(), currentData.end()) / 9;
 
 		//Add Vertex
 		currentData.push_back(position.x);
@@ -96,8 +100,8 @@ int Renderer::addVertexToMesh(MeshID meshID, vec3 position, vec3 normal, float r
 }
 
 int Renderer::addVertexToMesh(MeshID meshID, vec3 position, vec3 normal, float u, float v) {
-	if (currentMeshID == meshID && meshID.getColorType() == Texture) {
-		int vertexIndex = std::distance(currentData.begin(), currentData.end()) / 8; // /9 temp
+	if (currentMeshID == meshID && meshID.getColorType() == ColorType_Texture) {
+		int vertexIndex = std::distance(currentData.begin(), currentData.end()) / 8;
 
 		//Add Vertex
 		currentData.push_back(position.x);
@@ -129,7 +133,41 @@ void Renderer::addTriangleToMesh(MeshID meshID, int v1, int v2, int v3) {
 	}
 }
 
-void Renderer::createRectangle(MeshID meshID, glm::vec3 origin, float dx, float dy, float dz, float r, float g, float b) {//r, g, b temp
+void Renderer::addNullTriangle(MeshID meshID) {
+	if (currentMeshID == meshID) {
+		if (meshID.getColorType() == ColorType_Texture) {
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
+		} else {
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
+		}
+
+		currentIndices.push_back(-1);
+		currentIndices.push_back(-1);
+		currentIndices.push_back(-1);
+	}
+}
+
+void Renderer::createRectangle(MeshID meshID, glm::vec3 origin, float dx, float dy, float dz, float r, float g, float b) { //r, g, b temp
 	glm::vec3 normal; //temp
 
 	int v1, v2, v3, v4;
@@ -176,7 +214,7 @@ void Renderer::renderMesh(MeshID meshID) {
 	glEnableVertexAttribArray(2);
 
 	int vertexSize = 3;
-	int colorSize = (meshID.getColorType() == Texture ? 2 : 3);
+	int colorSize = (meshID.getColorType() == ColorType_Texture ? 2 : 3);
 	int normalSize = 3;
 	int stride = vertexSize + colorSize + normalSize;
 
@@ -218,7 +256,7 @@ void MeshID::reset() {
 	vertexID = 0;
 	indexID = 0;
 	numOfVertices = 0;
-	type = Default;
+	type = ColorType_Default;
 }
 
 uint* MeshID::getVertexIDAddress() {

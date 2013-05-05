@@ -14,7 +14,7 @@
 #include "Common.h"
 
 enum ColorType {
-	Color, Texture, Default
+	ColorType_Color, ColorType_Texture, ColorType_Default
 };//Do this Differently?
 
 struct MeshID {
@@ -55,7 +55,12 @@ public:
 
 	int addVertexToMesh(MeshID meshID, glm::vec3 position, glm::vec3 normal, float r, float g, float b);
 	int addVertexToMesh(MeshID meshID, glm::vec3 position, glm::vec3 normal, float u, float v);
+
 	void addTriangleToMesh(MeshID meshID, int vIndex1, int vIndex2, int vIndex3);
+	void addNullTriangle(MeshID meshID);
+
+	void startSubstituteData(MeshID meshID);
+	void endSubstituteData(MeshID meshID, int startVertexIndex, int numberOfVertices);
 
 	void createRectangle(MeshID meshID, glm::vec3 origin, float dx, float dy, float dz, float r, float g, float b);
 	void createPrism(MeshID meshID, glm::vec3 origin, float dx, float dy, float dz);

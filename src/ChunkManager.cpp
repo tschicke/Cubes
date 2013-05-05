@@ -17,6 +17,7 @@ ChunkManager::ChunkManager() {
 
 ChunkManager::ChunkManager(Player * mainPlayer) {
 	this->mainPlayer = mainPlayer;
+	loadChunks();//Temp?
 }
 
 ChunkManager::~ChunkManager() {
@@ -35,8 +36,8 @@ void ChunkManager::deleteChuck(int index) {
 }
 
 void ChunkManager::update(time_t dt) {
-	loadChunks();
-	unloadChunks();
+//	loadChunks();
+//	unloadChunks();
 
 	std::vector<Chunk *>::iterator iterator;
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
@@ -89,6 +90,7 @@ void ChunkManager::unloadChunks() {
 		float xDistSquared = (chunk->getChunkPos().x - mainPlayer->getPosition().x) * (chunk->getChunkPos().x - mainPlayer->getPosition().x);
 		float yDistSquared = (chunk->getChunkPos().y - mainPlayer->getPosition().y) * (chunk->getChunkPos().y - mainPlayer->getPosition().y);
 		float zDistSquared = (chunk->getChunkPos().z - mainPlayer->getPosition().z) * (chunk->getChunkPos().z - mainPlayer->getPosition().z);
+//		std::cout << xDistSquared / (Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE) << ", " << zDistSquared / (Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE)<< '\n';
 		if (xDistSquared > maxDistSquared || yDistSquared > maxDistSquared || zDistSquared > maxDistSquared){
 //			chunk->deleteChunk()
 			delete chunk;

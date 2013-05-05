@@ -28,6 +28,7 @@ Player::Player() {
 	jumpStrength = 0.f;
 	gravityVel = 0;
 	onGround = false;
+	loaded = false;
 }
 
 Player::Player(ts::World * world) {
@@ -47,32 +48,36 @@ void Player::init(ts::World * world) {
 	gravityVel = 0;
 	onGround = false;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
-	loadPlayerModel(); //TODO add loaded bool
+	loadPlayerModel();
 }
 
 void Player::loadPlayerModel() {
-	Shader vertexShader;
-	vertexShader.loadShader("shaders/colorShader.vert", GL_VERTEX_SHADER);
+	if (!loaded) {
+		Shader vertexShader;
+		vertexShader.loadShader("shaders/colorShader.vert", GL_VERTEX_SHADER);
 
-	Shader fragmentShader;
-	fragmentShader.loadShader("shaders/colorShader.frag", GL_FRAGMENT_SHADER);
+		Shader fragmentShader;
+		fragmentShader.loadShader("shaders/colorShader.frag", GL_FRAGMENT_SHADER);
 
-	shaderProgram.createProgram();
-	shaderProgram.addShader(&vertexShader);
-	shaderProgram.addShader(&fragmentShader);
-	shaderProgram.linkProgram();
+		shaderProgram.createProgram();
+		shaderProgram.addShader(&vertexShader);
+		shaderProgram.addShader(&fragmentShader);
+		shaderProgram.linkProgram();
 
-	vertexShader.deleteShader();
-	fragmentShader.deleteShader();
+		vertexShader.deleteShader();
+		fragmentShader.deleteShader();
 
-	playerModelID.setColorType(Color);
+		playerModelID.setColorType(Color);
 
-	Renderer& renderer = Renderer::getMainRenderer();
-	renderer.createMesh(&playerModelID);
+		Renderer& renderer = Renderer::getMainRenderer();
+		renderer.createMesh(&playerModelID);
 
-	renderer.createPrism(playerModelID, glm::vec3(-0.375f, 0.f, -0.375f), 0.75f, 0.5f, 0.75f);
+		renderer.createPrism(playerModelID, glm::vec3(-0.375f, 0.f, -0.375f), 0.75f, 0.5f, 0.75f);
 
-	renderer.endMesh(&playerModelID);
+		renderer.endMesh(&playerModelID);
+
+		loaded = true;
+	}
 }
 
 void Player::input() {
@@ -169,7 +174,7 @@ void Player::checkCollisions() {
 		float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 		Chunk * nextChunkY = world->getChunkAt(floorf(xt), floorf(nextPosition.y), floorf(zt)); //TODO add getcubeat function to world?
-		Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(floorf(xt), floorf(nextPosition.y), floorf(zt)) : NULL); //TODO add corner check to y collisions
+		Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(floorf(xt), floorf(nextPosition.y), floorf(zt)) : NULL);
 		if (nextBlockY != NULL && nextBlockY->isDrawn()) {
 			moveVector.y = -(position.y - ((int) nextPosition.y + 1));
 			velocity.y = 0;
@@ -190,8 +195,8 @@ void Player::checkCollisions() {
 
 void Player::update(time_t dt) {
 	input();
-	gravity(); //TODO tweak order of these three function calls
-	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed... should be able to get rid of gravityVel
+	gravity();
+	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
 
 	moveVector += velocity;
 
