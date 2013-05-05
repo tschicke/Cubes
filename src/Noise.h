@@ -12,9 +12,11 @@ class Noise {
 public:
 	Noise();
 	virtual ~Noise();
-	double smoothNoise(double x, double y);
-private:
+	double smoothNoise2D(double x, double y);
+	double smoothNoise3D(double x, double y, double z);
 	double noise2D(int x, int y);
+	double noise3D(int x, int y, int z);
+private:
 	double interpolate(double a, double b, double x);
 };
 

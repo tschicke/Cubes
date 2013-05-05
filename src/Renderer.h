@@ -57,7 +57,10 @@ public:
 	int addVertexToMesh(MeshID meshID, glm::vec3 position, glm::vec3 normal, float u, float v);
 
 	void addTriangleToMesh(MeshID meshID, int vIndex1, int vIndex2, int vIndex3);
+
 	void addNullTriangle(MeshID meshID);
+	void addNullQuad(MeshID meshID);
+	void addNullCube(MeshID meshID);
 
 	void startSubstituteData(MeshID meshID);
 	void endSubstituteData(MeshID meshID, int startVertexIndex, int numberOfVertices);

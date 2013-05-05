@@ -139,23 +139,7 @@ void Renderer::addNullTriangle(MeshID meshID) {
 			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
 			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
 			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
-
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
-
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0);
 		} else {
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
-
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
-			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
-
 			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
 			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
 			addVertexToMesh(meshID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 0, 0);
@@ -164,6 +148,18 @@ void Renderer::addNullTriangle(MeshID meshID) {
 		currentIndices.push_back(-1);
 		currentIndices.push_back(-1);
 		currentIndices.push_back(-1);
+	}
+}
+
+void Renderer::addNullQuad(MeshID meshID) {
+	for(int i = 0; i < 2; ++i){
+		addNullTriangle(meshID);
+	}
+}
+
+void Renderer::addNullCube(MeshID meshID) {
+	for(int i = 0; i < 6; ++i){
+		addNullQuad(meshID);
 	}
 }
 

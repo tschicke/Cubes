@@ -10,7 +10,7 @@
 using namespace glm;
 
 Camera::Camera() {
-	yaw = 0;
+	yaw = 180;
 	pitch = 0;
 	lookSpeed = 0.2f;
 	inverted = 1;

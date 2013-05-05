@@ -37,7 +37,7 @@ Texture::~Texture() {
 void Texture::initTextures(){
 	Texture::grassTexture = new Texture("res/Texture.DDS");
 	Texture::dirtTexture = new Texture("res/Texture.DDS");
-	Texture::stoneTexture = new Texture("res/Texture.DDS");
+	Texture::stoneTexture = new Texture("res/Texture2.DDS");
 }
 
 bool Texture::loadDDS(const char * texturePath) {

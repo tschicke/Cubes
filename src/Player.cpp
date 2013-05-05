@@ -39,7 +39,7 @@ Player::~Player() {
 }
 
 void Player::init(ts::World * world) {
-	yaw = 0;
+	yaw = 270;
 	pitch = 0;
 	moveSpeed = 0.3f;
 	this->world = world;
@@ -48,7 +48,7 @@ void Player::init(ts::World * world) {
 	gravityVel = 0;
 	onGround = false;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
-	loadPlayerModel();
+//	loadPlayerModel();
 }
 
 void Player::loadPlayerModel() {
@@ -67,7 +67,7 @@ void Player::loadPlayerModel() {
 		vertexShader.deleteShader();
 		fragmentShader.deleteShader();
 
-		playerModelID.setColorType(Color);
+		playerModelID.setColorType(ColorType_Color);
 
 		Renderer& renderer = Renderer::getMainRenderer();
 		renderer.createMesh(&playerModelID);
@@ -176,7 +176,7 @@ void Player::checkCollisions() {
 		Chunk * nextChunkY = world->getChunkAt(floorf(xt), floorf(nextPosition.y), floorf(zt)); //TODO add getcubeat function to world?
 		Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(floorf(xt), floorf(nextPosition.y), floorf(zt)) : NULL);
 		if (nextBlockY != NULL && nextBlockY->isDrawn()) {
-			moveVector.y = -(position.y - ((int) nextPosition.y + 1));
+			moveVector.y = -(position.y - (floorf(nextPosition.y) + 1));
 			velocity.y = 0;
 //		gravityVel = 0;
 			onGround = true;
@@ -187,8 +187,8 @@ void Player::checkCollisions() {
 	}
 
 	//Temp "falling off map" fix
-	if (position.y < 0) {
-		move(glm::vec3(0, 32, 0));
+	if (position.y < -64) {
+		move(glm::vec3(0, 96, 0));
 		velocity.y = 0;
 	}
 }

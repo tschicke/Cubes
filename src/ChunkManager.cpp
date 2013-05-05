@@ -17,7 +17,7 @@ ChunkManager::ChunkManager() {
 
 ChunkManager::ChunkManager(Player * mainPlayer) {
 	this->mainPlayer = mainPlayer;
-	loadChunks();//Temp?
+	loadChunks(); //Temp?
 }
 
 ChunkManager::~ChunkManager() {
@@ -71,12 +71,13 @@ Chunk * ChunkManager::getChunkWithCoordinate(int x, int y, int z) {
 }
 
 void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per frame
-	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 5); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 5; ++x) { //TODO should this be done this way? or should flags be used
-		int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 1; //TODO make this a for loop
-		for (int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE - 5); z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 5; ++z) {
-			Chunk * currentChunk = getChunkWithCoordinate(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE);
-			if ((currentChunk != NULL && !(currentChunk->isLoaded())) || !currentChunk) {
-				addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
+	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 1); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 1; ++x) { //TODO should this be done this way? or should flags be used
+		for (int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 1; y < (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) + 0; ++y) { //TODO make this a for loop
+			for (int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE - 1); z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 1; ++z) {
+				Chunk * currentChunk = getChunkWithCoordinate(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE);
+				if ((currentChunk != NULL && !(currentChunk->isLoaded())) || !currentChunk) {
+					addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
+				}
 			}
 		}
 	}
@@ -91,7 +92,7 @@ void ChunkManager::unloadChunks() {
 		float yDistSquared = (chunk->getChunkPos().y - mainPlayer->getPosition().y) * (chunk->getChunkPos().y - mainPlayer->getPosition().y);
 		float zDistSquared = (chunk->getChunkPos().z - mainPlayer->getPosition().z) * (chunk->getChunkPos().z - mainPlayer->getPosition().z);
 //		std::cout << xDistSquared / (Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE) << ", " << zDistSquared / (Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE)<< '\n';
-		if (xDistSquared > maxDistSquared || yDistSquared > maxDistSquared || zDistSquared > maxDistSquared){
+		if (xDistSquared > maxDistSquared || yDistSquared > maxDistSquared || zDistSquared > maxDistSquared) {
 //			chunk->deleteChunk()
 			delete chunk;
 			chunks.erase(iterator);

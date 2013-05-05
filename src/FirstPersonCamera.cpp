@@ -22,7 +22,7 @@ FirstPersonCamera::FirstPersonCamera(glm::vec3 position) {
 }
 
 void FirstPersonCamera::init(glm::vec3 position) {
-	yaw = 0;
+	yaw = 90;
 	pitch = 0;
 	lookSpeed = 0.2f;
 	this->position = position;

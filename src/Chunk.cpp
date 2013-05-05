@@ -39,13 +39,21 @@ void Chunk::init(int startX, int startY, int startZ) {
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
-				int height = (noise.smoothNoise(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
+				int height = (noise.smoothNoise2D(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
 
 				if (y + startY <= height) {
 					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
 				} else {
 					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
 				}
+
+//				float density = noise.smoothNoise3D(((x + startX) / 32.f), ((y + startY) / 32.f), ((z + startZ) / 32.f)) - (float)(y + startY) / (CHUNK_SIZE * 1);
+
+//				if (density >= 0) {
+//					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
+//				} else {
+//					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
+//				}
 			}
 		}
 	}
@@ -56,6 +64,8 @@ void Chunk::init(int startX, int startY, int startZ) {
 				Block * block = blocks[indexOfBlockAt(x, y, z)];
 				if (block->isDrawn()) {
 					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize)); //FIXME fix occlusion culling between chunks, and organize it better
+				} else {
+//					Renderer::getMainRenderer().addNullCube(meshID);
 				}
 			}
 		}
@@ -149,7 +159,7 @@ void Chunk::createCube(int x, int y, int z) {
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v2, v3);
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v3, v4);
 	} else {
-		Renderer::getMainRenderer().addNullTriangle(meshID);
+//		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
 
 	//Right
@@ -164,7 +174,7 @@ void Chunk::createCube(int x, int y, int z) {
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v6, v7);
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v7, v3);
 	} else {
-		Renderer::getMainRenderer().addNullTriangle(meshID);
+//		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
 
 	//Top
@@ -179,7 +189,7 @@ void Chunk::createCube(int x, int y, int z) {
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v7, v8);
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v8, v4);
 	} else {
-		Renderer::getMainRenderer().addNullTriangle(meshID);
+//		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
 
 	//Bottom
@@ -194,7 +204,7 @@ void Chunk::createCube(int x, int y, int z) {
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v5, v6);
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v6, v2);
 	} else {
-		Renderer::getMainRenderer().addNullTriangle(meshID);
+//		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
 
 	//Left
@@ -209,7 +219,7 @@ void Chunk::createCube(int x, int y, int z) {
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v4, v8);
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v8, v5);
 	} else {
-		Renderer::getMainRenderer().addNullTriangle(meshID);
+//		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
 
 	//Back
@@ -224,7 +234,7 @@ void Chunk::createCube(int x, int y, int z) {
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v8, v7);
 		Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v7, v6);
 	} else {
-		Renderer::getMainRenderer().addNullTriangle(meshID);
+//		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
 }
 
@@ -238,7 +248,7 @@ bool Chunk::isLoaded() {
 
 void Chunk::draw(mat4 * viewMatrix) {
 	shaderProgram.useProgram();
-	Texture::grassTexture->useTexture();
+	Texture::stoneTexture->useTexture();
 
 	mat4 modelMatrix = translate(chunkPosition);
 
