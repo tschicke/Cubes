@@ -26,7 +26,6 @@ public:
 	void setDrawn(bool drawn);
 	bool isDrawn();
 
-	void setBlockType(BlockType type);
 	BlockType getBlockType();
 
 	static const float cubeSize = 1.f;

@@ -8,8 +8,8 @@
 #include "BlockStone.h"
 
 BlockStone::BlockStone() {
-
 	drawn = true;
+	blockType = blockType_Stone;
 }
 
 BlockStone::~BlockStone() {

@@ -74,7 +74,7 @@ double Noise::noise2D(int x, int y) {
 }
 
 double Noise::noise3D(int x, int y, int z) {
-	int n = x + y * 43 + z * 163;
+	int n = x + y * 43 + z * 49;
 	n = (n << 13) ^ n;
 	int nn = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
 	return 1.0 - ((double) nn / 1073741824.0);

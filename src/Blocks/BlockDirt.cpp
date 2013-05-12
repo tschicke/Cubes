@@ -9,6 +9,7 @@
 
 BlockDirt::BlockDirt() {
 	drawn = true;
+	blockType = blockType_Dirt;
 }
 
 BlockDirt::~BlockDirt() {

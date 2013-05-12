@@ -8,7 +8,7 @@
 
 #include "Chunk.h"
 #include "Shader.h"
-#include "Texture.h"
+#include "SpriteSheet.h"
 
 #include <GL/glew.h>
 
@@ -42,7 +42,14 @@ void Chunk::init(int startX, int startY, int startZ) {
 				int height = (noise.smoothNoise2D(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
 
 				if (y + startY <= height) {
-					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
+					float random = rand() / (float) RAND_MAX;
+					if (random < 0.3f) {
+						blocks[indexOfBlockAt(x, y, z)] = new BlockGrass;
+					} else if (random > 0.65f) {
+						blocks[indexOfBlockAt(x, y, z)] = new BlockStone;
+					} else {
+						blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
+					}
 				} else {
 					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
 				}
@@ -145,19 +152,40 @@ void Chunk::createCube(int x, int y, int z) {
 //	float g = ((float) (rand() % 10)) / 10;//For colored cubes
 //	float b = ((float) (rand() % 10)) / 10;//For colored cubes
 
-	int v1, v2, v3, v4, v5, v6, v7, v8;
+	int vert1, vert2, vert3, vert4, vert5, vert6, vert7, vert8;
+
+	int tileX, tileY;
+	Block * currentBlock = blocks[indexOfBlockAt(x, y, z)];
+	if (currentBlock->getBlockType() == blockType_Grass) {
+		tileX = 0;
+		tileY = 0;
+	} else if (currentBlock->getBlockType() == blockType_Stone) {
+		tileX = 1;
+		tileY = 0;
+	} else if (currentBlock->getBlockType() == blockType_Dirt) {
+		tileX = 2;
+		tileY = 0;
+	}
+
+	ts::SpriteSheet * spriteSheet = ts::SpriteSheet::defaultSpriteSheet;//TODO dont automatically use default spritesheet
+
+	int texElementSizePixels = spriteSheet->getElementSizePixels();
+	float textureElementWidth = texElementSizePixels / (float) spriteSheet->getWidth();
+	float textureElementHeight = texElementSizePixels / (float) spriteSheet->getHeight();
+	float u1 = (texElementSizePixels * tileX * 2) / (float) spriteSheet->getWidth(), u2 = ((texElementSizePixels * tileX * 2) + texElementSizePixels) / (float) spriteSheet->getWidth();
+	float v1 = (texElementSizePixels * tileY * 2) / (float) spriteSheet->getWidth(), v2 = ((texElementSizePixels * tileY * 2) + texElementSizePixels) / (float) spriteSheet->getWidth();
 
 	//Front
 	if ((z != CHUNK_SIZE - 1 && !(blocks[indexOfBlockAt(x, y, z + 1)]->isDrawn())) || z == CHUNK_SIZE - 1) {
 		normal = vec3(0, 0, 1);
 
-		v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.0f, 0.0f);
-		v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 0.5f, 0.0f);
-		v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.5f, 0.5f);
-		v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.0f, 0.5f);
+		vert1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u1, v2 + textureElementWidth);
+		vert2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u1 + textureElementWidth, v2 + textureElementWidth);
+		vert3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u1 + textureElementWidth, v2);
+		vert4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u1, v2);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v2, v3);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v3, v4);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert2, vert3);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert3, vert4);
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -166,13 +194,13 @@ void Chunk::createCube(int x, int y, int z) {
 	if ((x != CHUNK_SIZE - 1 && !(blocks[indexOfBlockAt(x + 1, y, z)]->isDrawn())) || x == CHUNK_SIZE - 1) {
 		normal = vec3(1, 0, 0);
 
-		v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 0.0f, 0.0f);
-		v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.0f, 0.5f);
-		v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 0.5f, 0.0f);
-		v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.5f, 0.5f);
+		vert2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u1, v2 + textureElementHeight);
+		vert3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u1, v2);
+		vert6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u1 + textureElementWidth, v2 + textureElementHeight);
+		vert7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1 + textureElementWidth, v2);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v6, v7);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v2, v7, v3);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert2, vert6, vert7);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert2, vert7, vert3);
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -181,13 +209,13 @@ void Chunk::createCube(int x, int y, int z) {
 	if ((y != CHUNK_SIZE - 1 && !(blocks[indexOfBlockAt(x, y + 1, z)]->isDrawn())) || y == CHUNK_SIZE - 1) {
 		normal = vec3(0, 1, 0);
 
-		v3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, 0.5f, 0.5f);
-		v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.0f, 0.5f);
-		v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.5f, 1.0f);
-		v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.0f, 1.0f);
+		vert3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u1 + textureElementWidth, v1);
+		vert4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u1, v1);
+		vert7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1 + textureElementWidth, v1 + textureElementHeight);
+		vert8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u1, v1 + textureElementHeight);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v7, v8);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v3, v8, v4);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert3, vert7, vert8);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert3, vert8, vert4);
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -196,13 +224,13 @@ void Chunk::createCube(int x, int y, int z) {
 	if ((y != 0 && !(blocks[indexOfBlockAt(x, y - 1, z)]->isDrawn())) || y == 0) {
 		normal = vec3(0, -1, 0);
 
-		v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.5f, 1.0f);
-		v2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, 1.0f, 1.0f);
-		v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.5f, 0.5f);
-		v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 1.0f, 0.5f);
+		vert1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u2, v1 + textureElementHeight);
+		vert2 = Renderer::getMainRenderer().addVertexToMesh(meshID, p2, normal, u2 + textureElementWidth, v1 + textureElementHeight);
+		vert5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u2, v1);
+		vert6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u2 + textureElementWidth, v1);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v5, v6);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v6, v2);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert5, vert6);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert6, vert2);
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -211,13 +239,13 @@ void Chunk::createCube(int x, int y, int z) {
 	if ((x != 0 && !(blocks[indexOfBlockAt(x - 1, y, z)]->isDrawn())) || x == 0) {
 		normal = vec3(-1, 0, 0);
 
-		v1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, 0.5f, 0.0f);
-		v4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, 0.5f, 0.5f);
-		v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.0f, 0.0f);
-		v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.0f, 0.5f);
+		vert1 = Renderer::getMainRenderer().addVertexToMesh(meshID, p1, normal, u1 + textureElementWidth, v2 + textureElementHeight);
+		vert4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u1 + textureElementWidth, v2);
+		vert5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u1, v2 + textureElementHeight);
+		vert8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u1, v2);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v4, v8);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v1, v8, v5);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert4, vert8);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert8, vert5);
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -226,13 +254,13 @@ void Chunk::createCube(int x, int y, int z) {
 	if ((z != 0 && !(blocks[indexOfBlockAt(x, y, z - 1)]->isDrawn())) || z == 0) {
 		normal = vec3(0, 0, -1);
 
-		v5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, 0.5f, 0.0f);
-		v6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, 0.0f, 0.0f);
-		v7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, 0.0f, 0.5f);
-		v8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, 0.5f, 0.5f);
+		vert5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u1 + textureElementWidth, v2 + textureElementHeight);
+		vert6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u1, v2 + textureElementHeight);
+		vert7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1, v2);
+		vert8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u1 + textureElementWidth, v2);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v8, v7);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, v5, v7, v6);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert5, vert8, vert7);
+		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert5, vert7, vert6);
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -248,7 +276,7 @@ bool Chunk::isLoaded() {
 
 void Chunk::draw(mat4 * viewMatrix) {
 	shaderProgram.useProgram();
-	Texture::stoneTexture->useTexture();
+	ts::SpriteSheet::defaultSpriteSheet->useTexture();
 
 	mat4 modelMatrix = translate(chunkPosition);
 

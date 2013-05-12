@@ -9,6 +9,7 @@
 
 BlockAir::BlockAir() {
 	drawn = false;
+	blockType = blockType_Air;
 }
 
 BlockAir::~BlockAir() {

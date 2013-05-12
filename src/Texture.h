@@ -14,17 +14,21 @@ public:
 	Texture(const char * texturePath);
 	virtual ~Texture();
 
-	static Texture *grassTexture, *dirtTexture, *stoneTexture;
+	static Texture *grassTexture, *dirtTexture, *stoneTexture, *blockSheet;
 	static void initTextures();
 	static void unbindTextures();
 
 	void useTexture();
 
-private:
+	int getHeight(), getWidth();
+
+protected:
 	bool loadDDS(const char * texturePath);
 
 	bool loaded;
 	unsigned int texID;
+
+	int textureWidth, textureHeight;
 
 };
 

@@ -11,6 +11,7 @@
 
 #include "GameWindow.h"
 #include "Texture.h"
+#include "SpriteSheet.h"
 #include "FirstPersonCamera.h"
 
 #include "Keyboard.h"
@@ -63,6 +64,7 @@ void GameWindow::initGL() {
 	}
 
 	Texture::initTextures();
+	ts::SpriteSheet::initSpriteSheets();
 }
 
 void GameWindow::setScene(Scene * scene) {

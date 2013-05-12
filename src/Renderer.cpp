@@ -22,7 +22,7 @@ Renderer& Renderer::getMainRenderer() {
 }
 
 Renderer::Renderer() {
-	setProjectionMatrix(90, 600, 400, 0.1, 100);
+	setProjectionMatrix(90, 600, 400, 0.1, 200);
 }
 
 void Renderer::createMesh(MeshID * meshID) {

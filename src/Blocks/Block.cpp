@@ -33,8 +33,3 @@ void Block::setDrawn(bool d){
 BlockType Block::getBlockType(){
 	return blockType;
 }
-
-void Block::setBlockType(BlockType type){
-	blockType = type;
-}
-

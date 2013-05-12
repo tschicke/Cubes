@@ -11,6 +11,7 @@
 
 BlockGrass::BlockGrass() {
 	drawn = true;
+	blockType = blockType_Grass;
 }
 
 BlockGrass::~BlockGrass() {
