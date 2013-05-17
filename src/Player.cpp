@@ -138,10 +138,7 @@ void Player::checkCollisions() {
 			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
-//			std::cout << "x: " << c << ": (" << xt << ", " << zt << ")\n";
-
-			Chunk * nextChunkX = world->getChunkAt(floorf(xt), floorf(position.y), floorf(zt));
-			Block * nextBlockX = (nextChunkX ? nextChunkX->getBlockAtCoordinate(floorf(xt), floorf(position.y), floorf(zt)) : NULL);
+			Block * nextBlockX = world->getBlockAt(floorf(xt), floorf(position.y), floorf(zt));
 			if (nextBlockX != NULL && nextBlockX->isDrawn()) {
 				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.x = 0;
@@ -156,10 +153,7 @@ void Player::checkCollisions() {
 			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
-//			std::cout << "z: " << c << ": (" << xt << ", " << zt << ")\n";
-
-			Chunk * nextChunkZ = world->getChunkAt(floorf(xt), floorf(position.y), floorf(zt));
-			Block * nextBlockZ = (nextChunkZ ? nextChunkZ->getBlockAtCoordinate(floorf(xt), floorf(position.y), floorf(zt)) : NULL);
+			Block * nextBlockZ = world->getBlockAt(floorf(xt), floorf(position.y), floorf(zt));
 			if (nextBlockZ != NULL && nextBlockZ->isDrawn()) {
 				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.z = 0;
@@ -173,8 +167,7 @@ void Player::checkCollisions() {
 		float zt = (position.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 		float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
-		Chunk * nextChunkY = world->getChunkAt(floorf(xt), floorf(nextPosition.y), floorf(zt)); //TODO add getcubeat function to world?
-		Block * nextBlockY = (nextChunkY ? nextChunkY->getBlockAtCoordinate(floorf(xt), floorf(nextPosition.y), floorf(zt)) : NULL);
+		Block * nextBlockY = world->getBlockAt(floorf(xt), floorf(nextPosition.y), floorf(zt));
 		if (nextBlockY != NULL && nextBlockY->isDrawn()) {
 			moveVector.y = -(position.y - (floorf(nextPosition.y) + 1));
 			velocity.y = 0;

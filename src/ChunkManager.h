@@ -10,6 +10,7 @@
 
 #include "Common.h"
 #include "Chunk.h"
+#include "TerrainGenerator.h"
 
 #include <glm/glm.hpp>
 
@@ -33,6 +34,8 @@ public:
 private:
 	std::vector<Chunk *> chunks;
 	Player * mainPlayer;
+
+	ts::TerrainGenerator generator;
 
 	void loadChunks();
 	void unloadChunks();

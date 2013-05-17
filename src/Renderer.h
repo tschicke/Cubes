@@ -25,7 +25,7 @@ public:
 	virtual ~MeshID();
 
 	uint *getVertexIDAddress(), *getIndexIDAddress();
-	uint getVertexID(), getIndexID(); //TODO Need address and value getter??
+	uint getVertexID(), getIndexID();
 
 	void setNumVertices(uint numVertices);
 	uint getNumVertices();

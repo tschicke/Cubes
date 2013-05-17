@@ -39,7 +39,7 @@ void Chunk::init(int startX, int startY, int startZ) {
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
-				int height = (noise.smoothNoise2D(((x + startX) / 32.f), ((z + startZ) / 32.f)) + 1) * CHUNK_SIZE / 2;
+				int height = (noise.smoothNoise2D(((x + startX) / 64.f), ((z + startZ) / 64.f)) + 1) * CHUNK_SIZE / 2;
 
 				if (y + startY <= height) {
 					float random = rand() / (float) RAND_MAX;
