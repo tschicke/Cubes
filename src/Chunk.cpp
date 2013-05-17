@@ -9,17 +9,16 @@
 #include "Chunk.h"
 #include "Shader.h"
 #include "SpriteSheet.h"
+#include "Renderer.h"
 
-#include <GL/glew.h>
+#include "TerrainGenerator.h"
+
+#include <gl/glew.h>//Only for GL_VERTEX_SHADER and GL_FRAGMENT_SHADER, get them from somewhere else
 
 #include <glm/glm.hpp>//Temp??
 #include <glm/gtx/transform.hpp>//Temp??
-#include <glm/gtc/noise.hpp>
-#include "GameWindow.h"//Temp
-#include "Noise.h"
-#include <stdlib.h>
-using namespace glm;
-//Temp??
+
+using namespace glm;//Temp??
 
 Chunk::Chunk() {
 	blocks = NULL;
@@ -34,33 +33,20 @@ void Chunk::init(int startX, int startY, int startZ) {
 
 	blocks = new Block*[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
-	Noise noise;
+	ts::TerrainGenerator generator;
+
+	BlockType *blockTypes = new BlockType[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+	generator.generateChunk(startX, startY, startZ, blockTypes);
 
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
-				int height = (noise.smoothNoise2D(((x + startX) / 64.f), ((z + startZ) / 64.f)) + 1) * CHUNK_SIZE / 2;
-
-				if (y + startY <= height) {
-					float random = rand() / (float) RAND_MAX;
-					if (random < 0.3f) {
-						blocks[indexOfBlockAt(x, y, z)] = new BlockGrass;
-					} else if (random > 0.65f) {
-						blocks[indexOfBlockAt(x, y, z)] = new BlockStone;
-					} else {
-						blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
-					}
+//				std::cout << blockTypes[indexOfBlockAt(x, y, z)] << '\n';
+				if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Dirt) {
+					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
 				} else {
 					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
 				}
-
-//				float density = noise.smoothNoise3D(((x + startX) / 32.f), ((y + startY) / 32.f), ((z + startZ) / 32.f)) - (float)(y + startY) / (CHUNK_SIZE * 1);
-
-//				if (density >= 0) {
-//					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
-//				} else {
-//					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
-//				}
 			}
 		}
 	}
@@ -77,6 +63,8 @@ void Chunk::init(int startX, int startY, int startZ) {
 			}
 		}
 	}
+
+	delete blockTypes;
 
 	Renderer::getMainRenderer().endMesh(&meshID);
 
@@ -167,7 +155,7 @@ void Chunk::createCube(int x, int y, int z) {
 		tileY = 0;
 	}
 
-	ts::SpriteSheet * spriteSheet = ts::SpriteSheet::defaultSpriteSheet;//TODO dont automatically use default spritesheet
+	ts::SpriteSheet * spriteSheet = ts::SpriteSheet::defaultSpriteSheet; //TODO dont automatically use default spritesheet
 
 	int texElementSizePixels = spriteSheet->getElementSizePixels();
 	float textureElementWidth = texElementSizePixels / (float) spriteSheet->getWidth();
