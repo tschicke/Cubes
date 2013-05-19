@@ -43,7 +43,7 @@ public:
 		this->x = x;
 		this->y = y;
 	}
-	virtual ~Vector2();
+	virtual ~Vector2(){}
 
 	Vector2& operator=(Vector2 const& other) {
 		if (this != &other) {
@@ -56,13 +56,19 @@ public:
 	Vector2 operator+(Vector2 const& other) {
 		T newX = x + other.x;
 		T newY = y + other.y;
-		return Vector2(newX, newY);
+		return Vector2<T>(newX, newY);
 	}
 
 	Vector2 operator-(Vector2 const& other) {
 		T newX = x - other.x;
 		T newY = y - other.y;
-		return Vector2(newX, newY);
+		return Vector2<T>(newX, newY);
+	}
+
+	Vector2 operator*(T a){
+		T newX = x * a;
+		T newY = y * a;
+		return Vector2<T>(newX, newY);
 	}
 
 	T x, y;
@@ -110,14 +116,14 @@ public:
 		T newX = x + other.x;
 		T newY = y + other.y;
 		T newZ = z + other.z;
-		return Vector3(newX, newY, newZ);
+		return Vector3<T>(newX, newY, newZ);
 	}
 
 	Vector3 operator-(Vector3 const& other) {
 		T newX = x - other.x;
 		T newY = y - other.y;
 		T newZ = z - other.z;
-		return Vector3(newX, newY, newZ);
+		return Vector3<T>(newX, newY, newZ);
 	}
 
 	template <typename U>
@@ -125,7 +131,7 @@ public:
 		T newX = x * factor;
 		T newY = y * factor;
 		T newZ = z * factor;
-		return Vector3(newX, newY, newZ);
+		return Vector3<T>(newX, newY, newZ);
 	}
 
 	T x, y, z;
@@ -162,7 +168,7 @@ public:
 		T newY = y + other.y;
 		T newZ = z + other.z;
 		T newW = w + other.w;
-		return Vector4(newX, newY, newZ, newW);
+		return Vector4<T>(newX, newY, newZ, newW);
 	}
 
 	Vector4 operator-(Vector4 const& other) {
@@ -170,7 +176,7 @@ public:
 		T newY = y - other.y;
 		T newZ = z - other.z;
 		T newW = w - other.w;
-		return Vector4(newX, newY, newZ, newW);
+		return Vector4<T>(newX, newY, newZ, newW);
 	}
 
 	T x, y, z, w;

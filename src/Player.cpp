@@ -139,7 +139,7 @@ void Player::checkCollisions() {
 			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockX = world->getBlockAt(floorf(xt), floorf(position.y), floorf(zt));
-			if (nextBlockX != NULL && nextBlockX->isDrawn()) {
+			if (nextBlockX != NULL && nextBlockX->isDrawn() && nextBlockX->isSolid()) {
 				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.x = 0;
 				break;
@@ -154,7 +154,7 @@ void Player::checkCollisions() {
 			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockZ = world->getBlockAt(floorf(xt), floorf(position.y), floorf(zt));
-			if (nextBlockZ != NULL && nextBlockZ->isDrawn()) {
+			if (nextBlockZ != NULL && nextBlockZ->isDrawn() && nextBlockZ->isSolid()) {
 				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.z = 0;
 				break;
@@ -168,7 +168,7 @@ void Player::checkCollisions() {
 		float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 		Block * nextBlockY = world->getBlockAt(floorf(xt), floorf(nextPosition.y), floorf(zt));
-		if (nextBlockY != NULL && nextBlockY->isDrawn()) {
+		if (nextBlockY != NULL && nextBlockY->isDrawn() && nextBlockY->isSolid()) {
 			moveVector.y = -(position.y - (floorf(nextPosition.y) + 1));
 			velocity.y = 0;
 //		gravityVel = 0;

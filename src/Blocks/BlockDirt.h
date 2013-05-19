@@ -14,6 +14,11 @@ class BlockDirt: public Block {
 public:
 	BlockDirt();
 	virtual ~BlockDirt();
+
+
+	bool isDrawn();
+	bool isSolid();
+	BlockType getBlockType();
 };
 
 #endif /* BLOCKDIRT_H_ */

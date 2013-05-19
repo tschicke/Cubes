@@ -21,10 +21,14 @@ void SpriteSheet::initSpriteSheets(){
 }
 
 SpriteSheet::SpriteSheet(const char * texturePath){
-	loaded = loadDDS(texturePath);
+	init(texturePath);
 }
 
 SpriteSheet::~SpriteSheet() {
+}
+
+void SpriteSheet::init(const char* texturePath) {
+	loaded = loadDDS(texturePath);
 }
 
 //Default 16 pixels per element

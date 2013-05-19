@@ -14,6 +14,10 @@ class BlockGrass: public Block {
 public:
 	BlockGrass();
 	virtual ~BlockGrass();
+
+	bool isDrawn();
+	bool isSolid();
+	BlockType getBlockType();
 protected:
 };
 

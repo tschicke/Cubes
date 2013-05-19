@@ -7,21 +7,17 @@
 
 #include "ChunkStorage.h"
 
-BlockStorage::BlockStorage() {
-	blockArray = 0;
-	loaded = false;
-	arraySize = 0;
-}
+#include "Chunk.h"
 
-BlockStorage::BlockStorage(int chunkSize) {
-	arraySize = chunkSize * chunkSize * chunkSize;
-	blockArray = new Block *[arraySize];
+BlockStorage::BlockStorage() {
+	blockArrayLength = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE;
+	blockArray = new Block *[blockArrayLength];
 	loaded = false;
 }
 
 BlockStorage::~BlockStorage() {
-	if(loaded){
-		for (int i = 0; i < arraySize; ++i){
+	if (loaded) {
+		for (int i = 0; i < blockArrayLength; ++i) {
 			delete blockArray[i];
 		}
 
@@ -31,4 +27,12 @@ BlockStorage::~BlockStorage() {
 
 bool BlockStorage::isLoaded() {
 	return loaded;
+}
+
+int BlockStorage::getBlockArrayLength() {
+	return blockArrayLength;
+}
+
+Block** BlockStorage::getBlockArrayAddress() {
+	return blockArray;
 }

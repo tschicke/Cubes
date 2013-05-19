@@ -12,6 +12,7 @@
 #include "Blocks/BlockGrass.h"
 #include "Blocks/BlockStone.h"
 #include "Blocks/BlockDirt.h"
+#include "Blocks/BlockTree.h"
 #include "Blocks/BlockAir.h"
 
 #endif /* BLOCKTYPES_H_ */

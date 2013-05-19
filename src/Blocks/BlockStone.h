@@ -14,6 +14,10 @@ class BlockStone: public Block {
 public:
 	BlockStone();
 	virtual ~BlockStone();
+
+	bool isDrawn();
+	bool isSolid();
+	BlockType getBlockType();
 };
 
 #endif /* BLOCKSTONE_H_ */

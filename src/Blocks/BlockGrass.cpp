@@ -10,10 +10,19 @@
 #include "BlockGrass.h"
 
 BlockGrass::BlockGrass() {
-	drawn = true;
-	blockType = blockType_Grass;
 }
 
 BlockGrass::~BlockGrass() {
 }
 
+bool BlockGrass::isDrawn(){
+	return true;
+}
+
+BlockType BlockGrass::getBlockType(){
+	return blockType_Grass;
+}
+
+bool BlockGrass::isSolid() {
+	return true;
+}

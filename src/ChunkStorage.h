@@ -8,19 +8,20 @@
 #ifndef CHUNKSTORAGE_H_
 #define CHUNKSTORAGE_H_
 
-#include "Blocks/Block.h"
+#include "BlockTypes.h"
 
 class BlockStorage {
 public:
 	BlockStorage();
-	BlockStorage(int chunkSize);
 	virtual ~BlockStorage();
 
 	bool isLoaded();
+	int getBlockArrayLength();
+	Block** getBlockArrayAddress();
 
 private:
 	Block ** blockArray;
-	int arraySize;
+	int blockArrayLength;
 
 	bool loaded;
 };

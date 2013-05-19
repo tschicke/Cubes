@@ -10,10 +10,14 @@
 
 #include "Block.h"
 
-class BlockAir : public Block{
+class BlockAir: public Block {
 public:
 	BlockAir();
 	virtual ~BlockAir();
+
+	bool isDrawn();
+	bool isSolid();
+	BlockType getBlockType();
 };
 
 #endif /* BLOCKAIR_H_ */

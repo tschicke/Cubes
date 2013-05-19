@@ -13,8 +13,10 @@ enum BlockType{
 	blockType_Grass,
 	blockType_Dirt,
 	blockType_Stone,
+	blockType_Tree,
 	blockType_Air,
-	blockType_Default
+	blockType_Null,
+	numBlockTypes
 };
 
 class Block {
@@ -23,15 +25,12 @@ public:
 	Block(BlockType type);
 	virtual ~Block();
 
-	void setDrawn(bool drawn);
-	bool isDrawn();
-
-	BlockType getBlockType();
+	virtual bool isDrawn();
+	virtual bool isSolid();
+	virtual BlockType getBlockType();
 
 	static const float cubeSize = 1.f;
 protected:
-	bool drawn;
-	BlockType blockType;
 };
 
 #endif /* CUBE_H_ */

@@ -8,10 +8,19 @@
 #include "BlockStone.h"
 
 BlockStone::BlockStone() {
-	drawn = true;
-	blockType = blockType_Stone;
 }
 
 BlockStone::~BlockStone() {
 }
 
+bool BlockStone::isDrawn(){
+	return true;
+}
+
+BlockType BlockStone::getBlockType(){
+	return blockType_Stone;
+}
+
+bool BlockStone::isSolid() {
+	return true;
+}

@@ -8,10 +8,19 @@
 #include "BlockAir.h"
 
 BlockAir::BlockAir() {
-	drawn = false;
-	blockType = blockType_Air;
 }
 
 BlockAir::~BlockAir() {
 }
 
+bool BlockAir::isDrawn(){
+	return false;
+}
+
+BlockType BlockAir::getBlockType(){
+	return blockType_Air;
+}
+
+bool BlockAir::isSolid() {
+	return false;
+}

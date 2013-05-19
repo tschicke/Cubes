@@ -8,10 +8,19 @@
 #include "BlockDirt.h"
 
 BlockDirt::BlockDirt() {
-	drawn = true;
-	blockType = blockType_Dirt;
 }
 
 BlockDirt::~BlockDirt() {
 }
 
+bool BlockDirt::isDrawn(){
+	return true;
+}
+
+bool BlockDirt::isSolid() {
+	return true;
+}
+
+BlockType BlockDirt::getBlockType(){
+	return blockType_Dirt;
+}

@@ -18,6 +18,8 @@ public:
 	SpriteSheet(const char * texturePath);
 	virtual ~SpriteSheet();
 
+	void init(const char * texturePath);
+
 	static SpriteSheet *defaultSpriteSheet;
 
 	static void initSpriteSheets();//should just be done when first trying to use it and not loaded?

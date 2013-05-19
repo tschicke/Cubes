@@ -24,6 +24,8 @@ public:
 private:
 	int seed;
 
+	void generateStructures(int genX, int genY, int genZ, BlockType * blockArray);
+
 	Noise noiseGenerator;
 };
 

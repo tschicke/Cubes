@@ -95,8 +95,6 @@ bool Texture::loadDDS(const char * texturePath) {
 		glGenTextures(1, &texID);
 		glBindTexture(GL_TEXTURE_2D, texID);
 
-		std::cout << texID << '\n';
-
 		unsigned int block_size = ((format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16);
 		unsigned int offset = 0;
 

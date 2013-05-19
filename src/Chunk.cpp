@@ -14,11 +14,10 @@
 #include "TerrainGenerator.h"
 
 #include <gl/glew.h>//Only for GL_VERTEX_SHADER and GL_FRAGMENT_SHADER, get them from somewhere else
-
 #include <glm/glm.hpp>//Temp??
 #include <glm/gtx/transform.hpp>//Temp??
-
-using namespace glm;//Temp??
+using namespace glm;
+//Temp??
 
 Chunk::Chunk() {
 	blocks = NULL;
@@ -44,6 +43,10 @@ void Chunk::init(int startX, int startY, int startZ) {
 //				std::cout << blockTypes[indexOfBlockAt(x, y, z)] << '\n';
 				if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Dirt) {
 					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
+				} else if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Grass) {
+					blocks[indexOfBlockAt(x, y, z)] = new BlockGrass;
+				} else if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Tree) {
+					blocks[indexOfBlockAt(x, y, z)] = new BlockTree;
 				} else {
 					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
 				}
@@ -55,11 +58,11 @@ void Chunk::init(int startX, int startY, int startZ) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
 				Block * block = blocks[indexOfBlockAt(x, y, z)];
-				if (block->isDrawn()) {
+//				if (block->isDrawn()) {
 					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize)); //FIXME fix occlusion culling between chunks, and organize it better
-				} else {
+//				} else {
 //					Renderer::getMainRenderer().addNullCube(meshID);
-				}
+//				}
 			}
 		}
 	}
@@ -153,6 +156,9 @@ void Chunk::createCube(int x, int y, int z) {
 	} else if (currentBlock->getBlockType() == blockType_Dirt) {
 		tileX = 2;
 		tileY = 0;
+	} else if (currentBlock->getBlockType() == blockType_Tree) {
+		tileX = 3;
+		tileY = 0;
 	}
 
 	ts::SpriteSheet * spriteSheet = ts::SpriteSheet::defaultSpriteSheet; //TODO dont automatically use default spritesheet
@@ -172,8 +178,10 @@ void Chunk::createCube(int x, int y, int z) {
 		vert3 = Renderer::getMainRenderer().addVertexToMesh(meshID, p3, normal, u1 + textureElementWidth, v2);
 		vert4 = Renderer::getMainRenderer().addVertexToMesh(meshID, p4, normal, u1, v2);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert2, vert3);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert3, vert4);
+		if (currentBlock->isDrawn()) {
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert2, vert3);
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert3, vert4);
+		}
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -187,8 +195,10 @@ void Chunk::createCube(int x, int y, int z) {
 		vert6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u1 + textureElementWidth, v2 + textureElementHeight);
 		vert7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1 + textureElementWidth, v2);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert2, vert6, vert7);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert2, vert7, vert3);
+		if (currentBlock->isDrawn()) {
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert2, vert6, vert7);
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert2, vert7, vert3);
+		}
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -202,8 +212,10 @@ void Chunk::createCube(int x, int y, int z) {
 		vert7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1 + textureElementWidth, v1 + textureElementHeight);
 		vert8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u1, v1 + textureElementHeight);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert3, vert7, vert8);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert3, vert8, vert4);
+		if (currentBlock->isDrawn()) {
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert3, vert7, vert8);
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert3, vert8, vert4);
+		}
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -217,8 +229,10 @@ void Chunk::createCube(int x, int y, int z) {
 		vert5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u2, v1);
 		vert6 = Renderer::getMainRenderer().addVertexToMesh(meshID, p6, normal, u2 + textureElementWidth, v1);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert5, vert6);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert6, vert2);
+		if (currentBlock->isDrawn()) {
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert5, vert6);
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert6, vert2);
+		}
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -232,8 +246,10 @@ void Chunk::createCube(int x, int y, int z) {
 		vert5 = Renderer::getMainRenderer().addVertexToMesh(meshID, p5, normal, u1, v2 + textureElementHeight);
 		vert8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u1, v2);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert4, vert8);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert8, vert5);
+		if (currentBlock->isDrawn()) {
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert4, vert8);
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert1, vert8, vert5);
+		}
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}
@@ -247,8 +263,10 @@ void Chunk::createCube(int x, int y, int z) {
 		vert7 = Renderer::getMainRenderer().addVertexToMesh(meshID, p7, normal, u1, v2);
 		vert8 = Renderer::getMainRenderer().addVertexToMesh(meshID, p8, normal, u1 + textureElementWidth, v2);
 
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert5, vert8, vert7);
-		Renderer::getMainRenderer().addTriangleToMesh(meshID, vert5, vert7, vert6);
+		if (currentBlock->isDrawn()) {
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert5, vert8, vert7);
+			Renderer::getMainRenderer().addTriangleToMesh(meshID, vert5, vert7, vert6);
+		}
 	} else {
 //		Renderer::getMainRenderer().addNullQuad(meshID);
 	}

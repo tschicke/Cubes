@@ -10,26 +10,22 @@
 #include <iostream>
 
 Block::Block() {
-	blockType = blockType_Default;
-	drawn = true;
 }
 
 Block::Block(BlockType type){
-	blockType = type;
-	drawn = true;
 }
 
 Block::~Block() {
 }
 
 bool Block::isDrawn(){
-	return drawn;
+	return true;
 }
 
-void Block::setDrawn(bool d){
-	drawn = d;
+bool Block::isSolid() {
+	return false;
 }
 
 BlockType Block::getBlockType(){
-	return blockType;
+	return blockType_Null;
 }
