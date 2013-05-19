@@ -11,8 +11,6 @@
 namespace ts {
 
 //TODO finish overloading operators
-//TODO move to .cpp file
-
 template<typename T = float>
 class Vector2;
 template<typename T = float>

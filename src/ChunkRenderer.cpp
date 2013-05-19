@@ -1,71 +1,72 @@
 /*
  * ChunkRenderer.cpp
  *
- *  Created on: May 18, 2013
+ *  Created on: May 19, 2013
  *      Author: Tyler
  */
 
 #include "ChunkRenderer.h"
+
+#include "Chunk.h"
+#include "Player.h"
+
 #include <gl/glew.h>
 
-BaseRenderer::BaseRenderer() {
+ChunkRenderer::ChunkRenderer() {
+	Shader vertexShader;
+	vertexShader.loadShader("shaders/textureShader.vert", GL_VERTEX_SHADER);
+
+	Shader fragmentShader;
+	fragmentShader.loadShader("shaders/textureShader.frag", GL_FRAGMENT_SHADER);
+
+	ShaderProgram shaderProgram;
+	shaderProgram.createProgram();
+	shaderProgram.addShader(&vertexShader);
+	shaderProgram.addShader(&fragmentShader);
+	shaderProgram.linkProgram();
+
+	vertexShader.deleteShader();
+	fragmentShader.deleteShader();
 }
 
-BaseRenderer::~BaseRenderer() {
+ChunkRenderer::~ChunkRenderer() {
 }
 
-//if vertexBuffer = true, GL_ARRAY_BUFFER, else GL_ELEMENT_ARRAY_BUFFER
-uint BaseRenderer::createBufferWithSize(int size, bool vertexBuffer) {
-	uint buffer;
-	glGenBuffers(1, &buffer);
-	int bufferToBind = (vertexBuffer ? GL_ARRAY_BUFFER : GL_ELEMENT_ARRAY_BUFFER);
-	glBindBuffer(bufferToBind, buffer);
-	glBufferData(bufferToBind, size, NULL, GL_STREAM_DRAW);
-	glBindBuffer(bufferToBind, 0);
+void ChunkRenderer::render(Player * player) {
+	shaderProgram.useProgram();
 
-	return buffer;
-}
+	//Bind Texture
 
-void BaseRenderer::deleteBuffer(uint& buffer) {
-	glDeleteBuffers(1, &buffer);
-}
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 
-void BaseRenderer::substituteDataToVertexBuffer(uint bufferID, int size, int offset, float* data) {
-	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
-	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
-void BaseRenderer::substituteDataToVertexBuffer(uint bufferID, int size, int offset, int* data) {
-	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
-	glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
+	shaderProgram.setUniform("modelMatrix", &modelMatrix);
+	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix());
+	shaderProgram.setUniform("projectionMatrix", &projectionMatrix);
 
-void BaseRenderer::substituteDataToIndexBuffer(uint bufferID, int size, int offset, int* data) {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferID);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	int numCubes = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 36;
+	int numVertices = numCubes * 24;
+	int numIndices = numCubes * 36;
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 3)); //Texture Coordinates
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 5));//Normals
+
+	glDrawElements(GL_TRIANGLES, numIndices, GL_FLOAT, (void *) 0);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
 
-void BaseRenderer::bindVertexBuffer(uint buffer) {
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-}
-
-void BaseRenderer::bindIndexBuffer(uint buffer) {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-}
-
-void BaseRenderer::unbindVertexBuffer() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//Unbind Texture
 }
-
-void BaseRenderer::unbindIndexBuffer() {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void BaseRenderer::render(){
-
-}
-
 

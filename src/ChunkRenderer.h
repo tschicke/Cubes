@@ -1,35 +1,28 @@
 /*
  * ChunkRenderer.h
  *
- *  Created on: May 18, 2013
+ *  Created on: May 19, 2013
  *      Author: Tyler
  */
 
 #ifndef CHUNKRENDERER_H_
 #define CHUNKRENDERER_H_
 
-#include "Common.h"
+#include "BaseRenderer.h"
 
-class BaseRenderer {
+class Player;//Should be include?
+
+class ChunkRenderer : public BaseRenderer{
 public:
-	BaseRenderer();
-	virtual ~BaseRenderer();
+	ChunkRenderer();
+	ChunkRenderer(int x, int y, int z);
+	virtual ~ChunkRenderer();
 
-	unsigned int createBufferWithSize(int size, bool vertexBuffer);
-	void deleteBuffer(uint& buffer);
+	void setChunkPosition(int x, int y, int z);
 
-	void substituteDataToVertexBuffer(uint bufferID, int size, int offset, float * data);
-	void substituteDataToVertexBuffer(uint bufferID, int size, int offset, int * data);
+	void render(Player * player);
 
-	void substituteDataToIndexBuffer(uint bufferID, int size, int offset, int * data);
-
-	void bindVertexBuffer(uint buffer); //should be bindArrayBuffer?
-	void bindIndexBuffer(uint buffer); //should be bindIndexArrayBuffer?
-
-	void unbindVertexBuffer(); //should be bindArrayBuffer?
-	void unbindIndexBuffer(); //should be bindIndexArrayBuffer?
-
-	void render();
+protected:
 };
 
 #endif /* CHUNKRENDERER_H_ */

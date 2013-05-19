@@ -5,25 +5,36 @@
  *      Author: Tyler
  */
 
-#ifndef CHUNKSTORAGE_H_
-#define CHUNKSTORAGE_H_
+#ifndef BLOCKSTORAGE_H_
+#define BLOCKSTORAGE_H_
 
 #include "BlockTypes.h"
+
+class Chunk;
 
 class BlockStorage {
 public:
 	BlockStorage();
+	BlockStorage(Chunk * parentChunk);
 	virtual ~BlockStorage();
 
-	bool isLoaded();
+	void setParentChunk(Chunk * parentChunk);
+
+	bool hasParentChunk();
 	int getBlockArrayLength();
 	Block** getBlockArrayAddress();
+
+	void freeArray();
 
 private:
 	Block ** blockArray;
 	int blockArrayLength;
 
-	bool loaded;
+	void init(Chunk * parentChunk);
+
+	bool parentChunkLoaded;
+
+	Chunk * parentChunk;
 };
 
-#endif /* CHUNKSTORAGE_H_ */
+#endif /* BLOCKSTORAGE_H_ */
