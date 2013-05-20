@@ -10,8 +10,6 @@
 
 #include "BaseRenderer.h"
 
-class Player;//Should be include?
-
 class ChunkRenderer : public BaseRenderer{
 public:
 	ChunkRenderer();

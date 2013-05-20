@@ -50,7 +50,7 @@ void ChunkManager::draw(glm::mat4 *viewMat) {
 	std::vector<Chunk *>::iterator iterator;
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
 		Chunk *chunk = *iterator;
-		chunk->draw(viewMat);
+		chunk->draw(mainPlayer);
 	}
 }
 

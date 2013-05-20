@@ -13,6 +13,8 @@
 #include "Shader.h"
 #include <glm/glm.hpp>
 
+class Player;//Should be include?
+
 class BaseRenderer {
 public:
 	BaseRenderer();
@@ -34,7 +36,7 @@ public:
 
 	void translateModelMatrix(float x, float y, float z);
 
-	void render();
+	void render(Player * player);
 
 	static void setProjectionMatrix();
 

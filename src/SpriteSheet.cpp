@@ -17,7 +17,7 @@ SpriteSheet::SpriteSheet() {
 }
 
 void SpriteSheet::initSpriteSheets(){
-	defaultSpriteSheet = new SpriteSheet("res/BlockSheet.DDS");
+	defaultSpriteSheet = new SpriteSheet("res/BlockSheet2.DDS");
 }
 
 SpriteSheet::SpriteSheet(const char * texturePath){

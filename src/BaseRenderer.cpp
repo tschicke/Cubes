@@ -104,7 +104,7 @@ void BaseRenderer::translateModelMatrix(float x, float y, float z) {
 	modelMatrix *= glm::translate(x, y, z);
 }
 
-void BaseRenderer::render() {
+void BaseRenderer::render(Player * player) {
 
 }
 

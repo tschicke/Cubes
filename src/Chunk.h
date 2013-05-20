@@ -16,6 +16,10 @@
 #include "BlockTypes.h"
 #include "Renderer.h"
 #include "Shader.h"
+#include "BlockStorage.h"
+#include "ChunkRenderer.h"
+
+class Player;//should be include?
 
 class Chunk{
 public:
@@ -25,7 +29,7 @@ public:
 	void init(int x, int y, int z);
 
 	void update(time_t dt);
-	void draw(glm::mat4* viewMatrix);
+	void draw(Player * player);
 
 	glm::vec3 getChunkPos();
 
@@ -36,6 +40,9 @@ public:
 	bool isLoaded();
 
 	void setTestColor(float r, float b, float g);
+
+	//New Public Stuff
+	friend class BlockStorage;//Need this?
 private:
 	Block ** blocks;
 
@@ -49,6 +56,11 @@ private:
 	glm::vec3 testColor;
 
 	bool loaded;
+
+	//New Private Stuff
+	ChunkRenderer chunkRenderer;
+	BlockStorage * blockStorage;
+
 };
 
 #endif /* CHUNK_H_ */

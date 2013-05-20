@@ -10,6 +10,8 @@
 #include "Chunk.h"
 #include "Player.h"
 
+#include "SpriteSheet.h"
+
 #include <gl/glew.h>
 
 ChunkRenderer::ChunkRenderer() {
@@ -35,7 +37,7 @@ ChunkRenderer::~ChunkRenderer() {
 void ChunkRenderer::render(Player * player) {
 	shaderProgram.useProgram();
 
-	//Bind Texture
+	ts::SpriteSheet::defaultSpriteSheet->useTexture();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 
@@ -67,6 +69,6 @@ void ChunkRenderer::render(Player * player) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//Unbind Texture
+	ts::SpriteSheet::unbindTextures();
 }
 

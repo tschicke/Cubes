@@ -10,6 +10,7 @@
 #include "Shader.h"
 #include "SpriteSheet.h"
 #include "Renderer.h"
+#include "Player.h"
 
 #include "TerrainGenerator.h"
 
@@ -22,6 +23,7 @@ using namespace glm;
 Chunk::Chunk() {
 	blocks = NULL;
 	loaded = false;
+	blockStorage = NULL;
 }
 
 void Chunk::init(int startX, int startY, int startZ) {
@@ -86,6 +88,13 @@ void Chunk::init(int startX, int startY, int startZ) {
 	fragmentShader.deleteShader();
 
 	loaded = true;
+
+
+
+
+
+	//New Stuff;
+	blockStorage = new BlockStorage(this);
 }
 
 Chunk::~Chunk() {
@@ -97,6 +106,10 @@ Chunk::~Chunk() {
 		}
 	}
 	delete[] blocks;
+
+	//New Stuff
+	blockStorage->freeArray();
+	delete blockStorage;
 }
 
 glm::vec3 Chunk::getChunkPos() {
@@ -280,14 +293,14 @@ bool Chunk::isLoaded() {
 	return loaded;
 }
 
-void Chunk::draw(mat4 * viewMatrix) {
+void Chunk::draw(Player * player) {
 	shaderProgram.useProgram();
 	ts::SpriteSheet::defaultSpriteSheet->useTexture();
 
 	mat4 modelMatrix = translate(chunkPosition);
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", viewMatrix, 1);
+	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix(), 1);
 	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
 
 	shaderProgram.setUniform("testColor", &testColor, 1);
@@ -295,6 +308,11 @@ void Chunk::draw(mat4 * viewMatrix) {
 	Renderer::getMainRenderer().renderMesh(meshID);
 
 	Texture::unbindTextures();
+
+
+	//New Stuff
+
+//	chunkRenderer.render(player);
 }
 
 void Chunk::setTestColor(float r, float g, float b) {
