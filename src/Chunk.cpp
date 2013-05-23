@@ -95,6 +95,7 @@ void Chunk::init(int startX, int startY, int startZ) {
 
 	//New Stuff;
 	blockStorage = new BlockStorage(this);
+	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z);
 }
 
 Chunk::~Chunk() {
