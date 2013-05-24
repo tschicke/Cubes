@@ -5,6 +5,8 @@
  *      Author: Tyler
  */
 
+#include <iostream>
+
 #include "ChunkRenderer.h"
 
 #include "Chunk.h"
@@ -13,6 +15,8 @@
 #include "SpriteSheet.h"
 
 #include <gl/glew.h>
+
+#include <glm/gtx/transform.hpp>
 
 ChunkRenderer::ChunkRenderer() {
 	modelMatNeedsUpdate = false;
@@ -172,12 +176,31 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
 
 				Block * block = blockArray[blockIndex];
 
+				int numVerticesPerCube = 24, numIndicesPerCube = 36;
 
-				//TODO complete this
+				for(int i = 0; i < numVerticesPerCube; ++i){
+					vertexArray[vertexIndex + (i * 3)] = cubeVertexData[(i * 3)];
+					vertexArray[vertexIndex + (i * 3) + 1] = cubeVertexData[(i * 3) + 1];
+					vertexArray[vertexIndex + (i * 3) + 2] = cubeVertexData[(i * 3) + 2];
 
+					vertexArray[numVerticesPerChunk + texIndex + (i * 2)] = cubeTexData[(i * 2)];
+					vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1];
+				}
+
+				for(int i = 0; i < numIndicesPerCube; ++i){
+					indexArray[indexIndex + i] = cubeIndexData[i] + indexIndex;
+				}
+
+				//TODO print out data to check it and check substitute functions
 			}
 		}
 	}
+
+	substituteDataToVertexBuffer((numVerticesPerChunk + numTexCoordsPerChunk) * sizeof(float), 0, vertexArray);
+	substituteDataToIndexBuffer(numIndicesPerChunk * sizeof(unsigned int), 0, indexArray);
+
+	delete[] vertexArray;
+	delete[] indexArray;
 }
 
 ChunkRenderer::~ChunkRenderer() {
@@ -198,13 +221,16 @@ void ChunkRenderer::render(Player * player) {
 
 	ts::SpriteSheet::defaultSpriteSheet->useTexture();
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-
 	shaderProgram.setUniform("modelMatrix", &modelMatrix);
 	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix());
 	shaderProgram.setUniform("projectionMatrix", &projectionMatrix);
+
+	glm::vec3 testColor(1.f, 1.f, 1.f);
+	shaderProgram.setUniform("testColor", &testColor, 1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -212,13 +238,13 @@ void ChunkRenderer::render(Player * player) {
 
 	int numCubes = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 36;
 	int numVertices = numCubes * 24;
-	int numIndices = numCubes * 36;
+	int numTriangles = numCubes * 12;
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 3)); //Texture Coordinates
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 5)); //Normals
 
-	glDrawElements(GL_TRIANGLES, numIndices, GL_FLOAT, (void *) 0);
+	glDrawElements(GL_TRIANGLES, numTriangles, GL_FLOAT, (void *) 0);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);

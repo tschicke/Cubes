@@ -8,6 +8,7 @@
 #ifndef CHUNKRENDERER_H_
 #define CHUNKRENDERER_H_
 
+#include "BlockTypes.h"
 #include "BaseRenderer.h"
 
 class ChunkRenderer : public BaseRenderer{

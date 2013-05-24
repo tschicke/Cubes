@@ -72,7 +72,7 @@ void BaseRenderer::substituteDataToVertexBuffer(int size, int offset, int* data)
 	}
 }
 
-void BaseRenderer::substituteDataToIndexBuffer(int size, int offset, int* data) {
+void BaseRenderer::substituteDataToIndexBuffer(int size, int offset, unsigned int* data) {
 	if (indexBuffLoaded) {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBufferID);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);

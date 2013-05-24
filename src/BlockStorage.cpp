@@ -34,7 +34,7 @@ BlockStorage::~BlockStorage() {
 			delete blockArray[i];
 		}
 
-		delete blockArray;
+		delete[] blockArray;
 	}
 }
 
@@ -63,6 +63,6 @@ void BlockStorage::freeArray() {
 			delete blockArray[i];
 		}
 
-		delete blockArray;
+		delete[] blockArray;
 	}
 }

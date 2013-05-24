@@ -71,17 +71,18 @@ Chunk * ChunkManager::getChunkWithCoordinate(int x, int y, int z) {
 }
 
 void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per frame
-	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 1); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 1; ++x) { //TODO should this be done this way? or should flags be used
-		for (int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 2; y < (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) + 0; ++y) {
-			for (int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) - 1; z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 1; ++z) {
-				Chunk * currentChunk = getChunkWithCoordinate(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE);
-				if ((currentChunk != NULL && !(currentChunk->isLoaded())) || !currentChunk) {
-					addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
-					return;
-				}
-			}
-		}
-	}
+//	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 1); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 1; ++x) { //TODO should this be done this way? or should flags be used
+//		for (int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 2; y < (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) + 0; ++y) {
+//			for (int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) - 1; z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 1; ++z) {
+//				Chunk * currentChunk = getChunkWithCoordinate(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE);
+//				if ((currentChunk != NULL && !(currentChunk->isLoaded())) || !currentChunk) {
+//					addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
+//					return;
+//				}
+//			}
+//		}
+//	}
+	addChunk(0, 0, 0, 1, 1, 1);
 }
 
 void ChunkManager::unloadChunks() {

@@ -189,7 +189,7 @@ void Player::checkCollisions() {
 void Player::update(time_t dt) {
 	input();
 	gravity();
-	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
+//	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
 
 	moveVector += velocity;
 

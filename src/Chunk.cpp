@@ -30,62 +30,62 @@ void Chunk::init(int startX, int startY, int startZ) {
 	chunkPosition = glm::vec3(startX, startY, startZ);
 	meshID.setColorType(ColorType_Texture);
 
-	Renderer::getMainRenderer().createMesh(&meshID);
+//	Renderer::getMainRenderer().createMesh(&meshID);
 
 	blocks = new Block*[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
 
-	ts::TerrainGenerator generator;
+//	ts::TerrainGenerator generator;
 
-	BlockType *blockTypes = new BlockType[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
-	generator.generateChunk(startX, startY, startZ, blockTypes);
+//	BlockType *blockTypes = new BlockType[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+//	generator.generateChunk(startX, startY, startZ, blockTypes);
 
-	for (int x = 0; x < CHUNK_SIZE; x++) {
-		for (int y = 0; y < CHUNK_SIZE; y++) {
-			for (int z = 0; z < CHUNK_SIZE; z++) {
+//	for (int x = 0; x < CHUNK_SIZE; x++) {
+//		for (int y = 0; y < CHUNK_SIZE; y++) {
+//			for (int z = 0; z < CHUNK_SIZE; z++) {
 //				std::cout << blockTypes[indexOfBlockAt(x, y, z)] << '\n';
-				if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Dirt) {
-					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
-				} else if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Grass) {
-					blocks[indexOfBlockAt(x, y, z)] = new BlockGrass;
-				} else if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Tree) {
-					blocks[indexOfBlockAt(x, y, z)] = new BlockTree;
-				} else {
-					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
-				}
-			}
-		}
-	}
+//				if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Dirt) {
+//					blocks[indexOfBlockAt(x, y, z)] = new BlockDirt;
+//				} else if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Grass) {
+//					blocks[indexOfBlockAt(x, y, z)] = new BlockGrass;
+//				} else if (blockTypes[indexOfBlockAt(x, y, z)] == blockType_Tree) {
+//					blocks[indexOfBlockAt(x, y, z)] = new BlockTree;
+//				} else {
+//					blocks[indexOfBlockAt(x, y, z)] = new BlockAir;
+//				}
+//			}
+//		}
+//	}
 
-	for (int x = 0; x < CHUNK_SIZE; x++) {
-		for (int y = 0; y < CHUNK_SIZE; y++) {
-			for (int z = 0; z < CHUNK_SIZE; z++) {
-				Block * block = blocks[indexOfBlockAt(x, y, z)];
+//	for (int x = 0; x < CHUNK_SIZE; x++) {
+//		for (int y = 0; y < CHUNK_SIZE; y++) {
+//			for (int z = 0; z < CHUNK_SIZE; z++) {
+//				Block * block = blocks[indexOfBlockAt(x, y, z)];
 //				if (block->isDrawn()) {
-					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize)); //FIXME fix occlusion culling between chunks, and organize it better
+//					createCube((x * Block::cubeSize), (y * Block::cubeSize), (z * Block::cubeSize)); //FIXME fix occlusion culling between chunks, and organize it better
 //				} else {
 //					Renderer::getMainRenderer().addNullCube(meshID);
 //				}
-			}
-		}
-	}
+//			}
+//		}
+//	}
 
-	delete blockTypes;
+//	delete[] blockTypes;
 
-	Renderer::getMainRenderer().endMesh(&meshID);
+//	Renderer::getMainRenderer().endMesh(&meshID);
 
-	Shader vertexShader;
-	vertexShader.loadShader("shaders/textureShader.vert", GL_VERTEX_SHADER);
+//	Shader vertexShader;
+//	vertexShader.loadShader("shaders/textureShader.vert", GL_VERTEX_SHADER);
 
-	Shader fragmentShader;
-	fragmentShader.loadShader("shaders/textureShader.frag", GL_FRAGMENT_SHADER);
+//	Shader fragmentShader;
+//	fragmentShader.loadShader("shaders/textureShader.frag", GL_FRAGMENT_SHADER);
 
-	shaderProgram.createProgram();
-	shaderProgram.addShader(&vertexShader);
-	shaderProgram.addShader(&fragmentShader);
-	shaderProgram.linkProgram();
+//	shaderProgram.createProgram();
+//	shaderProgram.addShader(&vertexShader);
+//	shaderProgram.addShader(&fragmentShader);
+//	shaderProgram.linkProgram();
 
-	vertexShader.deleteShader();
-	fragmentShader.deleteShader();
+//	vertexShader.deleteShader();
+//	fragmentShader.deleteShader();
 
 	loaded = true;
 
@@ -95,7 +95,7 @@ void Chunk::init(int startX, int startY, int startZ) {
 
 	//New Stuff;
 	blockStorage = new BlockStorage(this);
-	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z);
+	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, blocks);
 }
 
 Chunk::~Chunk() {
@@ -295,25 +295,25 @@ bool Chunk::isLoaded() {
 }
 
 void Chunk::draw(Player * player) {
-	shaderProgram.useProgram();
-	ts::SpriteSheet::defaultSpriteSheet->useTexture();
-
-	mat4 modelMatrix = translate(chunkPosition);
-
-	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix(), 1);
-	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
-
-	shaderProgram.setUniform("testColor", &testColor, 1);
-
-	Renderer::getMainRenderer().renderMesh(meshID);
-
-	Texture::unbindTextures();
+//	shaderProgram.useProgram();
+//	ts::SpriteSheet::defaultSpriteSheet->useTexture();
+//
+//	mat4 modelMatrix = translate(chunkPosition);
+//
+//	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
+//	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix(), 1);
+//	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
+//
+//	shaderProgram.setUniform("testColor", &testColor, 1);
+//
+//	Renderer::getMainRenderer().renderMesh(meshID);
+//
+//	Texture::unbindTextures();
 
 
 	//New Stuff
 
-//	chunkRenderer.render(player);
+	chunkRenderer.render(player);
 }
 
 void Chunk::setTestColor(float r, float g, float b) {

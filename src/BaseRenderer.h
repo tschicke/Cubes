@@ -26,7 +26,7 @@ public:
 	void substituteDataToVertexBuffer(int size, int offset, float * data);
 	void substituteDataToVertexBuffer(int size, int offset, int * data);
 
-	void substituteDataToIndexBuffer(int size, int offset, int * data);
+	void substituteDataToIndexBuffer(int size, int offset, unsigned int * data);
 
 	void bindVertexBuffer(); //should be bindArrayBuffer?
 	void bindIndexBuffer(); //should be bindIndexArrayBuffer?
