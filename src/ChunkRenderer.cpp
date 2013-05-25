@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 
 #include "ChunkRenderer.h"
 
@@ -33,7 +34,6 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
 	Shader fragmentShader;
 	fragmentShader.loadShader("shaders/textureShader.frag", GL_FRAGMENT_SHADER);
 
-	ShaderProgram shaderProgram;
 	shaderProgram.createProgram();
 	shaderProgram.addShader(&vertexShader);
 	shaderProgram.addShader(&fragmentShader);
@@ -53,7 +53,6 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
 	float * vertexArray = new float[numVerticesPerChunk + numTexCoordsPerChunk];
 	unsigned int * indexArray = new unsigned int[numIndicesPerChunk];
 
-
 	/*
 	 *
 	 * 		  p7__________p6
@@ -68,106 +67,112 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
 	float cubeSize = Block::cubeSize;
 
 	float cubeVertexData[] = {
-		//Front
-		0, 0, cubeSize,
-		cubeSize, 0, cubeSize,
-		cubeSize, cubeSize, cubeSize,
-		0, cubeSize, cubeSize,
+			//Front
+			0, 0, cubeSize,
+			cubeSize, 0, cubeSize,
+			cubeSize, cubeSize, cubeSize,
+			0, cubeSize, cubeSize,
 
-		//Back
-		cubeSize, 0, 0,
-		0, 0, 0,
-		0, cubeSize, 0,
-		cubeSize, cubeSize, 0,
+			//Back
+			cubeSize, 0, 0,
+			0, 0, 0,
+			0, cubeSize, 0,
+			cubeSize, cubeSize, 0,
 
-		//Left
-		0, 0, 0,
-		0, 0, cubeSize,
-		0, cubeSize, cubeSize,
-		0, cubeSize, 0,
+			//Left
+			0, 0, 0,
+			0, 0, cubeSize,
+			0, cubeSize, cubeSize,
+			0, cubeSize, 0,
 
-		//Right
-		cubeSize, 0, cubeSize,
-		cubeSize, 0, 0,
-		cubeSize, cubeSize, 0,
-		cubeSize, cubeSize, cubeSize,
+			//Right
+			cubeSize, 0, cubeSize,
+			cubeSize, 0, 0,
+			cubeSize, cubeSize, 0,
+			cubeSize, cubeSize, cubeSize,
 
-		//Top
-		0, cubeSize, cubeSize,
-		cubeSize, cubeSize, cubeSize,
-		cubeSize, cubeSize, 0,
-		0, cubeSize, 0,
+			//Top
+			0, cubeSize, cubeSize,
+			cubeSize, cubeSize, cubeSize,
+			cubeSize, cubeSize, 0,
+			0, cubeSize, 0,
 
-		//Bottom
-		0, 0, 0,
-		cubeSize, 0, 0,
-		cubeSize, 0, cubeSize,
-		0, 0, cubeSize
+			//Bottom
+			0, 0, 0,
+			cubeSize, 0, 0,
+			cubeSize, 0, cubeSize,
+			0, 0, cubeSize
 	};
 
 	float texElementSize = ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getWidth();
 
 	float cubeTexData[] = {
-		0, 2 * texElementSize,
-		texElementSize, 2 * texElementSize,
-		texElementSize, texElementSize,
-		0, texElementSize,
+			//Front
+			0, 2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			texElementSize, texElementSize,
+			0, texElementSize,
 
-		0, 2 * texElementSize,
-		texElementSize, 2 * texElementSize,
-		texElementSize, texElementSize,
-		0, texElementSize,
+			//Back
+			0, 2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			texElementSize, texElementSize,
+			0, texElementSize,
 
-		0, 2 * texElementSize,
-		texElementSize, 2 * texElementSize,
-		texElementSize, texElementSize,
-		0, texElementSize,
+			//Left
+			0, 2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			texElementSize, texElementSize,
+			0, texElementSize,
 
-		0, 2 * texElementSize,
-		texElementSize, 2 * texElementSize,
-		texElementSize, texElementSize,
-		0, texElementSize,
+			//Right
+			0, 2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			texElementSize, texElementSize,
+			0, texElementSize,
 
-		0, texElementSize,
-		texElementSize, texElementSize,
-		texElementSize, 0,
-		0, 0,
+			//Top
+			0, texElementSize,
+			texElementSize, texElementSize,
+			texElementSize, 0,
+			0, 0,
 
-		texElementSize, texElementSize,
-		2 * texElementSize, texElementSize,
-		2 * texElementSize, 0,
-		texElementSize, 0
+			//Bottom
+			texElementSize, texElementSize,
+			2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			0, texElementSize, 0
 	};
 
 	unsigned int cubeIndexData[] = {
-		//Front
-		0, 1, 2,
-		0, 2, 3,
+			//Front
+			0, 1, 2,
+			0, 2, 3,
 
-		//Back
-		4, 5, 6,
-		4, 6, 7,
+			//Back
+			4, 5, 6,
+			4, 6, 7,
 
-		//Left
-		8, 9, 10,
-		8, 10, 11,
+			//Left
+			8, 9, 10,
+			8, 10, 11,
 
-		//Right
-		12, 13, 14,
-		12, 14, 15,
+			//Right
+			12, 13, 14,
+			12, 14, 15,
 
-		//Top
-		16, 17, 18,
-		16, 18, 19,
+			//Top
+			16, 17, 18,
+			16, 18, 19,
 
-		//Bottom
-		20, 21, 22,
-		20, 22, 23
+			//Bottom
+			20, 21, 22,
+			20, 22, 23
 	};
 
 	for (int x = 0; x < Chunk::CHUNK_SIZE; ++x) {
 		for (int y = 0; y < Chunk::CHUNK_SIZE; ++y) {
-			for(int z = 0; z < Chunk::CHUNK_SIZE; ++z){
+			for (int z = 0; z < Chunk::CHUNK_SIZE; ++z) {
 				int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
 
 				int vertexIndex = blockIndex * 24 * 3;
@@ -178,20 +183,20 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
 
 				int numVerticesPerCube = 24, numIndicesPerCube = 36;
 
-				for(int i = 0; i < numVerticesPerCube; ++i){
-					vertexArray[vertexIndex + (i * 3)] = cubeVertexData[(i * 3)];
-					vertexArray[vertexIndex + (i * 3) + 1] = cubeVertexData[(i * 3) + 1];
-					vertexArray[vertexIndex + (i * 3) + 2] = cubeVertexData[(i * 3) + 2];
+				if (block != NULL && block->isDrawn()) {
+					for (int i = 0; i < numVerticesPerCube; ++i) {
+						vertexArray[vertexIndex + (i * 3)] = cubeVertexData[(i * 3)] + x;
+						vertexArray[vertexIndex + (i * 3) + 1] = cubeVertexData[(i * 3) + 1] + y;
+						vertexArray[vertexIndex + (i * 3) + 2] = cubeVertexData[(i * 3) + 2] + z;
 
-					vertexArray[numVerticesPerChunk + texIndex + (i * 2)] = cubeTexData[(i * 2)];
-					vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1];
+						vertexArray[numVerticesPerChunk + texIndex + (i * 2)] = cubeTexData[(i * 2)];
+						vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1];
+					}
+
+					for (int i = 0; i < numIndicesPerCube; ++i) {
+						indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+					}
 				}
-
-				for(int i = 0; i < numIndicesPerCube; ++i){
-					indexArray[indexIndex + i] = cubeIndexData[i] + indexIndex;
-				}
-
-				//TODO print out data to check it and check substitute functions
 			}
 		}
 	}
@@ -204,7 +209,7 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
 }
 
 ChunkRenderer::~ChunkRenderer() {
-	deleteBuffers();
+//	deleteBuffers();
 }
 
 void ChunkRenderer::setChunkPosition(int x, int y, int z) {
@@ -215,15 +220,16 @@ void ChunkRenderer::setChunkPosition(int x, int y, int z) {
 void ChunkRenderer::render(Player * player) {
 	if (modelMatNeedsUpdate) {
 		modelMatrix = glm::translate(chunkPosition);
+		modelMatNeedsUpdate = false;
 	}
 
 	shaderProgram.useProgram();
 
 	ts::SpriteSheet::defaultSpriteSheet->useTexture();
 
-	shaderProgram.setUniform("modelMatrix", &modelMatrix);
-	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix());
-	shaderProgram.setUniform("projectionMatrix", &projectionMatrix);
+	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
+	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix(), 1);
+	shaderProgram.setUniform("projectionMatrix", &projectionMatrix, 1);
 
 	glm::vec3 testColor(1.f, 1.f, 1.f);
 	shaderProgram.setUniform("testColor", &testColor, 1);
@@ -236,15 +242,15 @@ void ChunkRenderer::render(Player * player) {
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
-	int numCubes = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 36;
+	int numCubes = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE;
 	int numVertices = numCubes * 24;
-	int numTriangles = numCubes * 12;
+	int numIndicesToDraw = numCubes * 36;
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 3)); //Texture Coordinates
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 5)); //Normals
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 3 * sizeof(float))); //Texture Coordinates
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Normals
 
-	glDrawElements(GL_TRIANGLES, numTriangles, GL_FLOAT, (void *) 0);
+	glDrawElements(GL_TRIANGLES, numIndicesToDraw, GL_UNSIGNED_INT, 0);
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
@@ -257,5 +263,17 @@ void ChunkRenderer::render(Player * player) {
 	ts::SpriteSheet::unbindTextures();
 }
 
-void ChunkRenderer::addBlockAtPosition(int x, int y, int z) {
+void ChunkRenderer::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
+}
+
+void ChunkRenderer::removeBlockAtPosition(int x, int y, int z) {
+	unsigned int indexData[36];
+	for(int i = 0; i < 36; ++i){
+		indexData[i] = -1;
+	}
+	int chunkSize = Chunk::CHUNK_SIZE;
+	int size = sizeof(unsigned int) * 36;
+	int offset = (x * chunkSize * chunkSize + y * chunkSize + z) * 36 * sizeof(unsigned int);
+
+	substituteDataToIndexBuffer(size, offset, indexData);
 }

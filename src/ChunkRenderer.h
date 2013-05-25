@@ -23,7 +23,8 @@ public:
 
 	void render(Player * player);
 
-	void addBlockAtPosition(int x, int y, int z);
+	void addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType);
+	void removeBlockAtPosition(int x, int y, int z);
 
 protected:
 	bool modelMatNeedsUpdate;

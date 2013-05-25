@@ -28,7 +28,7 @@ TerrainGenerator::TerrainGenerator(int seed) {
 TerrainGenerator::~TerrainGenerator() {
 }
 
-void TerrainGenerator::generateChunk(int genX, int genY, int genZ, BlockType * blockArray) {
+void TerrainGenerator::generateChunk(int genX, int genY, int genZ, Block ** blockArray) {
 	byte chunkSize = Chunk::CHUNK_SIZE;
 
 	for (int x = 0; x < chunkSize; ++x) {
@@ -42,9 +42,9 @@ void TerrainGenerator::generateChunk(int genX, int genY, int genZ, BlockType * b
 
 				if (y + genY < height) {
 //				if(y + genY < density * chunkSize){
-					blockArray[blockIndex] = blockType_Grass;
+					blockArray[blockIndex] = new BlockGrass;
 				} else {
-					blockArray[blockIndex] = blockType_Air;
+					blockArray[blockIndex] = new BlockAir;
 				}
 			}
 		}
@@ -53,7 +53,7 @@ void TerrainGenerator::generateChunk(int genX, int genY, int genZ, BlockType * b
 	generateStructures(genX, genY, genZ, blockArray);
 }
 
-void TerrainGenerator::generateStructures(int genX, int genY, int genZ, BlockType * blockArray) {
+void TerrainGenerator::generateStructures(int genX, int genY, int genZ, Block ** blockArray) {
 
 }
 

@@ -14,14 +14,13 @@
 #include <glm/glm.hpp>
 
 #include "BlockTypes.h"
-#include "Renderer.h"
-#include "Shader.h"
 #include "BlockStorage.h"
 #include "ChunkRenderer.h"
 
-class Player;//should be include?
+class Player;
+//should be include?
 
-class Chunk{
+class Chunk {
 public:
 	Chunk();
 	virtual ~Chunk();
@@ -41,26 +40,22 @@ public:
 
 	void setTestColor(float r, float b, float g);
 
-	//New Public Stuff
-	friend class BlockStorage;//Need this?
+	void addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType);
+	void removeBlockAtPosition(int x, int y, int z);
+
+	friend class BlockStorage; //Need this?
 private:
 	Block ** blocks;
 
-	MeshID meshID;
-	ShaderProgram shaderProgram;
+	int indexOfBlockAt(int x, int y, int z);
 
-	void createCube(int x, int y, int z);//Temp??
-	int indexOfBlockAt(int x, int y, int z);//Change to return int?
-
-	glm::vec3 chunkPosition;//Should be glm::vec3?
+	glm::vec3 chunkPosition;
 	glm::vec3 testColor;
 
 	bool loaded;
 
-	//New Private Stuff
 	ChunkRenderer chunkRenderer;
 	BlockStorage * blockStorage;
-
 };
 
 #endif /* CHUNK_H_ */

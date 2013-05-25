@@ -12,7 +12,7 @@
 
 namespace ts {
 
-class Mouse {
+class Mouse {//TODO add buttons to mouse class
 public:
 	static void init();
 

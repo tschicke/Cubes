@@ -20,11 +20,11 @@ public:
 	TerrainGenerator(int seed);
 	virtual ~TerrainGenerator();
 
-	void generateChunk(int x, int y, int z, BlockType * blockTypeArray);
+	void generateChunk(int x, int y, int z, Block ** blockArray);
 private:
 	int seed;
 
-	void generateStructures(int genX, int genY, int genZ, BlockType * blockArray);
+	void generateStructures(int genX, int genY, int genZ, Block ** blockArray);
 
 	Noise noiseGenerator;
 };

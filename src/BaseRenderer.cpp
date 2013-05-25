@@ -10,8 +10,10 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include <iostream>
+
 float BaseRenderer::fov = 90.f;
-glm::mat4 BaseRenderer::projectionMatrix = glm::perspective(fov, 800.f/600.f, 0.1f, 100.f);
+glm::mat4 BaseRenderer::projectionMatrix = glm::perspective(fov, 600.f / 400.f, 0.1f, 100.f);
 
 BaseRenderer::BaseRenderer() {
 	vertexBufferID = 0;
@@ -74,7 +76,7 @@ void BaseRenderer::substituteDataToVertexBuffer(int size, int offset, int* data)
 
 void BaseRenderer::substituteDataToIndexBuffer(int size, int offset, unsigned int* data) {
 	if (indexBuffLoaded) {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBufferID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, data);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
@@ -105,7 +107,6 @@ void BaseRenderer::translateModelMatrix(float x, float y, float z) {
 }
 
 void BaseRenderer::render(Player * player) {
-
 }
 
 void BaseRenderer::setProjectionMatrix() {

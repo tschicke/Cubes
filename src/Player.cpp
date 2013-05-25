@@ -48,7 +48,7 @@ void Player::init(ts::World * world) {
 	gravityVel = 0;
 	onGround = false;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
-//	loadPlayerModel();
+	loadPlayerModel();
 }
 
 void Player::loadPlayerModel() {
@@ -109,6 +109,31 @@ void Player::input() {
 		jump();
 	}
 
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::R) == ts::Keyboard::keyPressed){
+//		int floorX = floorf(position.x);
+//		int floorY = floorf(position.y);
+//		int floorZ = floorf(position.z);
+//
+//		for (int x = floorX - 0; x < floorX + 1; ++x) {
+//			for (int y = floorY - 0; x < floorY + 1; ++y) {
+//				for (int z = floorZ - 0; x < floorZ + 1; ++z) {
+//					Chunk * chunk = world->getChunkAt(floorX, floorY - 1, floorZ);
+//					if (chunk != NULL) {
+//						Block * block = chunk->getBlockAtCoordinate(floorX, floorY - 1, floorZ);
+//						if (block != NULL && !(block->getBlockType() == blockType_Air)) {
+//							chunk->removeBlockAtPosition(floorX, floorY - 1, floorZ);
+//						}
+//					}
+//				}
+//			}
+//		}
+
+		Chunk * chunk = world->getChunkAt(floorf(position.x), floorf(position.y - 1), floorf(position.z));
+		if(chunk != NULL){
+			chunk->removeBlockAtPosition(floorf(position.x), floorf(position.y - 1), floorf(position.z));
+		}
+	}
+
 	int mouseDX, mouseDY;
 	mouseDX = ts::Mouse::getLastMove().x;
 	mouseDY = ts::Mouse::getLastMove().y;
@@ -139,7 +164,7 @@ void Player::checkCollisions() {
 			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockX = world->getBlockAt(floorf(xt), floorf(position.y), floorf(zt));
-			if (nextBlockX != NULL && nextBlockX->isDrawn() && nextBlockX->isSolid()) {
+			if (nextBlockX != NULL && nextBlockX->isSolid()) {
 				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.x = 0;
 				break;
@@ -154,7 +179,7 @@ void Player::checkCollisions() {
 			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockZ = world->getBlockAt(floorf(xt), floorf(position.y), floorf(zt));
-			if (nextBlockZ != NULL && nextBlockZ->isDrawn() && nextBlockZ->isSolid()) {
+			if (nextBlockZ != NULL && nextBlockZ->isSolid()) {
 				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.z = 0;
 				break;
@@ -168,7 +193,7 @@ void Player::checkCollisions() {
 		float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 		Block * nextBlockY = world->getBlockAt(floorf(xt), floorf(nextPosition.y), floorf(zt));
-		if (nextBlockY != NULL && nextBlockY->isDrawn() && nextBlockY->isSolid()) {
+		if (nextBlockY != NULL && nextBlockY->isSolid()) {
 			moveVector.y = -(position.y - (floorf(nextPosition.y) + 1));
 			velocity.y = 0;
 //		gravityVel = 0;
@@ -189,7 +214,7 @@ void Player::checkCollisions() {
 void Player::update(time_t dt) {
 	input();
 	gravity();
-//	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
+	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
 
 	moveVector += velocity;
 
