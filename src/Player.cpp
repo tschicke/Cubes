@@ -110,28 +110,28 @@ void Player::input() {
 	}
 
 	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::R) == ts::Keyboard::keyPressed){
-//		int floorX = floorf(position.x);
-//		int floorY = floorf(position.y);
-//		int floorZ = floorf(position.z);
+		int floorX = floorf(position.x);
+		int floorY = floorf(position.y);
+		int floorZ = floorf(position.z);
 //
-//		for (int x = floorX - 0; x < floorX + 1; ++x) {
-//			for (int y = floorY - 0; x < floorY + 1; ++y) {
-//				for (int z = floorZ - 0; x < floorZ + 1; ++z) {
-//					Chunk * chunk = world->getChunkAt(floorX, floorY - 1, floorZ);
-//					if (chunk != NULL) {
-//						Block * block = chunk->getBlockAtCoordinate(floorX, floorY - 1, floorZ);
-//						if (block != NULL && !(block->getBlockType() == blockType_Air)) {
-//							chunk->removeBlockAtPosition(floorX, floorY - 1, floorZ);
-//						}
-//					}
-//				}
-//			}
-//		}
-
-		Chunk * chunk = world->getChunkAt(floorf(position.x), floorf(position.y - 1), floorf(position.z));
-		if(chunk != NULL){
-			chunk->removeBlockAtPosition(floorf(position.x), floorf(position.y - 1), floorf(position.z));
+		for (int x = floorX - 6; x < floorX + 7; ++x) {
+			for (int y = floorY - 6; y < floorY + 7; ++y) {
+				for (int z = floorZ - 6; z < floorZ + 7; ++z) {
+					Chunk * chunk = world->getChunkAt(x, y, z);
+					if (chunk != NULL) {
+						Block * block = chunk->getBlockAtCoordinate(x, y, z);
+						if (block != NULL && !(block->getBlockType() == blockType_Air)) {
+							chunk->removeBlockAtPosition(x, y, z);
+						}
+					}
+				}
+			}
 		}
+
+//		Chunk * chunk = world->getChunkAt(floorX, floorY - 1, floorZ);
+//		if(chunk != NULL){
+//			chunk->removeBlockAtPosition(floorX, floorY - 1, floorZ);
+//		}
 	}
 
 	int mouseDX, mouseDY;
@@ -224,15 +224,15 @@ void Player::update(time_t dt) {
 }
 
 void Player::draw(glm::mat4 * viewMat) {
-	shaderProgram.useProgram();
+//	shaderProgram.useProgram();
 
-	glm::mat4 modelMatrix = glm::translate(position.x, position.y, position.z);	// * glm::rotate(yaw, 0.f, 1.f, 0.f);
+//	glm::mat4 modelMatrix = glm::translate(position.x, position.y, position.z);	// * glm::rotate(yaw, 0.f, 1.f, 0.f);
 
-	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", viewMat, 1);
-	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
+//	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
+//	shaderProgram.setUniform("viewMatrix", viewMat, 1);
+//	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
 
-	Renderer::getMainRenderer().renderMesh(playerModelID);
+//	Renderer::getMainRenderer().renderMesh(playerModelID);
 }
 
 glm::vec3 Player::getPosition() {

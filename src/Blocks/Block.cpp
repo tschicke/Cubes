@@ -10,9 +10,11 @@
 #include <iostream>
 
 Block::Block() {
+	flagNeedsFaceUpdate = false;
 }
 
 Block::Block(BlockType type){
+	flagNeedsFaceUpdate = false;
 }
 
 Block::~Block() {
@@ -28,4 +30,12 @@ bool Block::isSolid() {
 
 BlockType Block::getBlockType(){
 	return blockType_Null;
+}
+
+bool Block::needsFaceUpdate() {
+	return flagNeedsFaceUpdate;
+}
+
+void Block::setNeedsFaceUpdate(bool flag) {
+	flagNeedsFaceUpdate = flag;
 }

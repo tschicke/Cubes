@@ -45,8 +45,6 @@ public:
 
 	friend class BlockStorage; //Need this?
 private:
-	Block ** blocks;
-
 	int indexOfBlockAt(int x, int y, int z);
 
 	glm::vec3 chunkPosition;

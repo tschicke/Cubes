@@ -30,7 +30,6 @@ void Renderer::createMesh(MeshID * meshID) {
 		glGenBuffers(1, meshID->getVertexIDAddress());
 		glGenBuffers(1, meshID->getIndexIDAddress());
 		currentMeshID = *meshID;
-		std::cout << "create mesh\n";
 	}
 }
 

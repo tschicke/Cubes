@@ -174,6 +174,12 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
 		for (int y = 0; y < Chunk::CHUNK_SIZE; ++y) {
 			for (int z = 0; z < Chunk::CHUNK_SIZE; ++z) {
 				int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+				int blockIndexXMinusOne = (x - 1) * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+				int blockIndexXPlusOne = (x + 1) * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+				int blockIndexYMinusOne = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + (y - 1) * Chunk::CHUNK_SIZE + z;
+				int blockIndexYPlusOne = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + (y + 1) * Chunk::CHUNK_SIZE + z;
+				int blockIndexZMinusOne = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z - 1;
+				int blockIndexZPlusOne = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z + 1;
 
 				int vertexIndex = blockIndex * 24 * 3;
 				int texIndex = blockIndex * 24 * 2;
@@ -193,8 +199,76 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
 						vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1];
 					}
 
-					for (int i = 0; i < numIndicesPerCube; ++i) {
-						indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+					if (z != Chunk::CHUNK_SIZE - 1) {
+						if (blockArray[blockIndexZPlusOne] != NULL && !blockArray[blockIndexZPlusOne]->isDrawn()) { //Front
+							for (int i = 0; i < 6; ++i) {
+								indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+							}
+						}
+					} else {
+						for (int i = 0; i < 6; ++i) {
+							indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+						}
+					}
+
+					if (z != 0) {
+						if (blockArray[blockIndexZMinusOne] != NULL && !blockArray[blockIndexZMinusOne]->isDrawn()) { //Back
+							for (int i = 6; i < 12; ++i) {
+								indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+							}
+						}
+					} else {
+						for (int i = 6; i < 12; ++i) {
+							indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+						}
+					}
+
+					if (x != 0) {
+						if (blockArray[blockIndexXMinusOne] != NULL && !blockArray[blockIndexXMinusOne]->isDrawn()) { //Left
+							for (int i = 12; i < 18; ++i) {
+								indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+							}
+						}
+					} else {
+						for (int i = 12; i < 18; ++i) {
+							indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+						}
+					}
+
+					if (x != Chunk::CHUNK_SIZE - 1) {
+						if (blockArray[blockIndexXPlusOne] != NULL && !blockArray[blockIndexXPlusOne]->isDrawn()) { //Right
+							for (int i = 18; i < 24; ++i) {
+								indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+							}
+						}
+					} else {
+						for (int i = 18; i < 24; ++i) {
+							indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+						}
+					}
+
+					if (y != Chunk::CHUNK_SIZE - 1) {
+						if (blockArray[blockIndexYPlusOne] != NULL && !blockArray[blockIndexYPlusOne]->isDrawn()) { //Top
+							for (int i = 24; i < 30; ++i) {
+								indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+							}
+						}
+					} else {
+						for (int i = 24; i < 30; ++i) {
+							indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+						}
+					}
+
+					if (y != 0) {
+						if (blockArray[blockIndexYMinusOne] != NULL && !blockArray[blockIndexYMinusOne]->isDrawn()) { //Bottom
+							for (int i = 30; i < 36; ++i) {
+								indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+							}
+						}
+					} else {
+						for (int i = 30; i < 36; ++i) {
+							indexArray[indexIndex + i] = cubeIndexData[i] + (blockIndex * 24);
+						}
 					}
 				}
 			}

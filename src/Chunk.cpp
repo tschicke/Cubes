@@ -21,7 +21,6 @@ using namespace glm;
 //Temp??
 
 Chunk::Chunk() {
-	blocks = NULL;
 	loaded = false;
 	blockStorage = NULL;
 }
@@ -29,31 +28,22 @@ Chunk::Chunk() {
 void Chunk::init(int startX, int startY, int startZ) {
 	chunkPosition = glm::vec3(startX, startY, startZ);
 
-	blocks = new Block*[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+	blockStorage = new BlockStorage(this);
 
 	ts::TerrainGenerator generator;
 
-	generator.generateChunk(startX, startY, startZ, blocks);
+	generator.generateChunk(startX, startY, startZ, blockStorage->getBlockArray());
 
 	loaded = true;
 
-	blockStorage = new BlockStorage(this);
-	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, blocks);
+	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, blockStorage->getBlockArray());
 }
 
 Chunk::~Chunk() {
-	for (int x = 0; x < CHUNK_SIZE; x++) {
-		for (int y = 0; y < CHUNK_SIZE; y++) {
-			for (int z = 0; z < CHUNK_SIZE; z++) {
-				delete blocks[indexOfBlockAt(x, y, z)];
-			}
-		}
-	}
-	delete[] blocks;
+	chunkRenderer.deleteBuffers();
 
-	//New Stuff
-	blockStorage->freeArray();
 	delete blockStorage;
+	blockStorage = NULL;
 }
 
 glm::vec3 Chunk::getChunkPos() {
@@ -67,7 +57,7 @@ Block * Chunk::getBlockAtCoordinate(int x, int y, int z) {
 	y = (y < 0 ? y + CHUNK_SIZE : y);
 	z %= CHUNK_SIZE;
 	z = (z < 0 ? z + CHUNK_SIZE : z);
-	return blocks[indexOfBlockAt(x, y, z)];
+	return blockStorage->getBlockArray()[indexOfBlockAt(x, y, z)];
 }
 
 void Chunk::update(time_t dt) {
@@ -77,11 +67,19 @@ void Chunk::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
 }
 
 void Chunk::removeBlockAtPosition(int x, int y, int z) {
+	x %= CHUNK_SIZE;
+	x = (x < 0 ? x + CHUNK_SIZE : x);
+	y %= CHUNK_SIZE;
+	y = (y < 0 ? y + CHUNK_SIZE : y);
+	z %= CHUNK_SIZE;
+	z = (z < 0 ? z + CHUNK_SIZE : z);
+
 	int blockIndex = indexOfBlockAt(x, y, z);
-	if(blocks[blockIndex]->getBlockType() != blockType_Air){
-		delete blocks[blockIndex];
-		blocks[blockIndex] = new BlockAir;
+	if (blockStorage->getBlockArray()[blockIndex]->getBlockType() != blockType_Air) {
+		delete blockStorage->getBlockArray()[blockIndex];
+		blockStorage->getBlockArray()[blockIndex] = new BlockAir;
 		chunkRenderer.removeBlockAtPosition(x, y, z);
+		blockStorage->markBlocksAroundBlockDirty(x, y, z);
 	}
 }
 

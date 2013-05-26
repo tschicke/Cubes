@@ -22,11 +22,15 @@ public:
 
 	bool hasParentChunk();
 	int getBlockArrayLength();
-	Block** getBlockArrayAddress();
+	Block** getBlockArray();
 
 	void freeArray();
 
+	void markBlocksAroundBlockDirty(int x, int y, int z);
 private:
+	BlockStorage(const BlockStorage& copy);
+	BlockStorage& operator=(const BlockStorage& copy);
+
 	Block ** blockArray;
 	int blockArrayLength;
 

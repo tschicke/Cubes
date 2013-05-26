@@ -7,6 +7,8 @@
 
 #include "BlockStorage.h"
 
+#include <iostream>
+
 #include "Chunk.h"
 
 BlockStorage::BlockStorage() {
@@ -17,9 +19,13 @@ BlockStorage::BlockStorage(Chunk* parentChunk) {
 	init(parentChunk);
 }
 
+
 void BlockStorage::init(Chunk * parentChunk) {
 	blockArrayLength = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE;
 	blockArray = new Block *[blockArrayLength];
+	for(int i = 0; i < blockArrayLength; ++i){
+		blockArray[i] = NULL;
+	}
 	if (parentChunk != NULL) {
 		parentChunkLoaded = true;
 	} else {
@@ -32,9 +38,11 @@ BlockStorage::~BlockStorage() {
 	if (parentChunkLoaded) {
 		for (int i = 0; i < blockArrayLength; ++i) {
 			delete blockArray[i];
+			blockArray[i] = NULL;
 		}
 
 		delete[] blockArray;
+		blockArray = NULL;
 	}
 }
 
@@ -46,7 +54,7 @@ int BlockStorage::getBlockArrayLength() {
 	return blockArrayLength;
 }
 
-Block** BlockStorage::getBlockArrayAddress() {
+Block** BlockStorage::getBlockArray() {
 	return blockArray;
 }
 
@@ -65,4 +73,14 @@ void BlockStorage::freeArray() {
 
 		delete[] blockArray;
 	}
+}
+
+void BlockStorage::markBlocksAroundBlockDirty(int x, int y, int z) {
+	int chunkSize = Chunk::CHUNK_SIZE;
+	blockArray[(x - 1) * chunkSize * chunkSize + y * chunkSize + z]->setNeedsFaceUpdate(true);//TODO add x == 0, x == chunkSize - 1 checks
+	blockArray[(x + 1) * chunkSize * chunkSize + y * chunkSize + z]->setNeedsFaceUpdate(true);
+	blockArray[x * chunkSize * chunkSize + (y - 1) * chunkSize + z]->setNeedsFaceUpdate(true);
+	blockArray[x * chunkSize * chunkSize + (y + 1) * chunkSize + z]->setNeedsFaceUpdate(true);
+	blockArray[x * chunkSize * chunkSize + y * chunkSize + (z - 1)]->setNeedsFaceUpdate(true);
+	blockArray[x * chunkSize * chunkSize + y * chunkSize + (z + 1)]->setNeedsFaceUpdate(true);
 }

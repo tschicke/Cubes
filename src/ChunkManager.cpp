@@ -71,12 +71,13 @@ Chunk * ChunkManager::getChunkWithCoordinate(int x, int y, int z) {
 }
 
 void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per frame
-	for (int x = (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE - 1); x < (mainPlayer->getPosition().x / Chunk::CHUNK_SIZE) + 1; ++x) { //TODO should this be done this way? or should flags be used
-		for (int y = (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) - 2; y < (mainPlayer->getPosition().y / Chunk::CHUNK_SIZE) + 0; ++y) {
-			for (int z = (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) - 1; z < (mainPlayer->getPosition().z / Chunk::CHUNK_SIZE) + 1; ++z) {
-				Chunk * currentChunk = getChunkWithCoordinate(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE);
+	for (int x = floorf(mainPlayer->getPosition().x - (2 * Chunk::CHUNK_SIZE)); x < floorf(mainPlayer->getPosition().x + (2 * Chunk::CHUNK_SIZE)); x += Chunk::CHUNK_SIZE) { //TODO should this be done this way? or should flags be used
+		for (int y = floorf(mainPlayer->getPosition().y - (1 * Chunk::CHUNK_SIZE)); y < floorf(mainPlayer->getPosition().y + (0 * Chunk::CHUNK_SIZE)); y += Chunk::CHUNK_SIZE) {
+			for (int z = floorf(mainPlayer->getPosition().z - (2 * Chunk::CHUNK_SIZE)); z < floorf(mainPlayer->getPosition().z + (2 * Chunk::CHUNK_SIZE)); z += Chunk::CHUNK_SIZE) {
+				Chunk * currentChunk = getChunkWithCoordinate(x - (x % Chunk::CHUNK_SIZE), y - (y % Chunk::CHUNK_SIZE), z - (z % Chunk::CHUNK_SIZE));
 				if ((currentChunk != NULL && !(currentChunk->isLoaded())) || !currentChunk) {
-					addChunk(x * Chunk::CHUNK_SIZE, y * Chunk::CHUNK_SIZE, z * Chunk::CHUNK_SIZE, 1, 1, 1);
+					addChunk(x - (x % Chunk::CHUNK_SIZE), y - (y % Chunk::CHUNK_SIZE), z - (z % Chunk::CHUNK_SIZE), 1, 1, 1);
+//					std::cout << "addChunk  " << x - (x % Chunk::CHUNK_SIZE) << '\n';
 					return;
 				}
 			}
@@ -85,18 +86,20 @@ void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per fra
 }
 
 void ChunkManager::unloadChunks() {
-	std::vector<Chunk *>::iterator iterator;
-	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
+	std::vector<Chunk *>::iterator iterator = chunks.begin();
+	while (iterator != chunks.end()) { //TODO add max limit per frame
 		Chunk *chunk = *iterator;
-		int maxDistSquared = 10 * 10 * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE;
-		float xDistSquared = (chunk->getChunkPos().x - mainPlayer->getPosition().x) * (chunk->getChunkPos().x - mainPlayer->getPosition().x);
-		float yDistSquared = (chunk->getChunkPos().y - mainPlayer->getPosition().y) * (chunk->getChunkPos().y - mainPlayer->getPosition().y);
-		float zDistSquared = (chunk->getChunkPos().z - mainPlayer->getPosition().z) * (chunk->getChunkPos().z - mainPlayer->getPosition().z);
-//		std::cout << xDistSquared / (Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE) << ", " << zDistSquared / (Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE)<< '\n';
-		if (xDistSquared > maxDistSquared || yDistSquared > maxDistSquared || zDistSquared > maxDistSquared) {
-//			chunk->deleteChunk()
+		float chunkX = chunk->getChunkPos().x, chunkY = chunk->getChunkPos().y, chunkZ = chunk->getChunkPos().z;
+		int chunkSize = Chunk::CHUNK_SIZE;
+
+		if (chunkX + chunkSize < floorf(mainPlayer->getPosition().x - (2 * chunkSize)) || chunkX >= floorf(mainPlayer->getPosition().x + (2 * chunkSize)) ||
+				chunkY + chunkSize < floorf(mainPlayer->getPosition().y - (1 * chunkSize)) || chunkY >= floorf(mainPlayer->getPosition().y) ||
+				chunkZ + chunkSize < floorf(mainPlayer->getPosition().z - (2 * chunkSize)) || chunkZ >= floorf(mainPlayer->getPosition().z + (2 * chunkSize))) {
+//			chunk->deleteChunk()//fake function, create it eventually for saving, etc.
 			delete chunk;
-			chunks.erase(iterator);
+			iterator = chunks.erase(iterator);
+		} else {
+			++iterator;
 		}
 	}
 }
