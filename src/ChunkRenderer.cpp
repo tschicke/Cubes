@@ -21,13 +21,16 @@
 
 ChunkRenderer::ChunkRenderer() {
 	modelMatNeedsUpdate = false;
+	parentChunk = NULL;
 }
 
-ChunkRenderer::ChunkRenderer(int x, int y, int z, Block ** blockArray) {
-	init(x, y, z, blockArray);
+ChunkRenderer::ChunkRenderer(int x, int y, int z, Block ** blockArray, Chunk * parentChunk) {
+	init(x, y, z, blockArray, parentChunk);
 }
 
-void ChunkRenderer::init(int x, int y, int z, Block ** blockArray) {
+void ChunkRenderer::init(int x, int y, int z, Block ** blockArray, Chunk * parentChunk) {
+	this->parentChunk = parentChunk;
+
 	Shader vertexShader;
 	vertexShader.loadShader("shaders/textureShader.vert", GL_VERTEX_SHADER);
 
@@ -289,6 +292,103 @@ ChunkRenderer::~ChunkRenderer() {
 void ChunkRenderer::setChunkPosition(int x, int y, int z) {
 	chunkPosition = glm::vec3(x, y, z);
 	modelMatNeedsUpdate = true;
+}
+
+void ChunkRenderer::update(time_t dt) {
+	if (parentChunk == NULL)
+		return;
+	BlockStorage * parentStorage = parentChunk->blockStorage;
+	Block ** blockArray = parentStorage->getBlockArray();
+	for (int x = 0; x < Chunk::CHUNK_SIZE; ++x) {
+		for (int y = 0; y < Chunk::CHUNK_SIZE; ++y) {
+			for (int z = 0; z < Chunk::CHUNK_SIZE; ++z) {
+				int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+				if (blockArray[blockIndex]->needsFaceUpdate()) {
+					updateBlockFaces(x, y, z);
+				}
+			}
+		}
+	}
+}
+
+void ChunkRenderer::updateBlockFaces(int x, int y, int z) {
+	int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+	int blockIndexXMinusOne = (x - 1) * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+	int blockIndexXPlusOne = (x + 1) * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+	int blockIndexYMinusOne = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + (y - 1) * Chunk::CHUNK_SIZE + z;
+	int blockIndexYPlusOne = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + (y + 1) * Chunk::CHUNK_SIZE + z;
+	int blockIndexZMinusOne = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z - 1;
+	int blockIndexZPlusOne = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z + 1;
+
+	Block ** blockArray = parentChunk->blockStorage->getBlockArray();
+
+	unsigned int cubeIndexData[] = {
+				//Front
+				0, 1, 2,
+				0, 2, 3,
+
+				//Back
+				4, 5, 6,
+				4, 6, 7,
+
+				//Left
+				8, 9, 10,
+				8, 10, 11,
+
+				//Right
+				12, 13, 14,
+				12, 14, 15,
+
+				//Top
+				16, 17, 18,
+				16, 18, 19,
+
+				//Bottom
+				20, 21, 22,
+				20, 22, 23
+		};
+
+	for(int i = 0; i < 36; ++i){
+		cubeIndexData[i] += blockIndex * 24;
+	}
+
+	if (!blockArray[blockIndexZPlusOne]->isDrawn()) {
+		for (int i = 0; i < 6; ++i) {
+			cubeIndexData[i] = -1;
+		}
+	}
+
+	if (!blockArray[blockIndexZMinusOne]->isDrawn()) {
+		for (int i = 6; i < 12; ++i) {
+			cubeIndexData[i] = -1;
+		}
+	}
+
+	if (!blockArray[blockIndexXMinusOne]->isDrawn()) {
+		for (int i = 12; i < 18; ++i) {
+			cubeIndexData[i] = -1;
+		}
+	}
+
+	if (!blockArray[blockIndexXPlusOne]->isDrawn()) {
+		for (int i = 18; i < 24; ++i) {
+			cubeIndexData[i] = -1;
+		}
+	}
+
+	if (!blockArray[blockIndexYPlusOne]->isDrawn()) {
+		for (int i = 24; i < 30; ++i) {
+			cubeIndexData[i] = -1;
+		}
+	}
+
+	if (!blockArray[blockIndexYMinusOne]->isDrawn()) {
+		for (int i = 30; i < 36; ++i) {
+			cubeIndexData[i] = -1;
+		}
+	}
+
+	substituteDataToIndexBuffer(sizeof(cubeIndexData), blockIndex * 36 * sizeof(unsigned int), cubeIndexData);
 }
 
 void ChunkRenderer::render(Player * player) {

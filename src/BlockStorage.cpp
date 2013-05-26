@@ -77,10 +77,22 @@ void BlockStorage::freeArray() {
 
 void BlockStorage::markBlocksAroundBlockDirty(int x, int y, int z) {
 	int chunkSize = Chunk::CHUNK_SIZE;
-	blockArray[(x - 1) * chunkSize * chunkSize + y * chunkSize + z]->setNeedsFaceUpdate(true);//TODO add x == 0, x == chunkSize - 1 checks
-	blockArray[(x + 1) * chunkSize * chunkSize + y * chunkSize + z]->setNeedsFaceUpdate(true);
-	blockArray[x * chunkSize * chunkSize + (y - 1) * chunkSize + z]->setNeedsFaceUpdate(true);
-	blockArray[x * chunkSize * chunkSize + (y + 1) * chunkSize + z]->setNeedsFaceUpdate(true);
-	blockArray[x * chunkSize * chunkSize + y * chunkSize + (z - 1)]->setNeedsFaceUpdate(true);
-	blockArray[x * chunkSize * chunkSize + y * chunkSize + (z + 1)]->setNeedsFaceUpdate(true);
+	if (x != 0) {
+		blockArray[(x - 1) * chunkSize * chunkSize + y * chunkSize + z]->setNeedsFaceUpdate(true);
+	}
+	if (x != chunkSize - 1) {
+		blockArray[(x + 1) * chunkSize * chunkSize + y * chunkSize + z]->setNeedsFaceUpdate(true);
+	}
+	if (y != 0) {
+		blockArray[x * chunkSize * chunkSize + (y - 1) * chunkSize + z]->setNeedsFaceUpdate(true);
+	}
+	if (y != chunkSize - 1) {
+		blockArray[x * chunkSize * chunkSize + (y + 1) * chunkSize + z]->setNeedsFaceUpdate(true);
+	}
+	if (z != 0) {
+		blockArray[x * chunkSize * chunkSize + y * chunkSize + (z - 1)]->setNeedsFaceUpdate(true);
+	}
+	if (z != chunkSize - 1) {
+		blockArray[x * chunkSize * chunkSize + y * chunkSize + (z + 1)]->setNeedsFaceUpdate(true);
+	}
 }

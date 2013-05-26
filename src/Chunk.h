@@ -44,6 +44,7 @@ public:
 	void removeBlockAtPosition(int x, int y, int z);
 
 	friend class BlockStorage; //Need this?
+	friend class ChunkRenderer;
 private:
 	int indexOfBlockAt(int x, int y, int z);
 

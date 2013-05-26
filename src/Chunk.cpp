@@ -36,7 +36,7 @@ void Chunk::init(int startX, int startY, int startZ) {
 
 	loaded = true;
 
-	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, blockStorage->getBlockArray());
+	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, blockStorage->getBlockArray(), this);
 }
 
 Chunk::~Chunk() {
@@ -61,6 +61,7 @@ Block * Chunk::getBlockAtCoordinate(int x, int y, int z) {
 }
 
 void Chunk::update(time_t dt) {
+	chunkRenderer.update(dt);
 }
 
 void Chunk::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
