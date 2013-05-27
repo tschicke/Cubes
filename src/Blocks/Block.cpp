@@ -9,6 +9,8 @@
 
 #include <iostream>
 
+#include "../SpriteSheet.h"
+
 Block::Block() {
 	flagNeedsFaceUpdate = false;
 }
@@ -34,6 +36,14 @@ BlockType Block::getBlockType(){
 
 bool Block::needsFaceUpdate() {
 	return flagNeedsFaceUpdate;
+}
+
+float Block::getBaseTextureX() {
+	return 3 * (2 * ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getWidth());
+}
+
+float Block::getBaseTextureY() {
+	return 3 * (2 * ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getHeight());
 }
 
 void Block::setNeedsFaceUpdate(bool flag) {

@@ -7,6 +7,8 @@
 
 #include "BlockTree.h"
 
+#include "../SpriteSheet.h"
+
 BlockTree::BlockTree() {
 }
 
@@ -23,4 +25,12 @@ BlockType BlockTree::getBlockType(){
 
 bool BlockTree::isSolid() {
 	return true;
+}
+
+float BlockTree::getBaseTextureX() {
+	return 3 * (2 * ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getWidth());
+}
+
+float BlockTree::getBaseTextureY() {
+	return 0;
 }

@@ -40,9 +40,11 @@ void TerrainGenerator::generateChunk(int genX, int genY, int genZ, Block ** bloc
 //				float density = glm::noise1(glm::vec3((x + genX) / (float)chunkSize, (y + genY) / (float) chunkSize, (z + genZ) / (float)chunkSize));
 //				float density = noiseGenerator.smoothNoise3D((x + genX) / (float)chunkSize, (y + genY) / (float) chunkSize, (z + genZ) / (float)chunkSize);
 
-				if (y + genY < height) {
+				if (y + genY == height) {//TODO change to blocktype array to avoid allocations that get changed in generatestructures??
 //				if(y + genY < density * chunkSize){
 					blockArray[blockIndex] = new BlockGrass;
+				} else if(y + genY < height){
+					blockArray[blockIndex] = new BlockStone;
 				} else {
 					blockArray[blockIndex] = new BlockAir;
 				}

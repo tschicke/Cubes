@@ -18,6 +18,9 @@ public:
 	bool isDrawn();
 	bool isSolid();
 	BlockType getBlockType();
+
+	float getBaseTextureX();
+	float getBaseTextureY();
 protected:
 };
 

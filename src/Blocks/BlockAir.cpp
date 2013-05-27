@@ -7,6 +7,8 @@
 
 #include "BlockAir.h"
 
+#include "../SpriteSheet.h"
+
 BlockAir::BlockAir() {
 }
 

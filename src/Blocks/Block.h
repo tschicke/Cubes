@@ -31,6 +31,9 @@ public:
 
 	static const float cubeSize = 1.f;
 
+	virtual float getBaseTextureX();
+	virtual float getBaseTextureY();
+
 	bool needsFaceUpdate();
 	void setNeedsFaceUpdate(bool flag);
 protected:

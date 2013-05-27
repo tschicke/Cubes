@@ -7,6 +7,8 @@
 
 #include "BlockStone.h"
 
+#include "../SpriteSheet.h"
+
 BlockStone::BlockStone() {
 }
 
@@ -23,4 +25,12 @@ BlockType BlockStone::getBlockType(){
 
 bool BlockStone::isSolid() {
 	return true;
+}
+
+float BlockStone::getBaseTextureX() {
+	return 1 * (2 * ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getWidth());
+}
+
+float BlockStone::getBaseTextureY() {
+	return 0;
 }

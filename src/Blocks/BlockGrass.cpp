@@ -5,9 +5,9 @@
  *      Author: Tyler
  */
 
-#include <iostream>
-
 #include "BlockGrass.h"
+
+#include "../SpriteSheet.h"
 
 BlockGrass::BlockGrass() {
 }
@@ -25,4 +25,12 @@ BlockType BlockGrass::getBlockType(){
 
 bool BlockGrass::isSolid() {
 	return true;
+}
+
+float BlockGrass::getBaseTextureX() {
+	return 0;
+}
+
+float BlockGrass::getBaseTextureY() {
+	return 0;
 }

@@ -65,6 +65,20 @@ void Chunk::update(time_t dt) {
 }
 
 void Chunk::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
+	x %= CHUNK_SIZE;
+	x = (x < 0 ? x + CHUNK_SIZE : x);
+	y %= CHUNK_SIZE;
+	y = (y < 0 ? y + CHUNK_SIZE : y);
+	z %= CHUNK_SIZE;
+	z = (z < 0 ? z + CHUNK_SIZE : z);
+
+	int blockIndex = indexOfBlockAt(x, y, z);
+	if(blockStorage->getBlockArray()[blockIndex]->getBlockType() == blockType_Air){
+		delete blockStorage->getBlockArray()[blockIndex];
+		blockStorage->getBlockArray()[blockIndex] = new BlockDirt;//TODO use blockType
+		chunkRenderer.addBlockOfTypeAtPosition(x, y, z, blockType);
+		blockStorage->markBlocksAroundBlockDirty(x, y, z);
+	}
 }
 
 void Chunk::removeBlockAtPosition(int x, int y, int z) {

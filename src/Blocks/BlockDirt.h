@@ -15,10 +15,12 @@ public:
 	BlockDirt();
 	virtual ~BlockDirt();
 
-
 	bool isDrawn();
 	bool isSolid();
 	BlockType getBlockType();
+
+	float getBaseTextureX();
+	float getBaseTextureY();
 };
 
 #endif /* BLOCKDIRT_H_ */

@@ -129,6 +129,16 @@ void Player::input() {
 		}
 	}
 
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::T) == ts::Keyboard::keyPressed){
+		Chunk * chunk = world->getChunkAt(floorf(position.x) - 3, floorf(position.y), floorf(position.z));
+		if(chunk != NULL){
+			Block * block = chunk->getBlockAtCoordinate(floorf(position.x) - 3, floorf(position.y), floorf(position.z));
+			if (block != NULL && block->getBlockType() == blockType_Air) {
+				chunk->addBlockOfTypeAtPosition(floorf(position.x) - 3, floorf(position.y), floorf(position.z), blockType_Grass);
+			}
+		}
+	}
+
 	int mouseDX, mouseDY;
 	mouseDX = ts::Mouse::getLastMove().x;
 	mouseDY = ts::Mouse::getLastMove().y;

@@ -198,8 +198,8 @@ void ChunkRenderer::init(int x, int y, int z, Block ** blockArray, Chunk * paren
 						vertexArray[vertexIndex + (i * 3) + 1] = cubeVertexData[(i * 3) + 1] + y;
 						vertexArray[vertexIndex + (i * 3) + 2] = cubeVertexData[(i * 3) + 2] + z;
 
-						vertexArray[numVerticesPerChunk + texIndex + (i * 2)] = cubeTexData[(i * 2)];
-						vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1];
+						vertexArray[numVerticesPerChunk + texIndex + (i * 2)] = cubeTexData[(i * 2)] + block->getBaseTextureX();
+						vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1] + block->getBaseTextureY();
 					}
 
 					if (z != Chunk::CHUNK_SIZE - 1) {
@@ -347,7 +347,7 @@ void ChunkRenderer::updateBlockFaces(int x, int y, int z) {
 				//Bottom
 				20, 21, 22,
 				20, 22, 23
-		};
+	};
 
 	for(int i = 0; i < 36; ++i){
 		cubeIndexData[i] += blockIndex * 24;
@@ -441,6 +441,139 @@ void ChunkRenderer::render(Player * player) {
 }
 
 void ChunkRenderer::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
+	float cubeSize = Block::cubeSize;
+	BlockStorage * blockStorage = parentChunk->blockStorage;
+	int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+	int chunkSize = Chunk::CHUNK_SIZE;
+
+	int numVerticesPerCube = 24, numIndicesPerCube = 36;
+
+	int vertexIndex = blockIndex * numVerticesPerCube * 3;
+	int texIndex = blockIndex * numVerticesPerCube * 2;
+	int indexIndex = blockIndex * numIndicesPerCube;
+
+	float cubeVertexData[] = {
+			//Front
+			0, 0, cubeSize,
+			cubeSize, 0, cubeSize,
+			cubeSize, cubeSize, cubeSize,
+			0, cubeSize, cubeSize,
+
+			//Back
+			cubeSize, 0, 0,
+			0, 0, 0,
+			0, cubeSize, 0,
+			cubeSize, cubeSize, 0,
+
+			//Left
+			0, 0, 0,
+			0, 0, cubeSize,
+			0, cubeSize, cubeSize,
+			0, cubeSize, 0,
+
+			//Right
+			cubeSize, 0, cubeSize,
+			cubeSize, 0, 0,
+			cubeSize, cubeSize, 0,
+			cubeSize, cubeSize, cubeSize,
+
+			//Top
+			0, cubeSize, cubeSize,
+			cubeSize, cubeSize, cubeSize,
+			cubeSize, cubeSize, 0,
+			0, cubeSize, 0,
+
+			//Bottom
+			0, 0, 0,
+			cubeSize, 0, 0,
+			cubeSize, 0, cubeSize,
+			0, 0, cubeSize
+	};
+
+	for(int i = 0; i < 24; ++i){
+		cubeVertexData[(i * 3)] += x;
+		cubeVertexData[(i * 3) + 1] += y;
+		cubeVertexData[(i * 3) + 2] += z;
+	}
+
+	float texElementSize = ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getWidth();
+
+	float cubeTexData[] = {
+			//Front
+			0, 2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			texElementSize, texElementSize,
+			0, texElementSize,
+
+			//Back
+			0, 2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			texElementSize, texElementSize,
+			0, texElementSize,
+
+			//Left
+			0, 2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			texElementSize, texElementSize,
+			0, texElementSize,
+
+			//Right
+			0, 2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			texElementSize, texElementSize,
+			0, texElementSize,
+
+			//Top
+			0, texElementSize,
+			texElementSize, texElementSize,
+			texElementSize, 0,
+			0, 0,
+
+			//Bottom
+			texElementSize, texElementSize,
+			2 * texElementSize,
+			texElementSize, 2 * texElementSize,
+			0, texElementSize, 0
+	};
+
+	for (int i = 0; i < 24; ++i){
+		cubeTexData[(i * 2)] += blockStorage->getBlockArray()[blockIndex]->getBaseTextureX();
+		cubeTexData[(i * 2) + 1] += blockStorage->getBlockArray()[blockIndex]->getBaseTextureY();
+	}
+
+	unsigned int cubeIndexData[] = {
+			//Front
+			0, 1, 2,
+			0, 2, 3,
+
+			//Back
+			4, 5, 6,
+			4, 6, 7,
+
+			//Left
+			8, 9, 10,
+			8, 10, 11,
+
+			//Right
+			12, 13, 14,
+			12, 14, 15,
+
+			//Top
+			16, 17, 18,
+			16, 18, 19,
+
+			//Bottom
+			20, 21, 22,
+			20, 22, 23
+	};
+
+	for (int i = 0; i < 36; ++i){
+		cubeIndexData[i] += blockIndex * 24;
+	}
+
+	substituteDataToVertexBuffer(sizeof(cubeVertexData), vertexIndex * sizeof(float), cubeVertexData);
+	substituteDataToVertexBuffer(sizeof(cubeTexData), ((chunkSize * chunkSize * chunkSize * numVerticesPerCube * 3) + texIndex) * sizeof(float), cubeTexData);
+	substituteDataToIndexBuffer(sizeof(cubeIndexData), blockIndex * 36 * sizeof(unsigned int), cubeIndexData);
 }
 
 void ChunkRenderer::removeBlockAtPosition(int x, int y, int z) {
