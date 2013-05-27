@@ -127,11 +127,6 @@ void Player::input() {
 				}
 			}
 		}
-
-//		Chunk * chunk = world->getChunkAt(floorX, floorY - 1, floorZ);
-//		if(chunk != NULL){
-//			chunk->removeBlockAtPosition(floorX, floorY - 1, floorZ);
-//		}
 	}
 
 	int mouseDX, mouseDY;
