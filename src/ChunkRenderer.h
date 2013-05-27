@@ -18,10 +18,10 @@ class Chunk;
 class ChunkRenderer : public BaseRenderer{
 public:
 	ChunkRenderer();
-	ChunkRenderer(int x, int y, int z, Block ** blockArray, Chunk * parentChunk);
+	ChunkRenderer(int x, int y, int z, Chunk * parentChunk);
 	virtual ~ChunkRenderer();
 
-	void init(int x, int y, int z, Block ** blockArray, Chunk * parentChunk);
+	void init(int x, int y, int z, Chunk * parentChunk);
 
 	void setChunkPosition(int x, int y, int z);
 
@@ -39,6 +39,11 @@ protected:
 	Chunk * parentChunk;
 
 	glm::vec3 chunkPosition;
+
+	int numVerticesToDraw;
+
+	void remakeIndexBuffer();
+	bool needsIndexBufferRemake;
 };
 
 #endif /* CHUNKRENDERER_H_ */

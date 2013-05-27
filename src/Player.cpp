@@ -113,7 +113,7 @@ void Player::input() {
 		int floorX = floorf(position.x);
 		int floorY = floorf(position.y);
 		int floorZ = floorf(position.z);
-//
+
 		for (int x = floorX - 6; x < floorX + 7; ++x) {
 			for (int y = floorY - 6; y < floorY + 7; ++y) {
 				for (int z = floorZ - 6; z < floorZ + 7; ++z) {

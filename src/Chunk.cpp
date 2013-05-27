@@ -36,7 +36,7 @@ void Chunk::init(int startX, int startY, int startZ) {
 
 	loaded = true;
 
-	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, blockStorage->getBlockArray(), this);
+	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, this);
 }
 
 Chunk::~Chunk() {
