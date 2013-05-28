@@ -30,8 +30,8 @@ public:
 
 	void updateBlockFaces(int blockX, int blockY, int blockZ);
 
-	void addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType);
-	void removeBlockAtPosition(int x, int y, int z);
+	void updateBlockAtPosition(int x, int y, int z);
+	void markDirty();
 
 protected:
 	bool modelMatNeedsUpdate;

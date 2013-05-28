@@ -134,7 +134,7 @@ void Player::input() {
 		if(chunk != NULL){
 			Block * block = chunk->getBlockAtCoordinate(floorf(position.x) - 3, floorf(position.y), floorf(position.z));
 			if (block != NULL && block->getBlockType() == blockType_Air) {
-				chunk->addBlockOfTypeAtPosition(floorf(position.x) - 3, floorf(position.y), floorf(position.z), blockType_Grass);
+				chunk->addBlockOfTypeAtPosition(floorf(position.x) - 3, floorf(position.y), floorf(position.z), blockType_Tree);
 			}
 		}
 	}

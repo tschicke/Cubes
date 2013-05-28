@@ -476,7 +476,7 @@ void ChunkRenderer::render(Player * player) {
 	ts::SpriteSheet::unbindTextures();
 }
 
-void ChunkRenderer::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
+void ChunkRenderer::updateBlockAtPosition(int x, int y, int z) {
 	float cubeSize = Block::cubeSize;
 	BlockStorage * blockStorage = parentChunk->blockStorage;
 	int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
@@ -578,9 +578,9 @@ void ChunkRenderer::addBlockOfTypeAtPosition(int x, int y, int z, BlockType bloc
 
 	substituteDataToVertexBuffer(sizeof(cubeVertexData), vertexIndex * sizeof(float), cubeVertexData);
 	substituteDataToVertexBuffer(sizeof(cubeTexData), ((chunkSize * chunkSize * chunkSize * numVerticesPerCube * 3) + texIndex) * sizeof(float), cubeTexData);
-	needsIndexBufferRemake = true;
+	markDirty();
 }
 
-void ChunkRenderer::removeBlockAtPosition(int x, int y, int z) {
-	needsIndexBufferRemake = true;//TODO should just add makeDirty() function?
+void ChunkRenderer::markDirty() {
+	needsIndexBufferRemake = true;
 }

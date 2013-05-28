@@ -32,18 +32,18 @@ void TerrainGenerator::generateChunk(int genX, int genY, int genZ, Block ** bloc
 	byte chunkSize = Chunk::CHUNK_SIZE;
 
 	for (int x = 0; x < chunkSize; ++x) {
-		for (int y = 0; y < chunkSize; ++y) {
-			for (int z = 0; z < chunkSize; ++z) {
+		for (int z = 0; z < chunkSize; ++z) {
+			int height = (noiseGenerator.smoothNoise2D((x + genX) / (float) chunkSize, (z + genZ) / (float) chunkSize) + 1) * chunkSize / 2;
+			for (int y = 0; y < chunkSize; ++y) {
 				int blockIndex = (x * chunkSize * chunkSize) + (y * chunkSize) + z;
-				int height = (noiseGenerator.smoothNoise2D((x + genX) / (float) chunkSize, (z + genZ) / (float) chunkSize) + 1) * chunkSize / 2;
 //				int height = (glm::noise1(glm::vec2((x + genX) / (float)chunkSize, (z + genZ) / (float)chunkSize)) + 1) * chunkSize / 2;
 //				float density = glm::noise1(glm::vec3((x + genX) / (float)chunkSize, (y + genY) / (float) chunkSize, (z + genZ) / (float)chunkSize));
 //				float density = noiseGenerator.smoothNoise3D((x + genX) / (float)chunkSize, (y + genY) / (float) chunkSize, (z + genZ) / (float)chunkSize);
 
-				if (y + genY == height) {//TODO change to blocktype array to avoid allocations that get changed in generatestructures??
+				if (y + genY == height) { //TODO change to blocktype array to avoid allocations that get changed in generatestructures??
 //				if(y + genY < density * chunkSize){
 					blockArray[blockIndex] = new BlockGrass;
-				} else if(y + genY < height){
+				} else if (y + genY < height) {
 					blockArray[blockIndex] = new BlockStone;
 				} else {
 					blockArray[blockIndex] = new BlockAir;

@@ -36,6 +36,8 @@ public:
 
 	bool needsFaceUpdate();
 	void setNeedsFaceUpdate(bool flag);
+
+	static Block * getBlockOfType(BlockType type);
 protected:
 	bool flagNeedsFaceUpdate;
 };
