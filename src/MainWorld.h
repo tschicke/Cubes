@@ -13,9 +13,11 @@
 #include "Character.h"
 #include "Player.h"
 
+#include <glm/glm.hpp>
+
 namespace ts {
 
-class MainWorld: public ts::World {
+class MainWorld: public ts::World{
 public:
 	MainWorld();
 	virtual ~MainWorld();

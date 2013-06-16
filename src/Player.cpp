@@ -109,7 +109,7 @@ void Player::input() {
 		jump();
 	}
 
-	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::R) == ts::Keyboard::keyPressed){
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::R) == ts::Keyboard::keyPressed) {
 		int floorX = floorf(position.x);
 		int floorY = floorf(position.y);
 		int floorZ = floorf(position.z);
@@ -129,9 +129,15 @@ void Player::input() {
 		}
 	}
 
-	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::T) == ts::Keyboard::keyPressed){
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::G) == ts::Keyboard::keyPressed) {
+		glm::vec3 startVec = camera.getPosition();
+		glm::vec3 endVec = startVec + ((camera.getLook() - startVec) * 6.f); //6 = block break range
+		world->raytraceBlocks(startVec, endVec);
+	}
+
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::T) == ts::Keyboard::keyPressed) {
 		Chunk * chunk = world->getChunkAt(floorf(position.x) - 3, floorf(position.y), floorf(position.z));
-		if(chunk != NULL){
+		if (chunk != NULL) {
 			Block * block = chunk->getBlockAtCoordinate(floorf(position.x) - 3, floorf(position.y), floorf(position.z));
 			if (block != NULL && block->getBlockType() == blockType_Air) {
 				chunk->addBlockOfTypeAtPosition(floorf(position.x) - 3, floorf(position.y), floorf(position.z), blockType_Tree);

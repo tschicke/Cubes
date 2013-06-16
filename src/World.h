@@ -26,6 +26,8 @@ public:
 	Chunk * getChunkAt(int x, int y, int z);
 	Block * getBlockAt(int x, int y, int z);
 
+	void raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos);
+
 protected:
 	ChunkManager chunkManager;
 };

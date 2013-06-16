@@ -28,6 +28,10 @@ void Camera::setPosition(vec3 newPos){
 Camera::~Camera() {
 }
 
+glm::vec3 Camera::getLook() {
+	return lookAt;
+}
+
 float Camera::toRadians(float deg){
 	return (deg * 3.141592) / 180;
 }

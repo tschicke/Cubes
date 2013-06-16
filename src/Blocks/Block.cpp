@@ -13,6 +13,9 @@
 
 #include "../SpriteSheet.h"
 
+#include <glm/glm.hpp>
+#include "../VectorHelper.h"
+
 Block::Block() {
 	flagNeedsFaceUpdate = false;
 }
@@ -50,6 +53,40 @@ float Block::getBaseTextureY() {
 
 void Block::setNeedsFaceUpdate(bool flag) {
 	flagNeedsFaceUpdate = flag;
+}
+
+bool Block::raytrace(int x, int y, int z, glm::vec3 startVec, glm::vec3 endVec) {
+	bool collision = false;
+
+//	std::cout << x << ' ' << y << ' ' << z << '\n';
+
+	glm::vec3 xMinVec = VectorHelper::getIntermediateWithXValue(startVec, endVec, x);
+	glm::vec3 xMaxVec = VectorHelper::getIntermediateWithXValue(startVec, endVec, x + cubeSize);
+	glm::vec3 yMinVec = VectorHelper::getIntermediateWithYValue(startVec, endVec, y);
+	glm::vec3 yMaxVec = VectorHelper::getIntermediateWithYValue(startVec, endVec, y + cubeSize);
+	glm::vec3 zMinVec = VectorHelper::getIntermediateWithZValue(startVec, endVec, z);
+	glm::vec3 zMaxVec = VectorHelper::getIntermediateWithZValue(startVec, endVec, z + cubeSize);
+
+	if (xMinVec != VectorHelper::NULL_VECTOR) {
+		collision = VectorHelper::isPointInYZBounds(glm::vec3(x, y, z), glm::vec3(x, y + cubeSize, z + cubeSize), xMinVec) || collision;
+	}
+	if (xMaxVec != VectorHelper::NULL_VECTOR) {
+		collision = VectorHelper::isPointInYZBounds(glm::vec3(x + cubeSize, y, z), glm::vec3(x + cubeSize, y + cubeSize, z + cubeSize), xMaxVec) || collision;
+	}
+	if (yMinVec != VectorHelper::NULL_VECTOR) {
+		collision = VectorHelper::isPointInXZBounds(glm::vec3(x, y, z), glm::vec3(x + cubeSize, y, z + cubeSize), yMinVec) || collision;
+	}
+	if (yMaxVec != VectorHelper::NULL_VECTOR) {
+		collision = VectorHelper::isPointInXZBounds(glm::vec3(x, y + cubeSize, z), glm::vec3(x + cubeSize, y + cubeSize, z + cubeSize), yMaxVec) || collision;
+	}
+	if (zMinVec != VectorHelper::NULL_VECTOR) {
+		collision = VectorHelper::isPointInXYBounds(glm::vec3(x, y, z), glm::vec3(x + cubeSize, y + cubeSize, z), zMinVec) || collision;
+	}
+	if (zMaxVec != VectorHelper::NULL_VECTOR) {
+		collision = VectorHelper::isPointInXYBounds(glm::vec3(x, y, z + cubeSize), glm::vec3(x + cubeSize, y + cubeSize, z + cubeSize), zMaxVec) || collision;
+	}
+
+	return collision;
 }
 
 Block* Block::getBlockOfType(BlockType blockType) {

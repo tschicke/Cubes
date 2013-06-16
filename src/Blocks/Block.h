@@ -8,6 +8,7 @@
 #ifndef CUBE_H_
 #define CUBE_H_
 
+#include <glm/glm.hpp>
 
 enum BlockType{
 	blockType_Grass,
@@ -36,6 +37,8 @@ public:
 
 	bool needsFaceUpdate();
 	void setNeedsFaceUpdate(bool flag);
+
+	bool raytrace(int x, int y, int z, glm::vec3 startVec, glm::vec3 endVec);
 
 	static Block * getBlockOfType(BlockType type);
 protected:
