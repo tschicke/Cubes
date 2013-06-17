@@ -12,7 +12,7 @@
 
 namespace ts {
 
-class FirstPersonCamera {
+class FirstPersonCamera { //TODO make extend Camera
 public:
 	FirstPersonCamera();
 	FirstPersonCamera(glm::vec3 position);
@@ -20,6 +20,9 @@ public:
 	void init(glm::vec3 position);
 
 	void setPosition(glm::vec3 newPosition);
+	glm::vec3 getPosition();
+
+	glm::vec3 getLook();
 
 	glm::vec3 getMoveVector(float dx, float dy, float dz);
 	void rotateWithMove(int dx, int dy);
@@ -31,7 +34,7 @@ public:
 
 private:
 	glm::vec3 position, lookAt;
-	glm::mat4 viewMatrix;//Temp??
+	glm::mat4 viewMatrix; //Temp??
 	float yaw, pitch;
 	float lookSpeed;
 

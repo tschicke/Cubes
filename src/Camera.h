@@ -21,6 +21,8 @@ public:
 	void setPosition(glm::vec3 newPos);
 	glm::vec3 getPosition();
 
+	glm::vec3 getLook();
+
 	int getYaw();
 
 	glm::mat4* getViewMatrix();

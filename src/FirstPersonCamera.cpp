@@ -111,6 +111,14 @@ glm::mat4 * FirstPersonCamera::getViewMatrix() {
 	return &viewMatrix;
 }
 
+glm::vec3 FirstPersonCamera::getPosition() {
+	return position;
+}
+
+glm::vec3 FirstPersonCamera::getLook() {
+	return lookAt;
+}
+
 float FirstPersonCamera::toRadians(float degrees) {
 	return (degrees * 3.141592) / 180.f;
 }
