@@ -65,8 +65,6 @@ Face Block::raytrace(int x, int y, int z, glm::vec3 startVec, glm::vec3 endVec) 
 	glm::vec3 zMinVec = VectorHelper::getIntermediateWithZValue(startVec, endVec, z);
 	glm::vec3 zMaxVec = VectorHelper::getIntermediateWithZValue(startVec, endVec, z + cubeSize);
 
-//	std::cout << xMaxVec.x << '\n';
-
 	if (!VectorHelper::isPointInYZBounds(glm::vec3(x, y, z), glm::vec3(x, y + cubeSize, z + cubeSize), xMinVec)) {
 		xMinVec = VectorHelper::NULL_VECTOR;
 	}

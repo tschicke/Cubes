@@ -47,28 +47,21 @@ SelectedBlock World::raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos) {
 	int startZ = (posZChange ? floorf(startPos.z) : ceilf(startPos.z));
 	int endZ = (posZChange ? ceilf(endPos.z) : floorf(endPos.z));
 
-//	std::cout << startPos.x << ' ' << startPos.y << ' ' << startPos.z << '\n';
-//	std::cout << startX << ' ' << startY << ' ' << startZ << '\n';
-//	std::cout << endPos.x << ' ' << endPos.y << ' ' << endPos.z << '\n';
-//	std::cout << endX << ' ' << endY << ' ' << endZ << '\n';
-
 	int xChange = (posXChange ? 1 : -1);
 	int yChange = (posYChange ? 1 : -1);
 	int zChange = (posZChange ? 1 : -1);
 
-//	std::cout << xChange << ' ' << yChange << ' ' << zChange << '\n' << '\n';
-
-	for (int x = startX; x != endX; x += xChange) {
-		for (int y = startY; y != endY; y += yChange) {
-			for (int z = startZ; z != endZ; z += zChange) {
+	for (int x = startX; x != endX + xChange; x += xChange) {
+		for (int y = startY; y != endY + yChange; y += yChange) {
+			for (int z = startZ; z != endZ + zChange; z += zChange) {
 				Chunk * currentChunk = chunkManager.getChunkWithCoordinate(x, y, z);
 				Block * currentBlock = NULL;
 				if (currentChunk) {
 					currentBlock = currentChunk->getBlockAtCoordinate(x, y, z);
 				}
 				if (currentBlock && currentBlock->getBlockType() != blockType_Air) {
-					Face face;
-					if ((face = currentBlock->raytrace(x, y, z, startPos, endPos)) != face_nocollision) {
+					Face face = currentBlock->raytrace(x, y, z, startPos, endPos);
+					if (face != face_nocollision) {
 						return SelectedBlock(x, y, z, currentBlock, face);
 					}
 				}

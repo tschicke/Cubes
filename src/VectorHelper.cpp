@@ -9,6 +9,8 @@
 
 #include <math.h>
 
+#include <iostream>
+
 const glm::vec3 VectorHelper::NULL_VECTOR = glm::vec3(0, 2056, 0); //Can increase y value or make it negative
 
 glm::vec3 VectorHelper::getIntermediateWithXValue(glm::vec3 v1, glm::vec3 v2, float xVal) {
@@ -16,11 +18,11 @@ glm::vec3 VectorHelper::getIntermediateWithXValue(glm::vec3 v1, glm::vec3 v2, fl
 	float yDiff = v2.y - v1.y;
 	float zDiff = v2.z - v1.z;
 
-	if (xVal == v1.x) {
-		return v1;
-	} else if (xVal == v2.x) {
-		return v2;
-	}
+//	if (xVal == v1.x) {
+//		return v1;
+//	} else if (xVal == v2.x) {
+//		return v2;
+//	}
 
 	float xScale = (xVal - v1.x) / xDiff;
 	if (xScale > 0 && xScale < 1) {
@@ -35,11 +37,11 @@ glm::vec3 VectorHelper::getIntermediateWithYValue(glm::vec3 v1, glm::vec3 v2, fl
 	float yDiff = v2.y - v1.y;
 	float zDiff = v2.z - v1.z;
 
-	if (yVal == v1.y) {
-		return v1;
-	} else if (yVal == v2.y) {
-		return v2;
-	}
+//	if (yVal == v1.y) {
+//		return v1;
+//	} else if (yVal == v2.y) {
+//		return v2;
+//	}
 
 	float yScale = (yVal - v1.y) / yDiff;
 	if (yScale > 0 && yScale < 1) {
@@ -54,11 +56,11 @@ glm::vec3 VectorHelper::getIntermediateWithZValue(glm::vec3 v1, glm::vec3 v2, fl
 	float yDiff = v2.y - v1.y;
 	float zDiff = v2.z - v1.z;
 
-	if (zVal == v1.z) {
-		return v1;
-	} else if (zVal == v2.z) {
-		return v2;
-	}
+//	if (zVal == v1.z) {
+//		return v1;
+//	} else if (zVal == v2.z) {
+//		return v2;
+//	}
 
 	float zScale = (zVal - v1.z) / zDiff;
 	if (zScale > 0 && zScale < 1) {
@@ -69,40 +71,40 @@ glm::vec3 VectorHelper::getIntermediateWithZValue(glm::vec3 v1, glm::vec3 v2, fl
 }
 
 bool VectorHelper::isPointInXYBounds(glm::vec3 v1, glm::vec3 v2, glm::vec3 point) {
-	if (!(v1.z == v2.z && v1.z == point.z)) {
-		return false;
-	}
+//	if (!(v1.z == v2.z && v1.z == point.z)) {
+//		return false;
+//	}
 
-	int minX = floorf((v1.x < v2.x ? v1.x : v2.x));
-	int maxX = floorf((v1.x > v2.x ? v1.x : v2.x));
-	int minY = floorf((v1.y < v2.y ? v1.y : v2.y));
-	int maxY = floorf((v1.y > v2.y ? v1.y : v2.y));
+	int minX = (v1.x < v2.x ? v1.x : v2.x);
+	int maxX = (v1.x > v2.x ? v1.x : v2.x);
+	int minY = (v1.y < v2.y ? v1.y : v2.y);
+	int maxY = (v1.y > v2.y ? v1.y : v2.y);
 
-	return (point.x > minX && point.x < maxX && point.y > minY && point.y < maxY);
+	return (point.x >= minX && point.x < maxX && point.y >= minY && point.y < maxY);
 }
 
 bool VectorHelper::isPointInXZBounds(glm::vec3 v1, glm::vec3 v2, glm::vec3 point) {
-	if (!(v1.y == v2.y && v1.y == point.y)) {
-		return false;
-	}
+//	if (!(v1.y == v2.y && v1.y == point.y)) {
+//		return false;
+//	}
 
-	int minX = floorf((v1.x < v2.x ? v1.x : v2.x));
-	int maxX = floorf((v1.x > v2.x ? v1.x : v2.x));
-	int minZ = floorf((v1.z < v2.z ? v1.z : v2.z));
-	int maxZ = floorf((v1.z > v2.z ? v1.z : v2.z));
+	int minX = (v1.x < v2.x ? v1.x : v2.x);
+	int maxX = (v1.x > v2.x ? v1.x : v2.x);
+	int minZ = (v1.z < v2.z ? v1.z : v2.z);
+	int maxZ = (v1.z > v2.z ? v1.z : v2.z);
 
-	return (point.x > minX && point.x < maxX && point.z > minZ && point.z < maxZ);
+	return (point.x >= minX && point.x < maxX && point.z >= minZ && point.z < maxZ);
 }
 
 bool VectorHelper::isPointInYZBounds(glm::vec3 v1, glm::vec3 v2, glm::vec3 point) {
-	if (!(v1.x == v2.x && v1.x == point.x)) {
-		return false;
-	}
+//	if (!(v1.x == v2.x && v1.x == point.x)) {
+//		return false;
+//	}
 
-	int minY = floorf((v1.y < v2.y ? v1.y : v2.y));
-	int maxY = floorf((v1.y > v2.y ? v1.y : v2.y));
-	int minZ = floorf((v1.z < v2.z ? v1.z : v2.z));
-	int maxZ = floorf((v1.z > v2.z ? v1.z : v2.z));
+	int minY = (v1.y < v2.y ? v1.y : v2.y);
+	int maxY = (v1.y > v2.y ? v1.y : v2.y);
+	int minZ = (v1.z < v2.z ? v1.z : v2.z);
+	int maxZ = (v1.z > v2.z ? v1.z : v2.z);
 
-	return (point.y > minY && point.y < maxY && point.z > minZ && point.z < maxZ);
+	return (point.y >= minY && point.y < maxY && point.z >= minZ && point.z < maxZ);
 }

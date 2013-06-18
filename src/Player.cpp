@@ -137,7 +137,7 @@ void Player::input() {
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::H) == ts::Keyboard::keyPressed) {
 		glm::vec3 addBlockPosition = selectedBlock.getAddBlockPosition();
-		world->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, blockType_Dirt);
+		world->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, blockType_Tree);
 	}
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::T) == ts::Keyboard::keyPressed) {
