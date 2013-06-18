@@ -116,6 +116,9 @@ void GameWindow::handleInput() {
 			} else {
 				ts::Mouse::setPosition(event.mouseMove.x, event.mouseMove.y);
 			}
+		} else if(event.type == sf::Event::MouseButtonPressed){//TODO implement mouse clicking
+		} else if(event.type == sf::Event::MouseButtonReleased){
+		} else if(event.type == sf::Event::MouseWheelMoved){
 		}
 
 		if (event.type == Event::Closed) {

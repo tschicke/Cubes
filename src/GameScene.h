@@ -10,6 +10,7 @@
 
 #include "Scene.h"
 #include "GameLayer.h"
+#include "HudLayer.h"
 
 class GameScene: public Scene {
 public:
@@ -21,6 +22,7 @@ public:
 	void draw();
 private:
 	GameLayer gameLayer;
+	HudLayer hud;
 };
 
 #endif /* GAMESCENE_H_ */

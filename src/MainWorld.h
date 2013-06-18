@@ -10,11 +10,6 @@
 
 #include "World.h"
 
-#include "Character.h"
-#include "Player.h"
-
-#include <glm/glm.hpp>
-
 namespace ts {
 
 class MainWorld: public ts::World{
@@ -27,8 +22,6 @@ public:
 	void draw();
 
 private:
-	std::vector<Character *> characters;
-	Player * mainPlayer;
 };
 
 } /* namespace ts */

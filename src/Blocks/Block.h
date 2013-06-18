@@ -10,6 +10,8 @@
 
 #include <glm/glm.hpp>
 
+#include "../SelectedBlock.h"
+
 enum BlockType{
 	blockType_Grass,
 	blockType_Dirt,
@@ -38,7 +40,7 @@ public:
 	bool needsFaceUpdate();
 	void setNeedsFaceUpdate(bool flag);
 
-	bool raytrace(int x, int y, int z, glm::vec3 startVec, glm::vec3 endVec);
+	Face raytrace(int x, int y, int z, glm::vec3 startVec, glm::vec3 endVec);
 
 	static Block * getBlockOfType(BlockType type);
 protected:

@@ -26,6 +26,7 @@ void GameScene::handleInput() {
 
 void GameScene::draw() {
 	gameLayer.draw();
+	hud.draw();
 }
 
 void GameScene::update(time_t dt) {

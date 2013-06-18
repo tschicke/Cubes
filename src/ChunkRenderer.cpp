@@ -473,6 +473,8 @@ void ChunkRenderer::render(Player * player) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	glUseProgram(0);
+
 	ts::SpriteSheet::unbindTextures();
 }
 

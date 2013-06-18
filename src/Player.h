@@ -15,6 +15,8 @@
 #include "Renderer.h"
 #include "Shader.h"
 
+#include "SelectedBlock.h"
+
 namespace ts {
 class World;
 }
@@ -64,6 +66,8 @@ private:
 
 	void loadPlayerModel();
 	bool loaded;
+
+	SelectedBlock selectedBlock;
 };
 
 #endif /* PLAYER_H_ */

@@ -10,7 +10,10 @@
 
 #include "Common.h"
 #include "ChunkManager.h"
-//#include "Player.h"
+#include "Player.h"
+#include "Character.h"
+
+#include "SelectedBlock.h"
 
 namespace ts {
 
@@ -26,10 +29,16 @@ public:
 	Chunk * getChunkAt(int x, int y, int z);
 	Block * getBlockAt(int x, int y, int z);
 
-	void raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos);
+	SelectedBlock raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos);
+
+	void addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType);
+	void removeBlockAtPosition(int x, int y, int z);
 
 protected:
 	ChunkManager chunkManager;
+
+	Player * mainPlayer;
+	std::vector<Character *> characters;
 };
 
 } /* namespace ts */

@@ -18,6 +18,8 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 
+#include "SelectedBlock.h"
+
 #include <math.h>//Temp?
 Player::Player() {
 	yaw = 0;
@@ -44,7 +46,7 @@ void Player::init(ts::World * world) {
 	moveSpeed = 0.3f;
 	this->world = world;
 	gravityStrength = 0.01f;
-	jumpStrength = 0.3f;
+	jumpStrength = 0.2f;
 	gravityVel = 0;
 	onGround = false;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
@@ -72,7 +74,7 @@ void Player::loadPlayerModel() {
 		Renderer& renderer = Renderer::getMainRenderer();
 		renderer.createMesh(&playerModelID);
 
-		renderer.createPrism(playerModelID, glm::vec3(-0.375f, 0.f, -0.375f), 0.75f, 0.5f, 0.75f);
+		renderer.createPrism(playerModelID, glm::vec3(0.f, 0.f, 0.f), 1.f, 1.f, 1.f);
 
 		renderer.endMesh(&playerModelID);
 
@@ -130,9 +132,12 @@ void Player::input() {
 	}
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::G) == ts::Keyboard::keyPressed) {
-		glm::vec3 startVec = camera.getPosition();
-		glm::vec3 endVec = startVec + ((camera.getLook() - startVec) * 6.f); //6 = block break range
-		world->raytraceBlocks(startVec, endVec);
+		world->removeBlockAtPosition(selectedBlock.x, selectedBlock.y, selectedBlock.z);
+	}
+
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::H) == ts::Keyboard::keyPressed) {
+		glm::vec3 addBlockPosition = selectedBlock.getAddBlockPosition();
+		world->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, blockType_Dirt);
 	}
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::T) == ts::Keyboard::keyPressed) {
@@ -223,6 +228,11 @@ void Player::checkCollisions() {
 }
 
 void Player::update(time_t dt) {
+	//if(needsRaytrace)
+	glm::vec3 startVec = camera.getPosition();
+	glm::vec3 endVec = startVec + ((camera.getLook() - startVec) * 12.f); //12 = block break range
+	selectedBlock = world->raytraceBlocks(startVec, endVec);
+
 	input();
 	gravity();
 	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
@@ -235,15 +245,17 @@ void Player::update(time_t dt) {
 }
 
 void Player::draw(glm::mat4 * viewMat) {
-//	shaderProgram.useProgram();
+	shaderProgram.useProgram();
 
-//	glm::mat4 modelMatrix = glm::translate(position.x, position.y, position.z);	// * glm::rotate(yaw, 0.f, 1.f, 0.f);
+	glm::mat4 modelMatrix = glm::translate((float) selectedBlock.x, (float) selectedBlock.y, (float) selectedBlock.z);	// * glm::rotate(yaw, 0.f, 1.f, 0.f);
 
-//	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-//	shaderProgram.setUniform("viewMatrix", viewMat, 1);
-//	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
+	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
+	shaderProgram.setUniform("viewMatrix", viewMat, 1);
+	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
 
-//	Renderer::getMainRenderer().renderMesh(playerModelID);
+	Renderer::getMainRenderer().renderMesh(playerModelID);
+
+	glUseProgram(0);
 }
 
 glm::vec3 Player::getPosition() {
