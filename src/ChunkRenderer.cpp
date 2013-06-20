@@ -54,11 +54,12 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 
 	int numVerticesPerChunk = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 24 * 3;
 	int numTexCoordsPerChunk = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 24 * 2;
+	int numNormalsPerChunk = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 24 * 3;
 	int numIndicesPerChunk = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 36;
 
-	initBuffersWithSize((numVerticesPerChunk + numTexCoordsPerChunk) * sizeof(float), numIndicesPerChunk * sizeof(unsigned int));
+	initBuffersWithSize((numVerticesPerChunk + numTexCoordsPerChunk + numNormalsPerChunk) * sizeof(float), numIndicesPerChunk * sizeof(unsigned int));
 
-	float * vertexArray = new float[numVerticesPerChunk + numTexCoordsPerChunk];
+	float * vertexArray = new float[numVerticesPerChunk + numTexCoordsPerChunk + numNormalsPerChunk];
 
 	/*   Cube Diagram
 	 *
@@ -151,6 +152,38 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 			0, texElementSize, 0
 	};
 
+	float cubeNormalData[] = {
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+
+			0, 0, -1,
+			0, 0, -1,
+			0, 0, -1,
+			0, 0, -1,
+
+			-1, 0, 0,
+			-1, 0, 0,
+			-1, 0, 0,
+			-1, 0, 0,
+
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0,
+
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+
+			0, -1, 0,
+			0, -1, 0,
+			0, -1, 0,
+			0, -1, 0
+	};
+
 
 	Block ** blockArray = parentChunk->blockStorage->getBlockArray();
 
@@ -163,6 +196,7 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 
 				int vertexIndex = blockIndex * numVerticesPerCube * 3;
 				int texIndex = blockIndex * numVerticesPerCube * 2;
+				int normalIndex = blockIndex * numVerticesPerCube * 3;
 
 				Block * block = blockArray[blockIndex];
 
@@ -174,13 +208,17 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 
 						vertexArray[numVerticesPerChunk + texIndex + (i * 2)] = cubeTexData[(i * 2)] + block->getBaseTextureX();
 						vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1] + block->getBaseTextureY();
+
+						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3)] = cubeNormalData[(i * 3)];
+						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3) + 1] = cubeNormalData[(i * 3) + 1];
+						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3) + 2] = cubeNormalData[(i * 3) + 2];
 					}
 				}
 			}
 		}
 	}
 
-	substituteDataToVertexBuffer((numVerticesPerChunk + numTexCoordsPerChunk) * sizeof(float), 0, vertexArray);
+	substituteDataToVertexBuffer((numVerticesPerChunk + numTexCoordsPerChunk + numNormalsPerChunk) * sizeof(float), 0, vertexArray);
 
 	remakeIndexBuffer();
 
@@ -461,7 +499,7 @@ void ChunkRenderer::render(Player * player) {
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 3 * sizeof(float))); //Texture Coordinates
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Normals
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 5 * sizeof(float))); //Normals
 
 	glDrawElements(GL_TRIANGLES, numVerticesToDraw, GL_UNSIGNED_INT, 0);
 
