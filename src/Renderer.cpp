@@ -133,6 +133,13 @@ void Renderer::addTriangleToMesh(MeshID meshID, int v1, int v2, int v3) {
 	}
 }
 
+void Renderer::addLineToMesh(MeshID meshID, int v1, int v2) {
+	if (currentMeshID == meshID) {
+		currentIndices.push_back(v1);
+		currentIndices.push_back(v2);
+	}
+}
+
 void Renderer::addNullTriangle(MeshID meshID) {
 	if (currentMeshID == meshID) {
 		if (meshID.getColorType() == ColorType_Texture) {
@@ -152,13 +159,13 @@ void Renderer::addNullTriangle(MeshID meshID) {
 }
 
 void Renderer::addNullQuad(MeshID meshID) {
-	for(int i = 0; i < 2; ++i){
+	for (int i = 0; i < 2; ++i) {
 		addNullTriangle(meshID);
 	}
 }
 
 void Renderer::addNullCube(MeshID meshID) {
-	for(int i = 0; i < 6; ++i){
+	for (int i = 0; i < 6; ++i) {
 		addNullQuad(meshID);
 	}
 }
@@ -218,7 +225,7 @@ void Renderer::renderMesh(MeshID meshID) {
 	glVertexAttribPointer(1, colorSize, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (void *) (3 * sizeof(float)));
 	glVertexAttribPointer(2, vertexSize, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (void *) ((3 + colorSize) * sizeof(float)));
 
-	glDrawElements(GL_TRIANGLES, meshID.getNumVertices(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, meshID.getNumVertices(), GL_UNSIGNED_INT, 0);//FIXME change back to triangles
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
