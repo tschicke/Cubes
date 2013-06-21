@@ -17,6 +17,8 @@
 
 #include "SelectedBlock.h"
 
+#include "Blocks/Block.h"
+
 namespace ts {
 class World;
 }
@@ -45,6 +47,8 @@ private:
 	ts::World * world;
 
 	glm::vec3 velocity;
+
+	BlockType activeBlock;
 
 	void gravity();
 	float gravityStrength, gravityVel;

@@ -184,7 +184,6 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 			0, -1, 0
 	};
 
-
 	Block ** blockArray = parentChunk->blockStorage->getBlockArray();
 
 	for (int x = 0; x < Chunk::CHUNK_SIZE; ++x) {
@@ -523,9 +522,12 @@ void ChunkRenderer::updateBlockAtPosition(int x, int y, int z) {
 	int chunkSize = Chunk::CHUNK_SIZE;
 
 	int numVerticesPerCube = 24;
+	int numVerticesPerChunk = numVerticesPerCube * chunkSize * chunkSize * chunkSize * 3;//num floats in vertex portion of data
+	int numTexCoordsPerChunk = numVerticesPerCube * chunkSize * chunkSize * chunkSize * 2;//num floats in texture portion of data
 
 	int vertexIndex = blockIndex * numVerticesPerCube * 3;
 	int texIndex = blockIndex * numVerticesPerCube * 2;
+	int normalIndex = blockIndex * numVerticesPerCube * 3;
 
 	float cubeVertexData[] = {
 			//Front
@@ -564,12 +566,6 @@ void ChunkRenderer::updateBlockAtPosition(int x, int y, int z) {
 			cubeSize, 0, cubeSize,
 			0, 0, cubeSize
 	};
-
-	for(int i = 0; i < 24; ++i){
-		cubeVertexData[(i * 3)] += x;
-		cubeVertexData[(i * 3) + 1] += y;
-		cubeVertexData[(i * 3) + 2] += z;
-	}
 
 	float texElementSize = ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getWidth();
 
@@ -611,13 +607,50 @@ void ChunkRenderer::updateBlockAtPosition(int x, int y, int z) {
 			0, texElementSize, 0
 	};
 
+	float cubeNormalData[] = {
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+
+			0, 0, -1,
+			0, 0, -1,
+			0, 0, -1,
+			0, 0, -1,
+
+			-1, 0, 0,
+			-1, 0, 0,
+			-1, 0, 0,
+			-1, 0, 0,
+
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0,
+
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+
+			0, -1, 0,
+			0, -1, 0,
+			0, -1, 0,
+			0, -1, 0
+	};
+
 	for (int i = 0; i < 24; ++i){
+		cubeVertexData[(i * 3)] += x;
+		cubeVertexData[(i * 3) + 1] += y;
+		cubeVertexData[(i * 3) + 2] += z;
+
 		cubeTexData[(i * 2)] += blockStorage->getBlockArray()[blockIndex]->getBaseTextureX();
 		cubeTexData[(i * 2) + 1] += blockStorage->getBlockArray()[blockIndex]->getBaseTextureY();
 	}
 
 	substituteDataToVertexBuffer(sizeof(cubeVertexData), vertexIndex * sizeof(float), cubeVertexData);
-	substituteDataToVertexBuffer(sizeof(cubeTexData), ((chunkSize * chunkSize * chunkSize * numVerticesPerCube * 3) + texIndex) * sizeof(float), cubeTexData);
+	substituteDataToVertexBuffer(sizeof(cubeTexData), (numVerticesPerChunk + texIndex) * sizeof(float), cubeTexData);
+	substituteDataToVertexBuffer(sizeof(cubeNormalData), (numVerticesPerChunk + numTexCoordsPerChunk + normalIndex) * sizeof(float), cubeNormalData);
 	markDirty();
 }
 

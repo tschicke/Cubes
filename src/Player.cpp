@@ -31,6 +31,7 @@ Player::Player() {
 	gravityVel = 0;
 	onGround = false;
 	loaded = false;
+	activeBlock = blockType_Null;
 }
 
 Player::Player(ts::World * world) {
@@ -49,6 +50,7 @@ void Player::init(ts::World * world) {
 	jumpStrength = 0.2f;
 	gravityVel = 0;
 	onGround = false;
+	activeBlock = blockType_Null;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
 	loadPlayerModel();
 }
@@ -163,17 +165,23 @@ void Player::input() {
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::H) == ts::Keyboard::keyPressed) {
 		glm::vec3 addBlockPosition = selectedBlock.getAddBlockPosition();
-		world->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, blockType_Tree);
+		world->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, activeBlock);
 	}
 
-	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::T) == ts::Keyboard::keyPressed) {
-		Chunk * chunk = world->getChunkAt(floorf(position.x) - 3, floorf(position.y), floorf(position.z));
-		if (chunk != NULL) {
-			Block * block = chunk->getBlockAtCoordinate(floorf(position.x) - 3, floorf(position.y), floorf(position.z));
-			if (block != NULL && block->getBlockType() == blockType_Air) {
-				chunk->addBlockOfTypeAtPosition(floorf(position.x) - 3, floorf(position.y), floorf(position.z), blockType_Tree);
-			}
-		}
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Num1) == ts::Keyboard::keyPressed){
+		activeBlock = blockType_Grass;
+	}
+
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Num2) == ts::Keyboard::keyPressed){
+		activeBlock = blockType_Dirt;
+	}
+
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Num3) == ts::Keyboard::keyPressed){
+		activeBlock = blockType_Stone;
+	}
+
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Num4) == ts::Keyboard::keyPressed){
+		activeBlock = blockType_Tree;
 	}
 
 	int mouseDX, mouseDY;
