@@ -31,6 +31,8 @@ TerrainGenerator::~TerrainGenerator() {
 void TerrainGenerator::generateChunk(int genX, int genY, int genZ, Block ** blockArray) {
 	byte chunkSize = Chunk::CHUNK_SIZE;
 
+	BlockType * blockTypes = new BlockType[chunkSize * chunkSize * chunkSize];
+
 	for (int x = 0; x < chunkSize; ++x) {
 		for (int z = 0; z < chunkSize; ++z) {
 			int height = (noiseGenerator.smoothNoise2D((x + genX) / (float) chunkSize, (z + genZ) / (float) chunkSize) + 1) * chunkSize / 2;
@@ -42,14 +44,18 @@ void TerrainGenerator::generateChunk(int genX, int genY, int genZ, Block ** bloc
 
 				if (y + genY == height) { //TODO change to blocktype array to avoid allocations that get changed in generatestructures??
 //				if(y + genY < density * chunkSize){
-					blockArray[blockIndex] = new BlockGrass;
+					blockTypes[blockIndex] = blockType_Grass;
 				} else if (y + genY < height) {
-					blockArray[blockIndex] = new BlockStone;
+					blockTypes[blockIndex] = blockType_Stone;
 				} else {
-					blockArray[blockIndex] = new BlockAir;
+					blockTypes[blockIndex] = blockType_Air;
 				}
 			}
 		}
+	}
+
+	for(int i = 0; i < chunkSize * chunkSize * chunkSize; ++i){
+		blockArray[i] = Block::getBlockOfType(blockTypes[i]);
 	}
 
 	generateStructures(genX, genY, genZ, blockArray);

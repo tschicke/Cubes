@@ -44,10 +44,10 @@ Player::~Player() {
 void Player::init(ts::World * world) {
 	yaw = 270;
 	pitch = 0;
-	moveSpeed = 0.3f;
+	moveSpeed = 0.2f;
 	this->world = world;
 	gravityStrength = 0.01f;
-	jumpStrength = 0.2f;
+	jumpStrength = 0.3f;
 	gravityVel = 0;
 	onGround = false;
 	activeBlock = blockType_Null;

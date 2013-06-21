@@ -99,7 +99,7 @@ bool Texture::loadDDS(const char * texturePath) {
 		unsigned int offset = 0;
 
 		/*Load texture and mipmaps*/
-		for (unsigned int level = 0; level < mipmap_count && (image_width || image_height); level++) {
+		for (unsigned int level = 0; level < 1 && (image_width || image_height); level++) {
 			unsigned int size = max((image_width / 4), 1) * max((image_height / 4), 1) * block_size;
 			glCompressedTexImage2D(GL_TEXTURE_2D, level, format, image_width, image_height, 0, size, buffer + offset);
 
@@ -109,9 +109,8 @@ bool Texture::loadDDS(const char * texturePath) {
 		}
 		delete buffer;
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);//Just for pixelated textures
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);//Just for pixelated textures
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);//Just for pixelated textures
-
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
