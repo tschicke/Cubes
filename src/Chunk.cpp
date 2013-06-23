@@ -89,6 +89,8 @@ void Chunk::removeBlockAtPosition(int x, int y, int z) {
 	z %= CHUNK_SIZE;
 	z = (z < 0 ? z + CHUNK_SIZE : z);
 
+	std::cout << x << ' ' << y << ' ' << z << '\n';
+
 	int blockIndex = indexOfBlockAt(x, y, z);
 	if (blockStorage->getBlockArray()[blockIndex]->getBlockType() != blockType_Air) {
 		delete blockStorage->getBlockArray()[blockIndex];

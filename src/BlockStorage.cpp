@@ -19,11 +19,10 @@ BlockStorage::BlockStorage(Chunk* parentChunk) {
 	init(parentChunk);
 }
 
-
 void BlockStorage::init(Chunk * parentChunk) {
 	blockArrayLength = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE;
 	blockArray = new Block *[blockArrayLength];
-	for(int i = 0; i < blockArrayLength; ++i){
+	for (int i = 0; i < blockArrayLength; ++i) {
 		blockArray[i] = NULL;
 	}
 	if (parentChunk != NULL) {
@@ -78,29 +77,40 @@ void BlockStorage::freeArray() {
 void BlockStorage::markBlocksAroundBlockDirty(int x, int y, int z) {
 	int chunkSize = Chunk::CHUNK_SIZE;
 
-	Block * blockXM1 = blockArray[(x - 1) * chunkSize * chunkSize + y * chunkSize + z];
-	Block * blockXP1 = blockArray[(x + 1) * chunkSize * chunkSize + y * chunkSize + z];
-	Block * blockYM1 = blockArray[x * chunkSize * chunkSize + (y - 1) * chunkSize + z];
-	Block * blockYP1 = blockArray[x * chunkSize * chunkSize + (y + 1) * chunkSize + z];
-	Block * blockZM1 = blockArray[x * chunkSize * chunkSize + y * chunkSize + (z - 1)];
-	Block * blockZP1 = blockArray[x * chunkSize * chunkSize + y * chunkSize + (z + 1)];
-
-	if (x != 0 && blockXM1->isDrawn()) {
-		blockXM1->setNeedsFaceUpdate(true);
+	if (x != 0) {
+		Block * blockXM1 = blockArray[(x - 1) * chunkSize * chunkSize + y * chunkSize + z];
+		if (blockXM1->isDrawn()) {
+			blockXM1->setNeedsFaceUpdate(true);
+		}
 	}
-	if (x != chunkSize - 1 && blockXP1->isDrawn()) {
-		blockXP1->setNeedsFaceUpdate(true);
+	if (x != chunkSize - 1) {
+		Block * blockXP1 = blockArray[(x + 1) * chunkSize * chunkSize + y * chunkSize + z];
+		if (blockXP1->isDrawn()) {
+			blockXP1->setNeedsFaceUpdate(true);
+		}
 	}
-	if (y != 0 && blockYM1->isDrawn()) {
-		blockYM1->setNeedsFaceUpdate(true);
+	if (y != 0) {
+		Block * blockYM1 = blockArray[x * chunkSize * chunkSize + (y - 1) * chunkSize + z];
+		if (blockYM1->isDrawn()) {
+			blockYM1->setNeedsFaceUpdate(true);
+		}
 	}
-	if (y != chunkSize - 1 && blockYP1->isDrawn()) {
-		blockYP1->setNeedsFaceUpdate(true);
+	if (y != chunkSize - 1) {
+		Block * blockYP1 = blockArray[x * chunkSize * chunkSize + (y + 1) * chunkSize + z];
+		if (blockYP1->isDrawn()) {
+			blockYP1->setNeedsFaceUpdate(true);
+		}
 	}
-	if (z != 0 && blockZM1->isDrawn()) {
-		blockZM1->setNeedsFaceUpdate(true);
+	if (z != 0) {
+		Block * blockZM1 = blockArray[x * chunkSize * chunkSize + y * chunkSize + (z - 1)];
+		if (blockZM1->isDrawn()) {
+			blockZM1->setNeedsFaceUpdate(true);
+		}
 	}
-	if (z != chunkSize - 1 && blockZP1->isDrawn()) {
-		blockZP1->setNeedsFaceUpdate(true);
+	if (z != chunkSize - 1) {
+		Block * blockZP1 = blockArray[x * chunkSize * chunkSize + y * chunkSize + (z + 1)];
+		if (blockZP1->isDrawn()) {
+			blockZP1->setNeedsFaceUpdate(true);
+		}
 	}
 }

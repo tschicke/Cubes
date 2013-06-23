@@ -15,6 +15,6 @@ void main(){
 	glUV.y = 1.0 - UV.y;
 	float diffuseIntensity = clamp(dot(normalize(vNormal), -normalize(vec3(3, -4, -2))), 0.2, 0.8);
 	color = texture2D(myTextureSampler, UV).rgb * (testColor * (diffuseIntensity + 0.2));
-	color = color * clamp((vertexYPos / 32), 0.2, 1);
+	color = color * clamp(((vertexYPos + 3) / 32), 0.0, 1);
 	
 }

@@ -150,10 +150,11 @@ void Player::input() {
 					Chunk * chunk = world->getChunkAt(x, y, z);
 					if (chunk != NULL) {
 						Block * block = chunk->getBlockAtCoordinate(x, y, z);
-						if (block != NULL && !(block->getBlockType() == blockType_Air)) {
+						if (block != NULL && block->getBlockType() != blockType_Air) {
 							chunk->removeBlockAtPosition(x, y, z);
 						}
 					}
+//					world->removeBlockAtPosition(x, y, z);
 				}
 			}
 		}
@@ -168,19 +169,19 @@ void Player::input() {
 		world->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, activeBlock);
 	}
 
-	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Num1) == ts::Keyboard::keyPressed){
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num1) == ts::Keyboard::keyPressed) {
 		activeBlock = blockType_Grass;
 	}
 
-	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Num2) == ts::Keyboard::keyPressed){
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num2) == ts::Keyboard::keyPressed) {
 		activeBlock = blockType_Dirt;
 	}
 
-	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Num3) == ts::Keyboard::keyPressed){
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num3) == ts::Keyboard::keyPressed) {
 		activeBlock = blockType_Stone;
 	}
 
-	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::Num4) == ts::Keyboard::keyPressed){
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num4) == ts::Keyboard::keyPressed) {
 		activeBlock = blockType_Tree;
 	}
 
@@ -209,11 +210,12 @@ void Player::checkCollisions() {
 
 	//X checks
 	if (nextPosition.x != position.x) {
-		for (int c = 0; c < 4; ++c) {
+		for (int c = 0; c < 8; ++c) {
 			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float zt = (position.z + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+			float yt = (position.y + (c / 4 * PLAYER_HEIGHT * 0.9f));
+			float zt = (position.z + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
-			Block * nextBlockX = world->getBlockAt(floorf(xt), floorf(position.y), floorf(zt));
+			Block * nextBlockX = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
 			if (nextBlockX != NULL && nextBlockX->isSolid()) {
 				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.x = 0;
@@ -224,11 +226,12 @@ void Player::checkCollisions() {
 
 	//Z checks
 	if (nextPosition.z != position.z) {
-		for (int c = 0; c < 4; ++c) {
+		for (int c = 0; c < 8; ++c) {
 			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+			float yt = (position.y + (c / 4 * PLAYER_HEIGHT * 0.9f));
+			float xt = (position.x + ((c % 4) / 2 * (PLAYER_WIDTH)) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
-			Block * nextBlockZ = world->getBlockAt(floorf(xt), floorf(position.y), floorf(zt));
+			Block * nextBlockZ = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
 			if (nextBlockZ != NULL && nextBlockZ->isSolid()) {
 				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
 				velocity.z = 0;
@@ -238,19 +241,24 @@ void Player::checkCollisions() {
 	}
 
 	//Y checks
-	for (int c = 0; c < 4; ++c) {
-		float zt = (position.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-		float xt = (position.x + (c / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+	if (nextPosition.y != position.y) {
+		for (int c = 0; c < 8; ++c) {
+			float zt = (position.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+			float yt = (nextPosition.y + (c / 4 * PLAYER_HEIGHT));
+			float xt = (position.x + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
-		Block * nextBlockY = world->getBlockAt(floorf(xt), floorf(nextPosition.y), floorf(zt));
-		if (nextBlockY != NULL && nextBlockY->isSolid()) {
-			moveVector.y = -(position.y - (floorf(nextPosition.y) + 1));
-			velocity.y = 0;
-//		gravityVel = 0;
-			onGround = true;
-			break;
-		} else {
-			onGround = false;
+			Block * nextBlockY = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
+			if (nextBlockY != NULL && nextBlockY->isSolid()) {
+				velocity.y = 0;
+				moveVector.y = roundf(yt) - (position.y + (c / 4 * PLAYER_HEIGHT));
+						//-(position.y - (floorf(yt) + 1));
+				if (nextPosition.y < position.y) {
+					onGround = true;
+				}
+				break;
+			} else {
+				onGround = false;
+			}
 		}
 	}
 

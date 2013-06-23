@@ -54,15 +54,63 @@ void TerrainGenerator::generateChunk(int genX, int genY, int genZ, Block ** bloc
 		}
 	}
 
-	for(int i = 0; i < chunkSize * chunkSize * chunkSize; ++i){
+	generateStructures(genX, genY, genZ, blockTypes);
+
+	for (int i = 0; i < chunkSize * chunkSize * chunkSize; ++i) {
+		delete blockArray[i];
 		blockArray[i] = Block::getBlockOfType(blockTypes[i]);
 	}
-
-	generateStructures(genX, genY, genZ, blockArray);
 }
 
-void TerrainGenerator::generateStructures(int genX, int genY, int genZ, Block ** blockArray) {
+void TerrainGenerator::generateStructures(int genX, int genY, int genZ, BlockType * blockArray) {
+	for (int x = 3; x < 12; ++x) {
+		for (int z = 0; z < 8; ++z) {
+			for (int y = 10; y < 20; ++y) {
+				int chunkSize = Chunk::CHUNK_SIZE;
+				int blockIndex = (x * 1) * chunkSize * chunkSize + y * chunkSize + (z * 1);
 
+				if (x == 3 || x == 11 || z == 0 || z == 7 || y == 10 || y == 19) { //House Outline
+					blockArray[blockIndex] = blockType_Tree;
+				} else {
+					blockArray[blockIndex] = blockType_Air;
+				}
+
+				if ((x == 6 || x == 7 || x == 8) && z == 0 && (y == 11 || y == 12)) { //Door
+					blockArray[blockIndex] = blockType_Air;
+				}
+
+
+				if(y == 19 && (x > 7 && x < 11) && z == 6){
+					blockArray[blockIndex] = blockType_Air;
+				}
+
+				if(z == 6 && (x > 3 && x < 11)){
+					int height = x + 7;
+					if(y == height){
+						blockArray[blockIndex] = blockType_Tree;
+					}
+				}
+			}
+		}
+	}
+
+	for (int x = 2; x < 13; ++x) {
+		int height = -abs(x - 7) + 25;
+		for (int y = 20; y < 30; ++y) {
+			for (int z = 0; z < 8; ++z) {
+				int chunkSize = Chunk::CHUNK_SIZE;
+				int blockIndex = x * chunkSize * chunkSize + y * chunkSize + z;
+
+				if(y == height || (y < height && (z == 0 || z == 7))){
+					blockArray[blockIndex] = blockType_Tree;
+				}
+
+				if(y > 20 && y < 23 && z == 0 && x > 5 && x < 9){
+					blockArray[blockIndex] = blockType_Air;
+				}
+			}
+		}
+	}
 }
 
 } /* namespace ts */
