@@ -41,8 +41,8 @@ void GameWindow::create(int w, int h, const char * title) {
 	this->title = title;
 	running = false;
 	create(VideoMode(w, h, 32), title);
-	setVerticalSyncEnabled(true);
-//	setFramerateLimit(60);
+//	setVerticalSyncEnabled(true);
+	setFramerateLimit(60);
 	init();
 	initGL();
 }
@@ -79,6 +79,7 @@ void GameWindow::run() {
 	running = true;
 
 	long dt;
+	int frames;
 
 	Clock clock;
 	while (running) {
@@ -86,10 +87,15 @@ void GameWindow::run() {
 		handleInput();
 		update(dt);
 		render();
+
 		ts::Keyboard::clearEvents();
+		ts::Mouse::clearEvents();
+
+		frames++;
 		fpsCounter += dt;
 		if (fpsCounter >= 1000) {
-			std::cout << 1000.f / dt << std::endl;
+			std::cout << frames << std::endl;
+			frames = 0;
 			fpsCounter = 0;
 		}
 	}
@@ -116,9 +122,13 @@ void GameWindow::handleInput() {
 			} else {
 				ts::Mouse::setPosition(event.mouseMove.x, event.mouseMove.y);
 			}
-		} else if(event.type == sf::Event::MouseButtonPressed){//TODO implement mouse clicking
-		} else if(event.type == sf::Event::MouseButtonReleased){
-		} else if(event.type == sf::Event::MouseWheelMoved){
+		} else if (event.type == sf::Event::MouseButtonPressed) {
+			ts::Mouse::setButton(event.mouseButton.button, true);
+			ts::Mouse::setMouseButtonEvent(event.mouseButton.button, ts::Mouse::buttonPressed);
+		} else if (event.type == sf::Event::MouseButtonReleased) {
+			ts::Mouse::setButton(event.mouseButton.button, false);
+			ts::Mouse::setMouseButtonEvent(event.mouseButton.button, ts::Mouse::buttonReleased);
+		} else if (event.type == sf::Event::MouseWheelMoved) {
 		}
 
 		if (event.type == Event::Closed) {
@@ -146,7 +156,7 @@ void GameWindow::render() { //Watch for too high framerate
 void GameWindow::lockMouse(int mouseX, int mouseY) {
 	int xDist = mouseX - (width / 2), yDist = mouseY - (height / 2);
 	int distSqr = (xDist * xDist) + (yDist * yDist);
-	if (distSqr >= 90000) {//Temp
+	if (distSqr >= 90000) { //Temp
 		sf::Mouse::setPosition(sf::Vector2i(width / 2, height / 2), *this);
 		ts::Mouse::setPosition(width / 2, height / 2);
 	} else {

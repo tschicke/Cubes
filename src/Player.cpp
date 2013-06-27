@@ -160,11 +160,11 @@ void Player::input() {
 		}
 	}
 
-	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::G) == ts::Keyboard::keyPressed) {
+	if (ts::Mouse::checkMouseButtonEvent(ts::Mouse::Button0) == ts::Mouse::buttonPressed) {
 		world->removeBlockAtPosition(selectedBlock.x, selectedBlock.y, selectedBlock.z);
 	}
 
-	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::H) == ts::Keyboard::keyPressed) {
+	if (ts::Mouse::checkMouseButtonEvent(ts::Mouse::Button1) == ts::Mouse::buttonPressed) {
 		glm::vec3 addBlockPosition = selectedBlock.getAddBlockPosition();
 		world->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, activeBlock);
 	}
@@ -210,48 +210,52 @@ void Player::checkCollisions() {
 
 	//X checks
 	if (nextPosition.x != position.x) {
-		for (int c = 0; c < 8; ++c) {
+		for (int c = 0; c < 12; ++c) {
 			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float yt = (position.y + (c / 4 * PLAYER_HEIGHT * 0.9f));
+			float yt = (position.y + (c / 4 * (PLAYER_HEIGHT / 2)));
 			float zt = (position.z + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockX = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
 			if (nextBlockX != NULL && nextBlockX->isSolid()) {
-				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
+				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.001f)) - ((PLAYER_WIDTH + 0.001f) / 2));
 				velocity.x = 0;
 				break;
 			}
 		}
 	}
 
+	nextPosition = position + moveVector + velocity;
+
 	//Z checks
 	if (nextPosition.z != position.z) {
-		for (int c = 0; c < 8; ++c) {
+		for (int c = 0; c < 12; ++c) {
 			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float yt = (position.y + (c / 4 * PLAYER_HEIGHT * 0.9f));
-			float xt = (position.x + ((c % 4) / 2 * (PLAYER_WIDTH)) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+			float yt = (position.y + (c / 4 * (PLAYER_HEIGHT / 2)));
+			float xt = (nextPosition.x + ((c % 4) / 2 * (PLAYER_WIDTH)) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockZ = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
 			if (nextBlockZ != NULL && nextBlockZ->isSolid()) {
-				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.01)) - ((PLAYER_WIDTH + 0.01) / 2));
+				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.001f)) - ((PLAYER_WIDTH + 0.001f) / 2));
 				velocity.z = 0;
 				break;
 			}
 		}
 	}
 
+	nextPosition = position + moveVector + velocity;
+
 	//Y checks
 	if (nextPosition.y != position.y) {
 		for (int c = 0; c < 8; ++c) {
-			float zt = (position.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
 			float yt = (nextPosition.y + (c / 4 * PLAYER_HEIGHT));
-			float xt = (position.x + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+			float xt = (nextPosition.x + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockY = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
 			if (nextBlockY != NULL && nextBlockY->isSolid()) {
 				velocity.y = 0;
-				moveVector.y = roundf(yt) - (position.y + (c / 4 * PLAYER_HEIGHT));
-						//-(position.y - (floorf(yt) + 1));
+				moveVector.y = roundf(yt) - (position.y + (c / 4 * (PLAYER_HEIGHT + 0.001f)));
+				//-(position.y - (floorf(yt) + 1));
 				if (nextPosition.y < position.y) {
 					onGround = true;
 				}
