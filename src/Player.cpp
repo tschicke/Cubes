@@ -147,14 +147,7 @@ void Player::input() {
 		for (int x = floorX - 6; x < floorX + 7; ++x) {
 			for (int y = floorY - 6; y < floorY + 7; ++y) {
 				for (int z = floorZ - 6; z < floorZ + 7; ++z) {
-					Chunk * chunk = world->getChunkAt(x, y, z);
-					if (chunk != NULL) {
-						Block * block = chunk->getBlockAtCoordinate(x, y, z);
-						if (block != NULL && block->getBlockType() != blockType_Air) {
-							chunk->removeBlockAtPosition(x, y, z);
-						}
-					}
-//					world->removeBlockAtPosition(x, y, z);
+					world->removeBlockAtPosition(x, y, z);
 				}
 			}
 		}
@@ -204,9 +197,6 @@ void Player::jump() {
 }
 void Player::checkCollisions() {
 	glm::vec3 nextPosition = position + moveVector + velocity;
-
-	//TODO fix corner collisions
-	//TODO fix false positive collisions due to overlap in corner and next block
 
 	//X checks
 	if (nextPosition.x != position.x) {

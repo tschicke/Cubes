@@ -37,14 +37,11 @@ public:
 	virtual float getBaseTextureX();
 	virtual float getBaseTextureY();
 
-	bool needsFaceUpdate();
-	void setNeedsFaceUpdate(bool flag);
-
 	Face raytrace(int x, int y, int z, glm::vec3 startVec, glm::vec3 endVec);
 
 	static Block * getBlockOfType(BlockType type);
 protected:
-	bool flagNeedsFaceUpdate;
+	static Block * blocks[numBlockTypes];
 };
 
 #endif /* CUBE_H_ */

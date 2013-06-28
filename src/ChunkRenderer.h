@@ -28,8 +28,6 @@ public:
 	void update(time_t dt);
 	void render(Player * player);
 
-	void updateBlockFaces(int blockX, int blockY, int blockZ);
-
 	void updateBlockAtPosition(int x, int y, int z);
 	void markDirty();
 

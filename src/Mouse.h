@@ -12,7 +12,7 @@
 
 namespace ts {
 
-class Mouse { //TODO add buttons to mouse class
+class Mouse {
 public:
 	enum Button {
 		Button0,

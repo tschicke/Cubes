@@ -25,8 +25,6 @@ public:
 	Block** getBlockArray();
 
 	void freeArray();
-
-	void markBlocksAroundBlockDirty(int x, int y, int z);
 private:
 	BlockStorage(const BlockStorage& copy);
 	BlockStorage& operator=(const BlockStorage& copy);

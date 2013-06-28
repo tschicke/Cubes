@@ -30,7 +30,7 @@ void ChunkManager::addChunk(int x, int y, int z, float r, float g, float b) {
 	chunks.push_back(chunk);
 }
 
-void ChunkManager::deleteChuck(int index) {
+void ChunkManager::deleteChunk(int index) {
 	delete chunks[index];
 	chunks[index] = NULL;
 }
@@ -38,6 +38,7 @@ void ChunkManager::deleteChuck(int index) {
 void ChunkManager::update(time_t dt) {
 	loadChunks();
 	unloadChunks();
+	std::cout << chunks.size() << '\n';
 
 	std::vector<Chunk *>::iterator iterator;
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
@@ -77,7 +78,6 @@ void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per fra
 				Chunk * currentChunk = getChunkWithCoordinate(x - (x % Chunk::CHUNK_SIZE), y - (y % Chunk::CHUNK_SIZE), z - (z % Chunk::CHUNK_SIZE));
 				if ((currentChunk != NULL && !(currentChunk->isLoaded())) || !currentChunk) {
 					addChunk(x - (x % Chunk::CHUNK_SIZE), y - (y % Chunk::CHUNK_SIZE), z - (z % Chunk::CHUNK_SIZE), 1, 1, 1);
-//					std::cout << "addChunk  " << x - (x % Chunk::CHUNK_SIZE) << '\n';
 					return;
 				}
 			}
