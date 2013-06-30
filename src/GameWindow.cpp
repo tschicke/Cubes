@@ -43,6 +43,7 @@ void GameWindow::create(int w, int h, const char * title) {
 	create(VideoMode(w, h, 32), title);
 //	setVerticalSyncEnabled(true);
 	setFramerateLimit(60);
+	setMouseCursorVisible(false);
 	init();
 	initGL();
 }

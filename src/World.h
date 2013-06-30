@@ -34,6 +34,7 @@ public:
 	void addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType);
 	void removeBlockAtPosition(int x, int y, int z);
 
+	Player * getMainPlayer();
 protected:
 	ChunkManager chunkManager;
 

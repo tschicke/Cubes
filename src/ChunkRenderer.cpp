@@ -15,8 +15,6 @@
 
 #include "SpriteSheet.h"
 
-#include <gl/glew.h>
-
 #include <glm/gtx/transform.hpp>
 
 #include <vector>

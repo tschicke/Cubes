@@ -38,7 +38,6 @@ void ChunkManager::deleteChunk(int index) {
 void ChunkManager::update(time_t dt) {
 	loadChunks();
 	unloadChunks();
-	std::cout << chunks.size() << '\n';
 
 	std::vector<Chunk *>::iterator iterator;
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame

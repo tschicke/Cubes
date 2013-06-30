@@ -85,4 +85,8 @@ void World::removeBlockAtPosition(int x, int y, int z) {
 	}
 }
 
+Player* World::getMainPlayer() {
+	return mainPlayer;
+}
+
 } /* namespace ts */

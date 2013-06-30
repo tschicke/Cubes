@@ -50,8 +50,9 @@ void Player::init(ts::World * world) {
 	jumpStrength = 0.3f;
 	gravityVel = 0;
 	onGround = false;
-	activeBlock = blockType_Null;
+	activeBlock = blockType_Grass;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
+	entity = Entity(world, position.x + 1, position.y, position.z + 1);
 	loadPlayerModel();
 }
 
@@ -266,7 +267,7 @@ void Player::checkCollisions() {
 void Player::update(time_t dt) {
 	//if(needsRaytrace)
 	glm::vec3 startVec = camera.getPosition();
-	glm::vec3 endVec = startVec + ((camera.getLook() - startVec) * 12.f); //12 = block break range
+	glm::vec3 endVec = startVec + ((camera.getLook() - startVec) * 4.f); //12 = block break range
 	selectedBlock = world->raytraceBlocks(startVec, endVec);
 
 	input();
@@ -292,6 +293,8 @@ void Player::draw(glm::mat4 * viewMat) {
 	Renderer::getMainRenderer().renderMesh(playerModelID);
 
 	glUseProgram(0);
+
+	entity.draw();
 }
 
 glm::vec3 Player::getPosition() {
@@ -306,6 +309,7 @@ void Player::setPosition(glm::vec3 newPos) {
 void Player::move(glm::vec3 moveVector) {
 	position += moveVector;
 	camera.move(moveVector);
+	entity.move(moveVector);
 }
 
 void Player::move(float x, float y, float z) {

@@ -19,6 +19,8 @@
 
 #include "Blocks/Block.h"
 
+#include "Entity.h"
+
 namespace ts {
 class World;
 }
@@ -72,6 +74,8 @@ private:
 	bool loaded;
 
 	SelectedBlock selectedBlock;
+
+	Entity entity;
 };
 
 #endif /* PLAYER_H_ */

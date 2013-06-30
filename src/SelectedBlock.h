@@ -28,6 +28,11 @@ public:
 	int face;
 
 	glm::vec3 getAddBlockPosition();
+
+	void draw();
+
+private:
+	void loadModel();
 };
 
 #endif /* SELECTEDBLOCK_H_ */

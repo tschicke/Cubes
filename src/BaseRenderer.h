@@ -13,6 +13,8 @@
 #include "Shader.h"
 #include <glm/glm.hpp>
 
+#include <gl/glew.h>
+
 class Player;//Should be include?
 
 class BaseRenderer {
