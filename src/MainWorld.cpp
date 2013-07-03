@@ -8,12 +8,17 @@
 #include "MainWorld.h"
 #include <iostream>
 
+#include "DynamicEntity.h"
+
 namespace ts {
 
 MainWorld::MainWorld() {
 	mainPlayer = new Player(this);
 	mainPlayer->setPosition(glm::vec3(0, 32, 0));
-	characters.push_back(mainPlayer);
+	entityList.push_back(mainPlayer);
+
+	Entity * entity = new DynamicEntity(this, glm::vec3(0, 14, 0));
+	entityList.push_back(entity);
 
 	chunkManager = ChunkManager(mainPlayer);
 }
@@ -26,18 +31,20 @@ void MainWorld::handleInput() {
 }
 
 void MainWorld::update(time_t dt) {
-	for (std::vector<Character *>::iterator iterator = characters.begin(); iterator != characters.end(); iterator++) {
-		Character *character = *iterator;
-		character->update(dt);
+	for (std::vector<Entity *>::iterator iterator = entityList.begin(); iterator != entityList.end(); iterator++) {
+		Entity *entity = *iterator;
+		entity->update(dt);
 	}
+
 	chunkManager.update(dt);
 }
 
 void MainWorld::draw() {
-	for (std::vector<Character *>::iterator iterator = characters.begin(); iterator != characters.end(); iterator++) {
-		Character *character = *iterator;
-		character->draw(mainPlayer->getCameraViewMatrix());
+	for (std::vector<Entity *>::iterator iterator = entityList.begin(); iterator != entityList.end(); iterator++) {
+		Entity *entity = *iterator;
+		entity->draw();
 	}
+
 	chunkManager.draw(mainPlayer->getCameraViewMatrix());
 }
 

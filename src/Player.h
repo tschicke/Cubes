@@ -19,7 +19,8 @@
 
 #include "Blocks/Block.h"
 
-#include "Entity.h"
+//#include "DynamicEntity.h"
+//#include "StaticEntity.h"
 
 namespace ts {
 class World;
@@ -37,7 +38,7 @@ public:
 
 	void update(time_t dt);
 
-	void draw(glm::mat4 * viewMat);
+	void draw();
 
 	glm::vec3 getPosition();
 	void setPosition(glm::vec3 newPos);
@@ -47,8 +48,6 @@ private:
 	ts::FirstPersonCamera camera;
 
 	ts::World * world;
-
-	glm::vec3 velocity;
 
 	BlockType activeBlock;
 
@@ -74,8 +73,6 @@ private:
 	bool loaded;
 
 	SelectedBlock selectedBlock;
-
-	Entity entity;
 };
 
 #endif /* PLAYER_H_ */

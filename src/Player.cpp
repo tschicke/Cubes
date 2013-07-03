@@ -52,7 +52,6 @@ void Player::init(ts::World * world) {
 	onGround = false;
 	activeBlock = blockType_Grass;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
-	entity = Entity(world, position.x + 1, position.y, position.z + 1);
 	loadPlayerModel();
 }
 
@@ -281,20 +280,18 @@ void Player::update(time_t dt) {
 	moveVector = glm::vec3();	//Reset move vector every frame;
 }
 
-void Player::draw(glm::mat4 * viewMat) {
+void Player::draw() {
 	shaderProgram.useProgram();
 
 	glm::mat4 modelMatrix = glm::translate((float) selectedBlock.x, (float) selectedBlock.y, (float) selectedBlock.z);	// * glm::rotate(yaw, 0.f, 1.f, 0.f);
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", viewMat, 1);
+	shaderProgram.setUniform("viewMatrix", world->getMainPlayer()->getCameraViewMatrix(), 1);
 	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
 
 	Renderer::getMainRenderer().renderMesh(playerModelID);
 
 	glUseProgram(0);
-
-	entity.draw();
 }
 
 glm::vec3 Player::getPosition() {
@@ -309,7 +306,6 @@ void Player::setPosition(glm::vec3 newPos) {
 void Player::move(glm::vec3 moveVector) {
 	position += moveVector;
 	camera.move(moveVector);
-	entity.move(moveVector);
 }
 
 void Player::move(float x, float y, float z) {

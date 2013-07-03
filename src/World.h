@@ -39,7 +39,7 @@ protected:
 	ChunkManager chunkManager;
 
 	Player * mainPlayer;
-	std::vector<Character *> characters;
+	std::vector<Entity *> entityList;
 };
 
 } /* namespace ts */

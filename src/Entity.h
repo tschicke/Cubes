@@ -18,23 +18,16 @@ namespace ts{
 class World;
 }
 
-class Entity {
+class Entity {//TODO gravity and collisions
 public:
 	Entity();
-	Entity(ts::World * world, float x, float y, float z);
 	Entity(ts::World * world, glm::vec3 position);
 	virtual ~Entity();
 
 	void init(ts::World * world, glm::vec3 position);
 
-	virtual void update(time_t dt){};
-	void draw();
-
-	void move(float x, float y, float z);
-	void move(glm::vec3 moveVec);
-
-	void addYaw(float yaw);
-	void addPitch(float pitch);
+	virtual void update(time_t dt) = 0;
+	virtual void draw();
 
 	friend class EntityRenderer;
 protected:

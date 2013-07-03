@@ -10,6 +10,8 @@
 
 #include "World.h"
 
+#include "Entity.h"
+
 namespace ts {
 
 class MainWorld: public ts::World{

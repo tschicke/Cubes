@@ -28,7 +28,6 @@ EntityRenderer::~EntityRenderer() {
 }
 
 void EntityRenderer::init(Entity * parent, const char * modelFile) {
-	std::cout << "er init " << parent << '\n';
 	modelMatNeedsUpdate = true;
 
 	parentEntity = parent;
@@ -199,7 +198,7 @@ void EntityRenderer::loadModel(const char * modelFile) {
 void EntityRenderer::render(Player* player) {
 	if (modelMatNeedsUpdate) {
 		modelMatrix = glm::translate(parentEntity->position);
-		std::cout << "renderer " << parentEntity << '\n';
+		std::cout << parentEntity->position.x << '\n';
 		modelMatNeedsUpdate = false;
 	}
 

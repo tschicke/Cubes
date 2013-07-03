@@ -10,18 +10,18 @@
 
 #include "Common.h"
 
+#include "DynamicEntity.h"
+
 #include <glm/glm.hpp>
 
-class Character {
+class Character : public DynamicEntity{
 public:
 	Character();
 	virtual ~Character();
 
-	virtual void update(time_t dt) = 0;
-	virtual void draw(glm::mat4 * viewMatrix) = 0;
-
+	virtual void update(time_t dt);
 protected:
-	glm::vec3 position, moveVector;
+	glm::vec3 moveVector;
 	float yaw, pitch;
 };
 
