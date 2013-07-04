@@ -23,7 +23,6 @@ Entity::Entity(ts::World* world, glm::vec3 position) {
 }
 
 Entity::~Entity() {
-	std::cout << "entity deconst " << this << '\n';
 }
 
 void Entity::init(ts::World* world, glm::vec3 position) {
@@ -43,3 +42,6 @@ void Entity::draw() {
 	}
 }
 
+CollisionBox Entity::getCollisionBox() {
+	return CollisionBox(position, halfDimentions);
+}

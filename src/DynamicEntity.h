@@ -26,8 +26,14 @@ public:
 	void addYaw(float yaw);
 	void addPitch(float pitch);
 
+	void checkCollisions();
+
 protected:
-	glm::vec3 velocity;
+	glm::vec3 velocity, moveVector;
+
+	bool affectedByGravity;
+
+	bool xColl, zColl, ceilColl, floorColl;
 };
 
 #endif /* DYNAMICENTITY_H_ */

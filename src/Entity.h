@@ -14,6 +14,8 @@
 
 #include "EntityRenderer.h"
 
+#include "CollisionBox.h"
+
 namespace ts{
 class World;
 }
@@ -27,11 +29,14 @@ public:
 	void init(ts::World * world, glm::vec3 position);
 
 	virtual void update(time_t dt) = 0;
-	virtual void draw();
+	virtual void draw();//TODO should be virtual?
 
 	friend class EntityRenderer;
+
+	CollisionBox getCollisionBox();
 protected:
 	glm::vec3 position;
+	glm::vec3 halfDimentions;
 	float yaw, pitch;
 
 	ts::World * parentWorld;

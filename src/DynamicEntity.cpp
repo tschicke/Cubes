@@ -7,9 +7,13 @@
 
 #include "DynamicEntity.h"
 
+#include "World.h"
+
 #include <iostream>
 
 DynamicEntity::DynamicEntity() {
+	affectedByGravity = false;
+	xColl = zColl = floorColl = ceilColl = false;
 }
 
 DynamicEntity::DynamicEntity(ts::World* world, glm::vec3 position) {
@@ -18,6 +22,13 @@ DynamicEntity::DynamicEntity(ts::World* world, glm::vec3 position) {
 
 DynamicEntity::DynamicEntity(ts::World * world, glm::vec3 position, glm::vec3 velocity) {
 	init(world, position, velocity);
+}
+
+void DynamicEntity::init(ts::World* world, glm::vec3 position, glm::vec3 velocity) {
+	Entity::init(world, position);
+	affectedByGravity = false;
+	this->velocity = velocity;
+	xColl = zColl = floorColl = ceilColl = false;
 }
 
 DynamicEntity::~DynamicEntity() {
@@ -36,12 +47,87 @@ void DynamicEntity::update(time_t dt) {
 	move(velocity * (dt / 1000.f));
 }
 
-void DynamicEntity::init(ts::World* world, glm::vec3 position, glm::vec3 velocity) {
-	Entity::init(world, position);
-	this->velocity = velocity;
-}
-
 void DynamicEntity::addPitch(float pitch) {
 	this->pitch += pitch;
+}
+
+void DynamicEntity::checkCollisions() {
+	glm::vec3 nextPosition = position + moveVector + velocity;
+
+	CollisionBox box = getCollisionBox();
+
+	//X checks
+	if (nextPosition.x != position.x) {
+		for (int c = 0; c < 12; ++c) {
+			float xt = (nextPosition.x + (c % 2 * (box.halfDimentions.x * 2)) - box.halfDimentions.x);
+			float yt = (position.y + (c / 4 * (box.halfDimentions.y * 2)));
+			float zt = (position.z + ((c % 4) / 2 * (box.halfDimentions.z * 2)) - box.halfDimentions.z);	// - (c / 2 * -0.01) is temp
+
+			Block * nextBlockX = parentWorld->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
+			if (nextBlockX != NULL && nextBlockX->isSolid()) {
+				moveVector.x = roundf(xt) - (position.x + (c % 2 * ((box.halfDimentions.x * 2) + 0.001f)) - (box.halfDimentions.x + 0.0005f));
+				velocity.x = 0;
+
+				xColl = true;
+				break;
+			} else {
+				xColl = false;
+			}
+		}
+	}
+
+	nextPosition = position + moveVector + velocity;
+
+	//Z checks
+	if (nextPosition.z != position.z) {
+		for (int c = 0; c < 12; ++c) {
+			float zt = (nextPosition.z + (c % 2 * (box.halfDimentions.z * 2)) - box.halfDimentions.z);
+			float yt = (position.y + (c / 4 * (box.halfDimentions.y * 2)));
+			float xt = (nextPosition.x + ((c % 4) / 2 * (box.halfDimentions.x * 2)) - box.halfDimentions.x);	// - (c / 2 * -0.01) is temp
+
+			Block * nextBlockZ = parentWorld->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
+			if (nextBlockZ != NULL && nextBlockZ->isSolid()) {
+				moveVector.z = roundf(zt) - (position.z + (c % 2 * ((box.halfDimentions.z * 2) + 0.001f)) - (box.halfDimentions.z + 0.0005f));
+				velocity.z = 0;
+
+				zColl = true;
+				break;
+			} else {
+				zColl = false;
+			}
+		}
+	}
+
+	nextPosition = position + moveVector + velocity;
+
+	//Y checks
+	if (nextPosition.y != position.y) {
+		for (int c = 0; c < 8; ++c) {
+			float zt = (nextPosition.z + (c % 2 * (box.halfDimentions.z * 2)) - box.halfDimentions.z);
+			float yt = (nextPosition.y + (c / 4 * (box.halfDimentions.y * 2)));
+			float xt = (nextPosition.x + ((c % 4) / 2 * (box.halfDimentions.x * 2)) - box.halfDimentions.x);	// - (c / 2 * -0.01) is temp
+
+			Block * nextBlockY = parentWorld->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
+			if (nextBlockY != NULL && nextBlockY->isSolid()) {
+				velocity.y = 0;
+				moveVector.y = roundf(yt) - (position.y + (c / 4 * ((box.halfDimentions.y * 2) + 0.001f)));
+				if (nextPosition.y < position.y) {
+					floorColl = true;
+				} else {
+					ceilColl = true;
+				}
+
+				break;
+			} else {
+				floorColl = ceilColl = false;
+			}
+		}
+	}
+
+	//Temp "falling off map" fix
+	if (position.y < -64) {
+		move(glm::vec3(0, 96, 0));
+		velocity.y = 0;
+	}
 }
 

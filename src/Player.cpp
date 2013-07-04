@@ -25,33 +25,32 @@ Player::Player() {
 	yaw = 0;
 	pitch = 0;
 	moveSpeed = 0.0f;
-	world = NULL;
+	parentWorld = NULL;
 	gravityStrength = 0.f;
 	jumpStrength = 0.f;
-	gravityVel = 0;
 	onGround = false;
 	loaded = false;
 	activeBlock = blockType_Null;
 }
 
-Player::Player(ts::World * world) {
-	init(world);
+Player::Player(ts::World * parentWorld) {
+	init(parentWorld);
 }
 
 Player::~Player() {
 }
 
-void Player::init(ts::World * world) {
+void Player::init(ts::World * parentWorld) {
+	DynamicEntity::init(parentWorld, glm::vec3(), glm::vec3());
 	yaw = 270;
 	pitch = 0;
 	moveSpeed = 0.2f;
-	this->world = world;
 	gravityStrength = 0.01f;
 	jumpStrength = 0.3f;
-	gravityVel = 0;
 	onGround = false;
 	activeBlock = blockType_Grass;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
+	halfDimentions = glm::vec3(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2, PLAYER_WIDTH / 2);
 	loadPlayerModel();
 }
 
@@ -147,19 +146,19 @@ void Player::input() {
 		for (int x = floorX - 6; x < floorX + 7; ++x) {
 			for (int y = floorY - 6; y < floorY + 7; ++y) {
 				for (int z = floorZ - 6; z < floorZ + 7; ++z) {
-					world->removeBlockAtPosition(x, y, z);
+					parentWorld->removeBlockAtPosition(x, y, z);
 				}
 			}
 		}
 	}
 
 	if (ts::Mouse::checkMouseButtonEvent(ts::Mouse::Button0) == ts::Mouse::buttonPressed) {
-		world->removeBlockAtPosition(selectedBlock.x, selectedBlock.y, selectedBlock.z);
+		parentWorld->removeBlockAtPosition(selectedBlock.x, selectedBlock.y, selectedBlock.z);
 	}
 
 	if (ts::Mouse::checkMouseButtonEvent(ts::Mouse::Button1) == ts::Mouse::buttonPressed) {
 		glm::vec3 addBlockPosition = selectedBlock.getAddBlockPosition();
-		world->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, activeBlock);
+		parentWorld->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, activeBlock);
 	}
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num1) == ts::Keyboard::keyPressed) {
@@ -195,83 +194,92 @@ void Player::jump() {
 		velocity.y += jumpStrength;
 	}
 }
-void Player::checkCollisions() {
-	glm::vec3 nextPosition = position + moveVector + velocity;
 
-	//X checks
-	if (nextPosition.x != position.x) {
-		for (int c = 0; c < 12; ++c) {
-			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float yt = (position.y + (c / 4 * (PLAYER_HEIGHT / 2)));
-			float zt = (position.z + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
-
-			Block * nextBlockX = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
-			if (nextBlockX != NULL && nextBlockX->isSolid()) {
-				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.001f)) - ((PLAYER_WIDTH + 0.001f) / 2));
-				velocity.x = 0;
-				break;
-			}
-		}
-	}
-
-	nextPosition = position + moveVector + velocity;
-
-	//Z checks
-	if (nextPosition.z != position.z) {
-		for (int c = 0; c < 12; ++c) {
-			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float yt = (position.y + (c / 4 * (PLAYER_HEIGHT / 2)));
-			float xt = (nextPosition.x + ((c % 4) / 2 * (PLAYER_WIDTH)) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
-
-			Block * nextBlockZ = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
-			if (nextBlockZ != NULL && nextBlockZ->isSolid()) {
-				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.001f)) - ((PLAYER_WIDTH + 0.001f) / 2));
-				velocity.z = 0;
-				break;
-			}
-		}
-	}
-
-	nextPosition = position + moveVector + velocity;
-
-	//Y checks
-	if (nextPosition.y != position.y) {
-		for (int c = 0; c < 8; ++c) {
-			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
-			float yt = (nextPosition.y + (c / 4 * PLAYER_HEIGHT));
-			float xt = (nextPosition.x + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
-
-			Block * nextBlockY = world->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
-			if (nextBlockY != NULL && nextBlockY->isSolid()) {
-				velocity.y = 0;
-				moveVector.y = roundf(yt) - (position.y + (c / 4 * (PLAYER_HEIGHT + 0.001f)));
-				//-(position.y - (floorf(yt) + 1));
-				if (nextPosition.y < position.y) {
-					onGround = true;
-				}
-				break;
-			} else {
-				onGround = false;
-			}
-		}
-	}
-
-	//Temp "falling off map" fix
-	if (position.y < -64) {
-		move(glm::vec3(0, 96, 0));
-		velocity.y = 0;
-	}
-}
+//void Player::checkCollisions() {
+//	glm::vec3 nextPosition = position + moveVector + velocity;
+//
+//	//X checks
+//	if (nextPosition.x != position.x) {
+//		for (int c = 0; c < 12; ++c) {
+//			float xt = (nextPosition.x + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+//			float yt = (position.y + (c / 4 * (PLAYER_HEIGHT / 2)));
+//			float zt = (position.z + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+//
+//			Block * nextBlockX = parentWorld->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
+//			if (nextBlockX != NULL && nextBlockX->isSolid()) {
+//				moveVector.x = roundf(xt) - (position.x + (c % 2 * (PLAYER_WIDTH + 0.001f)) - ((PLAYER_WIDTH + 0.001f) / 2));
+//				velocity.x = 0;
+//				break;
+//			}
+//		}
+//	}
+//
+//	nextPosition = position + moveVector + velocity;
+//
+//	//Z checks
+//	if (nextPosition.z != position.z) {
+//		for (int c = 0; c < 12; ++c) {
+//			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+//			float yt = (position.y + (c / 4 * (PLAYER_HEIGHT / 2)));
+//			float xt = (nextPosition.x + ((c % 4) / 2 * (PLAYER_WIDTH)) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+//
+//			Block * nextBlockZ = parentWorld->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
+//			if (nextBlockZ != NULL && nextBlockZ->isSolid()) {
+//				moveVector.z = roundf(zt) - (position.z + (c % 2 * (PLAYER_WIDTH + 0.001f)) - ((PLAYER_WIDTH + 0.001f) / 2));
+//				velocity.z = 0;
+//				break;
+//			}
+//		}
+//	}
+//
+//	nextPosition = position + moveVector + velocity;
+//
+//	//Y checks
+//	if (nextPosition.y != position.y) {
+//		for (int c = 0; c < 8; ++c) {
+//			float zt = (nextPosition.z + (c % 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));
+//			float yt = (nextPosition.y + (c / 4 * PLAYER_HEIGHT));
+//			float xt = (nextPosition.x + ((c % 4) / 2 * PLAYER_WIDTH) - (PLAYER_WIDTH / 2));	// - (c / 2 * -0.01) is temp
+//
+//			Block * nextBlockY = parentWorld->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
+//			if (nextBlockY != NULL && nextBlockY->isSolid()) {
+//				velocity.y = 0;
+//				moveVector.y = roundf(yt) - (position.y + (c / 4 * (PLAYER_HEIGHT + 0.001f)));
+//				//-(position.y - (floorf(yt) + 1));
+//				if (nextPosition.y < position.y) {
+//					onGround = true;
+//				}
+//				break;
+//			} else {
+//				onGround = false;
+//			}
+//		}
+//	}
+//
+//	//Temp "falling off map" fix
+//	if (position.y < -64) {
+//		move(glm::vec3(0, 96, 0));
+//		velocity.y = 0;
+//	}
+//}
 
 void Player::update(time_t dt) {
 	//if(needsRaytrace)
 	glm::vec3 startVec = camera.getPosition();
 	glm::vec3 endVec = startVec + ((camera.getLook() - startVec) * 4.f); //12 = block break range
-	selectedBlock = world->raytraceBlocks(startVec, endVec);
+	selectedBlock = parentWorld->raytraceBlocks(startVec, endVec);
 
 	input();
 	gravity();
-	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
+//	std::cout << "move vec = " << moveVector.x << ' ' << moveVector.y << ' ' << moveVector.z << '\n';
+ 	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
+// 	std::cout << "move vec = " << moveVector.x << ' ' << moveVector.y << ' ' << moveVector.z << '\n' << '\n';
+
+	if(floorColl){
+		onGround = true;
+	} else {
+		onGround = false;
+	}
 
 	moveVector += velocity;
 
@@ -286,7 +294,7 @@ void Player::draw() {
 	glm::mat4 modelMatrix = glm::translate((float) selectedBlock.x, (float) selectedBlock.y, (float) selectedBlock.z);	// * glm::rotate(yaw, 0.f, 1.f, 0.f);
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", world->getMainPlayer()->getCameraViewMatrix(), 1);
+	shaderProgram.setUniform("viewMatrix", parentWorld->getMainPlayer()->getCameraViewMatrix(), 1);
 	shaderProgram.setUniform("projectionMatrix", Renderer::getProjectionMatrix(), 1);
 
 	Renderer::getMainRenderer().renderMesh(playerModelID);
