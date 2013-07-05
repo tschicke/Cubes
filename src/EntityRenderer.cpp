@@ -54,46 +54,46 @@ void EntityRenderer::markNeedsMatrixUpdate() {
 }
 
 void EntityRenderer::loadModel(const char * modelFile) {
-	float cubeSize = 0.2f;
+	float cubeSize = 0.1f;
 
 	parentEntity->halfDimentions = glm::vec3(cubeSize, cubeSize, cubeSize);
 
 	float vertexData[] = {
 			//Front
-			-cubeSize, -cubeSize, cubeSize,
-			cubeSize, -cubeSize, cubeSize,
-			cubeSize, cubeSize, cubeSize,
-			-cubeSize, cubeSize, cubeSize,
+			-cubeSize, 0, cubeSize,
+			cubeSize, 0, cubeSize,
+			cubeSize, 2 * cubeSize, cubeSize,
+			-cubeSize, 2 * cubeSize, cubeSize,
 
 			//Back
-			cubeSize, -cubeSize, -cubeSize,
-			-cubeSize, -cubeSize, -cubeSize,
-			-cubeSize, cubeSize, -cubeSize,
-			cubeSize, cubeSize, -cubeSize,
+			cubeSize, 0, -cubeSize,
+			-cubeSize, 0, -cubeSize,
+			-cubeSize, 2 * cubeSize, -cubeSize,
+			cubeSize, 2 * cubeSize, -cubeSize,
 
 			//Left
-			-cubeSize, -cubeSize, -cubeSize,
-			-cubeSize, -cubeSize, cubeSize,
-			-cubeSize, cubeSize, cubeSize,
-			-cubeSize, cubeSize, -cubeSize,
+			-cubeSize, 0, -cubeSize,
+			-cubeSize, 0, cubeSize,
+			-cubeSize, 2 * cubeSize, cubeSize,
+			-cubeSize, 2 * cubeSize, -cubeSize,
 
 			//Right
-			cubeSize, -cubeSize, cubeSize,
-			cubeSize, -cubeSize, -cubeSize,
-			cubeSize, cubeSize, -cubeSize,
-			cubeSize, cubeSize, cubeSize,
+			cubeSize, 0, cubeSize,
+			cubeSize, 0, -cubeSize,
+			cubeSize, 2 * cubeSize, -cubeSize,
+			cubeSize, 2 * cubeSize, cubeSize,
 
 			//Top
-			-cubeSize, cubeSize, cubeSize,
-			cubeSize, cubeSize, cubeSize,
-			cubeSize, cubeSize, -cubeSize,
-			-cubeSize, cubeSize, -cubeSize,
+			-cubeSize, 2 * cubeSize, cubeSize,
+			cubeSize, 2 * cubeSize, cubeSize,
+			cubeSize, 2 * cubeSize, -cubeSize,
+			-cubeSize, 2 * cubeSize, -cubeSize,
 
 			//Bottom
-			-cubeSize, -cubeSize, -cubeSize,
-			cubeSize, -cubeSize, -cubeSize,
-			cubeSize, -cubeSize, cubeSize,
-			-cubeSize, -cubeSize, cubeSize
+			-cubeSize, 0, -cubeSize,
+			cubeSize, 0, -cubeSize,
+			cubeSize, 0, cubeSize,
+			-cubeSize, 0, cubeSize
 	};
 
 	float colorData[] = {

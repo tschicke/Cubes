@@ -14,6 +14,8 @@
 Entity::Entity() {
 	parentWorld = NULL;
 
+	flagShouldBeDeleted = false;
+
 	yaw = 0;
 	pitch = 0;
 }
@@ -23,6 +25,7 @@ Entity::Entity(ts::World* world, glm::vec3 position) {
 }
 
 Entity::~Entity() {
+	renderer.deleteBuffers();
 }
 
 void Entity::init(ts::World* world, glm::vec3 position) {
@@ -44,4 +47,11 @@ void Entity::draw() {
 
 CollisionBox Entity::getCollisionBox() {
 	return CollisionBox(position, halfDimentions);
+}
+
+void Entity::update(time_t dt) {
+}
+
+bool Entity::shouldBeDeleted() {
+	return flagShouldBeDeleted;
 }

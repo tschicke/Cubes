@@ -177,6 +177,11 @@ void Player::input() {
 		activeBlock = blockType_Tree;
 	}
 
+	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::P) == ts::Keyboard::keyPressed) {
+		Entity * entity = new DynamicEntity(parentWorld, camera.getPosition(), (camera.getLook() - camera.getPosition()) * 0.2f);
+		parentWorld->addEntity(entity);
+	}
+
 	int mouseDX, mouseDY;
 	mouseDX = ts::Mouse::getLastMove().x;
 	mouseDY = ts::Mouse::getLastMove().y;
@@ -184,9 +189,7 @@ void Player::input() {
 }
 
 void Player::gravity() {
-//	if (!onGround) {
 	velocity.y -= gravityStrength;
-//	}
 }
 
 void Player::jump() {

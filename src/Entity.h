@@ -34,6 +34,8 @@ public:
 	friend class EntityRenderer;
 
 	CollisionBox getCollisionBox();
+
+	bool shouldBeDeleted();
 protected:
 	glm::vec3 position;
 	glm::vec3 halfDimentions;
@@ -42,6 +44,8 @@ protected:
 	ts::World * parentWorld;
 
 	EntityRenderer renderer;
+
+	bool flagShouldBeDeleted;
 };
 
 #endif /* ENTITY_H_ */

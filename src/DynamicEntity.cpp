@@ -26,7 +26,7 @@ DynamicEntity::DynamicEntity(ts::World * world, glm::vec3 position, glm::vec3 ve
 
 void DynamicEntity::init(ts::World* world, glm::vec3 position, glm::vec3 velocity) {
 	Entity::init(world, position);
-	affectedByGravity = false;
+	affectedByGravity = true;
 	this->velocity = velocity;
 	xColl = zColl = floorColl = ceilColl = false;
 }
@@ -44,7 +44,20 @@ void DynamicEntity::addYaw(float yaw) {
 }
 
 void DynamicEntity::update(time_t dt) {
-	move(velocity * (dt / 1000.f));
+	if (affectedByGravity) {
+		velocity.y -= 0.005f;
+	}
+	checkCollisions();
+	if (floorColl) {
+//		flagShouldBeDeleted = true;
+		velocity = glm::vec3();
+	} else if (ceilColl || xColl || zColl) {
+//		flagShouldBeDeleted = true;
+		velocity = glm::vec3();
+		affectedByGravity = false;
+	}
+
+	move(velocity + moveVector);
 }
 
 void DynamicEntity::addPitch(float pitch) {
@@ -60,7 +73,7 @@ void DynamicEntity::checkCollisions() {
 	if (nextPosition.x != position.x) {
 		for (int c = 0; c < 12; ++c) {
 			float xt = (nextPosition.x + (c % 2 * (box.halfDimentions.x * 2)) - box.halfDimentions.x);
-			float yt = (position.y + (c / 4 * (box.halfDimentions.y * 2)));
+			float yt = (position.y + (c / 4 * box.halfDimentions.y));
 			float zt = (position.z + ((c % 4) / 2 * (box.halfDimentions.z * 2)) - box.halfDimentions.z);	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockX = parentWorld->getBlockAt(floorf(xt), floorf(yt), floorf(zt));
@@ -82,7 +95,7 @@ void DynamicEntity::checkCollisions() {
 	if (nextPosition.z != position.z) {
 		for (int c = 0; c < 12; ++c) {
 			float zt = (nextPosition.z + (c % 2 * (box.halfDimentions.z * 2)) - box.halfDimentions.z);
-			float yt = (position.y + (c / 4 * (box.halfDimentions.y * 2)));
+			float yt = (position.y + (c / 4 * box.halfDimentions.y));
 			float xt = (nextPosition.x + ((c % 4) / 2 * (box.halfDimentions.x * 2)) - box.halfDimentions.x);	// - (c / 2 * -0.01) is temp
 
 			Block * nextBlockZ = parentWorld->getBlockAt(floorf(xt), floorf(yt), floorf(zt));

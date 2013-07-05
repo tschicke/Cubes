@@ -89,4 +89,10 @@ Player* World::getMainPlayer() {
 	return mainPlayer;
 }
 
+void World::addEntity(Entity* entity) {
+	if(entity != NULL){
+		entityList.push_back(entity);
+	}
+}
+
 } /* namespace ts */
