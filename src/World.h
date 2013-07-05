@@ -35,6 +35,8 @@ public:
 	void removeBlockAtPosition(int x, int y, int z);
 
 	Player * getMainPlayer();
+
+	void addEntity(Entity * entity);
 protected:
 	ChunkManager chunkManager;
 

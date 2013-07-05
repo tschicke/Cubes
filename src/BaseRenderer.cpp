@@ -56,6 +56,8 @@ void BaseRenderer::deleteBuffers() {
 		glDeleteBuffers(1, &indexBufferID);
 		indexBuffLoaded = false;
 	}
+
+	shaderProgram.deleteProgram();
 }
 
 void BaseRenderer::substituteDataToVertexBuffer(int size, int offset, float* data) {

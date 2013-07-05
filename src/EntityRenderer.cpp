@@ -54,44 +54,46 @@ void EntityRenderer::markNeedsMatrixUpdate() {
 }
 
 void EntityRenderer::loadModel(const char * modelFile) {
-	float cubeSize = 0.4f;
+	float cubeSize = 0.1f;
+
+	parentEntity->halfDimentions = glm::vec3(cubeSize, cubeSize, cubeSize);
 
 	float vertexData[] = {
 			//Front
-			0, 0, cubeSize,
+			-cubeSize, 0, cubeSize,
 			cubeSize, 0, cubeSize,
-			cubeSize, cubeSize, cubeSize,
-			0, cubeSize, cubeSize,
+			cubeSize, 2 * cubeSize, cubeSize,
+			-cubeSize, 2 * cubeSize, cubeSize,
 
 			//Back
-			cubeSize, 0, 0,
-			0, 0, 0,
-			0, cubeSize, 0,
-			cubeSize, cubeSize, 0,
+			cubeSize, 0, -cubeSize,
+			-cubeSize, 0, -cubeSize,
+			-cubeSize, 2 * cubeSize, -cubeSize,
+			cubeSize, 2 * cubeSize, -cubeSize,
 
 			//Left
-			0, 0, 0,
-			0, 0, cubeSize,
-			0, cubeSize, cubeSize,
-			0, cubeSize, 0,
+			-cubeSize, 0, -cubeSize,
+			-cubeSize, 0, cubeSize,
+			-cubeSize, 2 * cubeSize, cubeSize,
+			-cubeSize, 2 * cubeSize, -cubeSize,
 
 			//Right
 			cubeSize, 0, cubeSize,
-			cubeSize, 0, 0,
-			cubeSize, cubeSize, 0,
-			cubeSize, cubeSize, cubeSize,
+			cubeSize, 0, -cubeSize,
+			cubeSize, 2 * cubeSize, -cubeSize,
+			cubeSize, 2 * cubeSize, cubeSize,
 
 			//Top
-			0, cubeSize, cubeSize,
-			cubeSize, cubeSize, cubeSize,
-			cubeSize, cubeSize, 0,
-			0, cubeSize, 0,
+			-cubeSize, 2 * cubeSize, cubeSize,
+			cubeSize, 2 * cubeSize, cubeSize,
+			cubeSize, 2 * cubeSize, -cubeSize,
+			-cubeSize, 2 * cubeSize, -cubeSize,
 
 			//Bottom
-			0, 0, 0,
-			cubeSize, 0, 0,
+			-cubeSize, 0, -cubeSize,
+			cubeSize, 0, -cubeSize,
 			cubeSize, 0, cubeSize,
-			0, 0, cubeSize
+			-cubeSize, 0, cubeSize
 	};
 
 	float colorData[] = {
@@ -198,7 +200,6 @@ void EntityRenderer::loadModel(const char * modelFile) {
 void EntityRenderer::render(Player* player) {
 	if (modelMatNeedsUpdate) {
 		modelMatrix = glm::translate(parentEntity->position);
-		std::cout << parentEntity->position.x << '\n';
 		modelMatNeedsUpdate = false;
 	}
 

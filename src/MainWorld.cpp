@@ -13,12 +13,12 @@
 namespace ts {
 
 MainWorld::MainWorld() {
+	std::cout << "capacity " << entityList.capacity() << '\n';
 	mainPlayer = new Player(this);
 	mainPlayer->setPosition(glm::vec3(0, 32, 0));
-	entityList.push_back(mainPlayer);
-
-	Entity * entity = new DynamicEntity(this, glm::vec3(0, 14, 0));
-	entityList.push_back(entity);
+	addEntity(mainPlayer);
+	addEntity(new DynamicEntity(this, glm::vec3(1, 32, 1), glm::vec3()));
+	addEntity(new DynamicEntity(this, glm::vec3(2, 32, 1), glm::vec3()));
 
 	chunkManager = ChunkManager(mainPlayer);
 }
@@ -31,9 +31,13 @@ void MainWorld::handleInput() {
 }
 
 void MainWorld::update(time_t dt) {
-	for (std::vector<Entity *>::iterator iterator = entityList.begin(); iterator != entityList.end(); iterator++) {
-		Entity *entity = *iterator;
+	for(unsigned int i = 0; i < entityList.size(); ++i) {
+		Entity *entity = entityList[i];
 		entity->update(dt);
+		if(entity->shouldBeDeleted()){
+			delete entity;
+			entityList.erase(entityList.begin() + i);
+		}
 	}
 
 	chunkManager.update(dt);

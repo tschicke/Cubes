@@ -21,7 +21,6 @@ public:
 
 	virtual void update(time_t dt) = 0;
 protected:
-	glm::vec3 moveVector;
 	float yaw, pitch;
 };
 

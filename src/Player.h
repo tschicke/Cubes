@@ -47,18 +47,14 @@ public:
 private:
 	ts::FirstPersonCamera camera;
 
-	ts::World * world;
-
 	BlockType activeBlock;
 
 	void gravity();
-	float gravityStrength, gravityVel;
+	float gravityStrength;
 	bool onGround;
 
 	void jump();
 	float jumpStrength;
-
-	void checkCollisions();
 
 	void move(glm::vec3 moveVector); //On axis, not directional
 	void move(float x, float y, float z); //On axis, not directional
