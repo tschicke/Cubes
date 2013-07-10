@@ -13,7 +13,6 @@
 namespace ts {
 
 MainWorld::MainWorld() {
-	std::cout << "capacity " << entityList.capacity() << '\n';
 	mainPlayer = new Player(this);
 	mainPlayer->setPosition(glm::vec3(0, 32, 0));
 	addEntity(mainPlayer);
