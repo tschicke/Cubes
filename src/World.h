@@ -31,8 +31,7 @@ public:
 
 	SelectedBlock raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos);
 
-	void addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType);
-	void removeBlockAtPosition(int x, int y, int z);
+	void setBlockTypeAtPosition(int x, int y, int z, BlockType type);
 
 	Player * getMainPlayer();
 

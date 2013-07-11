@@ -71,17 +71,10 @@ SelectedBlock World::raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos) {
 	return SelectedBlock();
 }
 
-void World::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
+void World::setBlockTypeAtPosition(int x, int y, int z, BlockType type){
 	Chunk * chunk = chunkManager.getChunkWithCoordinate(x, y, z);
-	if (chunk) {
-		chunk->addBlockOfTypeAtPosition(x, y, z, blockType);
-	}
-}
-
-void World::removeBlockAtPosition(int x, int y, int z) {
-	Chunk * chunk = chunkManager.getChunkWithCoordinate(x, y, z);
-	if (chunk) {
-		chunk->removeBlockAtPosition(x, y, z);
+	if(chunk != NULL){
+		chunk->setBlockTypeAtPosition(x, y, z, type);
 	}
 }
 

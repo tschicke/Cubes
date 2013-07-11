@@ -64,7 +64,7 @@ void Chunk::update(time_t dt) {
 	chunkRenderer.update(dt);
 }
 
-void Chunk::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
+void Chunk::setBlockTypeAtPosition(int x, int y, int z, BlockType type) {
 	x %= CHUNK_SIZE;
 	x = (x < 0 ? x + CHUNK_SIZE : x);
 	y %= CHUNK_SIZE;
@@ -73,25 +73,17 @@ void Chunk::addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType) {
 	z = (z < 0 ? z + CHUNK_SIZE : z);
 
 	int blockIndex = indexOfBlockAt(x, y, z);
-	if (blockStorage->getBlockArray()[blockIndex]->getBlockType() == blockType_Air) {
-		blockStorage->getBlockArray()[blockIndex] = Block::getBlockOfType(blockType);
-		chunkRenderer.updateBlockAtPosition(x, y, z);
+	if(blockStorage->getBlockArray()[blockIndex]->getBlockType() == type){
+		return;
 	}
-}
 
-void Chunk::removeBlockAtPosition(int x, int y, int z) {
-	x %= CHUNK_SIZE;
-	x = (x < 0 ? x + CHUNK_SIZE : x);
-	y %= CHUNK_SIZE;
-	y = (y < 0 ? y + CHUNK_SIZE : y);
-	z %= CHUNK_SIZE;
-	z = (z < 0 ? z + CHUNK_SIZE : z);
+	blockStorage->getBlockArray()[blockIndex] = Block::getBlockOfType(type);
 
-	int blockIndex = indexOfBlockAt(x, y, z);
-	if (blockStorage->getBlockArray()[blockIndex]->getBlockType() != blockType_Air) {
-		blockStorage->getBlockArray()[blockIndex] = Block::getBlockOfType(blockType_Air);
-		chunkRenderer.markDirty();
+	if(type != blockType_Air){
+		chunkRenderer.updateBlockAtPosition(x, y, z);//TODO make flag for this
 	}
+
+	chunkRenderer.markIndicesDirty();
 }
 
 int Chunk::indexOfBlockAt(int x, int y, int z) {

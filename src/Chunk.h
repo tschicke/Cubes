@@ -40,8 +40,7 @@ public:
 
 	void setTestColor(float r, float b, float g);
 
-	void addBlockOfTypeAtPosition(int x, int y, int z, BlockType blockType);
-	void removeBlockAtPosition(int x, int y, int z);
+	void setBlockTypeAtPosition(int x, int y, int z, BlockType type);
 
 	friend class BlockStorage; //Need this?
 	friend class ChunkRenderer;

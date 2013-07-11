@@ -29,7 +29,7 @@ public:
 	void render(Player * player);
 
 	void updateBlockAtPosition(int x, int y, int z);
-	void markDirty();
+	void markIndicesDirty();
 
 protected:
 	bool modelMatNeedsUpdate;

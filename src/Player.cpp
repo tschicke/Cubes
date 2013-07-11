@@ -146,19 +146,19 @@ void Player::input() {
 		for (int x = floorX - 6; x < floorX + 7; ++x) {
 			for (int y = floorY - 6; y < floorY + 7; ++y) {
 				for (int z = floorZ - 6; z < floorZ + 7; ++z) {
-					parentWorld->removeBlockAtPosition(x, y, z);
+					parentWorld->setBlockTypeAtPosition(x, y, z, blockType_Air);
 				}
 			}
 		}
 	}
 
 	if (ts::Mouse::checkMouseButtonEvent(ts::Mouse::Button0) == ts::Mouse::buttonPressed) {
-		parentWorld->removeBlockAtPosition(selectedBlock.x, selectedBlock.y, selectedBlock.z);
+		parentWorld->setBlockTypeAtPosition(selectedBlock.x, selectedBlock.y, selectedBlock.z, blockType_Air);
 	}
 
 	if (ts::Mouse::checkMouseButtonEvent(ts::Mouse::Button1) == ts::Mouse::buttonPressed) {
 		glm::vec3 addBlockPosition = selectedBlock.getAddBlockPosition();
-		parentWorld->addBlockOfTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, activeBlock);
+		parentWorld->setBlockTypeAtPosition(addBlockPosition.x, addBlockPosition.y, addBlockPosition.z, activeBlock);
 	}
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num1) == ts::Keyboard::keyPressed) {

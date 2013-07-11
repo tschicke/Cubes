@@ -554,9 +554,8 @@ void ChunkRenderer::updateBlockAtPosition(int x, int y, int z) {
 	substituteDataToVertexBuffer(sizeof(cubeVertexData), vertexIndex * sizeof(float), cubeVertexData);
 	substituteDataToVertexBuffer(sizeof(cubeTexData), (numVerticesPerChunk + texIndex) * sizeof(float), cubeTexData);
 	substituteDataToVertexBuffer(sizeof(cubeNormalData), (numVerticesPerChunk + numTexCoordsPerChunk + normalIndex) * sizeof(float), cubeNormalData);
-	markDirty();
 }
 
-void ChunkRenderer::markDirty() {
+void ChunkRenderer::markIndicesDirty() {
 	needsIndexBufferRemake = true;
 }
