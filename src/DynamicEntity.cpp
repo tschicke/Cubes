@@ -48,6 +48,8 @@ void DynamicEntity::update(time_t dt) {
 		velocity.y -= 0.005f;
 	}
 	checkCollisions();
+
+	move(velocity + moveVector);
 	if (floorColl) {
 //		flagShouldBeDeleted = true;
 		velocity = glm::vec3();
@@ -57,7 +59,7 @@ void DynamicEntity::update(time_t dt) {
 		affectedByGravity = false;
 	}
 
-	move(velocity + moveVector);
+	moveVector = glm::vec3();
 }
 
 void DynamicEntity::addPitch(float pitch) {

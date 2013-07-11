@@ -95,4 +95,12 @@ void World::addEntity(Entity* entity) {
 	}
 }
 
+void World::clearEntities() {
+	std::vector<Entity *>::iterator iterator;
+	for(iterator = entityList.begin(); iterator != entityList.end(); ++iterator){
+		Entity * entity = *iterator;
+		if(entity != mainPlayer) entity->deleteEntity();
+	}
+}
+
 } /* namespace ts */

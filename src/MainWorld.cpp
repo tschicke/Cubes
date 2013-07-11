@@ -8,6 +8,8 @@
 #include "MainWorld.h"
 #include <iostream>
 
+#include "Keyboard.h"
+
 #include "DynamicEntity.h"
 
 namespace ts {
@@ -27,6 +29,9 @@ MainWorld::~MainWorld() {
 
 void MainWorld::handleInput() {
 	//TODO move all input functions into update
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::C) == ts::Keyboard::keyPressed){
+		clearEntities();
+	}
 }
 
 void MainWorld::update(time_t dt) {

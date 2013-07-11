@@ -55,3 +55,7 @@ void Entity::update(time_t dt) {
 bool Entity::shouldBeDeleted() {
 	return flagShouldBeDeleted;
 }
+
+void Entity::deleteEntity() {
+	flagShouldBeDeleted = true;
+}

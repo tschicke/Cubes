@@ -37,6 +37,7 @@ public:
 	Player * getMainPlayer();
 
 	void addEntity(Entity * entity);
+	void clearEntities();
 protected:
 	ChunkManager chunkManager;
 

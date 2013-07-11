@@ -36,6 +36,7 @@ public:
 	CollisionBox getCollisionBox();
 
 	bool shouldBeDeleted();
+	void deleteEntity();
 protected:
 	glm::vec3 position;
 	glm::vec3 halfDimentions;
