@@ -7,17 +7,17 @@
 
 #include <iostream>
 
-#include "Player.h"
+#include "World.h"
 
 #include "ChunkManager.h"
 
 ChunkManager::ChunkManager() {
-	mainPlayer = NULL;
+	parentWorld = NULL;
 }
 
-ChunkManager::ChunkManager(Player * mainPlayer) {
-	this->mainPlayer = mainPlayer;
-	loadChunks(); //Temp?
+ChunkManager::ChunkManager(ts::World * world) {
+	this->parentWorld = parentWorld;
+//	loadChunks(); //Temp?
 }
 
 ChunkManager::~ChunkManager() {
@@ -36,7 +36,7 @@ void ChunkManager::deleteChunk(int index) {
 }
 
 void ChunkManager::update(time_t dt) {
-	loadChunks();
+//	loadChunks();
 	unloadChunks();
 
 	std::vector<Chunk *>::iterator iterator;
@@ -50,7 +50,7 @@ void ChunkManager::draw(glm::mat4 *viewMat) {
 	std::vector<Chunk *>::iterator iterator;
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
 		Chunk *chunk = *iterator;
-		chunk->draw(mainPlayer);
+		chunk->draw(parentWorld->getMainPlayer());
 	}
 }
 
@@ -71,12 +71,14 @@ Chunk * ChunkManager::getChunkWithCoordinate(int x, int y, int z) {
 }
 
 void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per frame
-	for (int x = floorf(mainPlayer->getPosition().x - (2 * Chunk::CHUNK_SIZE)); x < floorf(mainPlayer->getPosition().x + (2 * Chunk::CHUNK_SIZE)); x += Chunk::CHUNK_SIZE) { //TODO should this be done this way? or should flags be used
-		for (int y = floorf(mainPlayer->getPosition().y - (1 * Chunk::CHUNK_SIZE)); y < floorf(mainPlayer->getPosition().y + (0 * Chunk::CHUNK_SIZE)); y += Chunk::CHUNK_SIZE) {
-			for (int z = floorf(mainPlayer->getPosition().z - (2 * Chunk::CHUNK_SIZE)); z < floorf(mainPlayer->getPosition().z + (2 * Chunk::CHUNK_SIZE)); z += Chunk::CHUNK_SIZE) {
+	for (int x = floorf(parentWorld->getMainPlayer()->getPosition().x - (2 * Chunk::CHUNK_SIZE)); x < floorf(parentWorld->getMainPlayer()->getPosition().x + (2 * Chunk::CHUNK_SIZE)); x += Chunk::CHUNK_SIZE) { //TODO should this be done this way? or should flags be used
+		for (int y = floorf(parentWorld->getMainPlayer()->getPosition().y - (1 * Chunk::CHUNK_SIZE)); y < floorf(parentWorld->getMainPlayer()->getPosition().y + (0 * Chunk::CHUNK_SIZE)); y += Chunk::CHUNK_SIZE) {
+			for (int z = floorf(parentWorld->getMainPlayer()->getPosition().z - (2 * Chunk::CHUNK_SIZE)); z < floorf(parentWorld->getMainPlayer()->getPosition().z + (2 * Chunk::CHUNK_SIZE)); z += Chunk::CHUNK_SIZE) {
 				Chunk * currentChunk = getChunkWithCoordinate(x - (x % Chunk::CHUNK_SIZE), y - (y % Chunk::CHUNK_SIZE), z - (z % Chunk::CHUNK_SIZE));
 				if ((currentChunk != NULL && !(currentChunk->isLoaded())) || !currentChunk) {
-					addChunk(x - (x % Chunk::CHUNK_SIZE), y - (y % Chunk::CHUNK_SIZE), z - (z % Chunk::CHUNK_SIZE), 1, 1, 1);
+					int chunkX = x - (x % Chunk::CHUNK_SIZE), chunkY = y - (y % Chunk::CHUNK_SIZE), chunkZ = z - (z % Chunk::CHUNK_SIZE);
+					addChunk(chunkX, chunkY, chunkZ, 1, 1, 1);
+					parentWorld->getWorldGenerator()->generateChunk(chunkX, chunkY, chunkZ);
 					return;
 				}
 			}
@@ -91,9 +93,9 @@ void ChunkManager::unloadChunks() {
 		float chunkX = chunk->getChunkPos().x, chunkY = chunk->getChunkPos().y, chunkZ = chunk->getChunkPos().z;
 		int chunkSize = Chunk::CHUNK_SIZE;
 
-		if (chunkX + chunkSize < floorf(mainPlayer->getPosition().x - (2 * chunkSize)) || chunkX >= floorf(mainPlayer->getPosition().x + (2 * chunkSize)) ||
-				chunkY + chunkSize < floorf(mainPlayer->getPosition().y - (1 * chunkSize)) || chunkY >= floorf(mainPlayer->getPosition().y) ||
-				chunkZ + chunkSize < floorf(mainPlayer->getPosition().z - (2 * chunkSize)) || chunkZ >= floorf(mainPlayer->getPosition().z + (2 * chunkSize))) {
+		if (chunkX + chunkSize < floorf(parentWorld->getMainPlayer()->getPosition().x - (2 * chunkSize)) || chunkX >= floorf(parentWorld->getMainPlayer()->getPosition().x + (2 * chunkSize)) ||
+				chunkY + chunkSize < floorf(parentWorld->getMainPlayer()->getPosition().y - (1 * chunkSize)) || chunkY >= floorf(parentWorld->getMainPlayer()->getPosition().y) ||
+				chunkZ + chunkSize < floorf(parentWorld->getMainPlayer()->getPosition().z - (2 * chunkSize)) || chunkZ >= floorf(parentWorld->getMainPlayer()->getPosition().z + (2 * chunkSize))) {
 //			chunk->deleteChunk()//fake function, create it eventually for saving, etc.
 			delete chunk;
 			iterator = chunks.erase(iterator);

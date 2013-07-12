@@ -13,6 +13,8 @@
 #include "Player.h"
 #include "Character.h"
 
+#include "TerrainGenerator.h"
+
 #include "SelectedBlock.h"
 
 namespace ts {
@@ -37,11 +39,15 @@ public:
 
 	void addEntity(Entity * entity);
 	void clearEntities();
+
+	TerrainGenerator * getWorldGenerator();
 protected:
 	ChunkManager chunkManager;
 
 	Player * mainPlayer;
 	std::vector<Entity *> entityList;
+
+	TerrainGenerator * generator;
 };
 
 } /* namespace ts */

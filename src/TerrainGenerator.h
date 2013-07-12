@@ -13,18 +13,26 @@
 #include "Noise.h"//Temp
 
 namespace ts {
+class World;
+}
+
+namespace ts {
 
 class TerrainGenerator {
 public:
 	TerrainGenerator();
-	TerrainGenerator(int seed);
+	TerrainGenerator(World * parentWorld);
 	virtual ~TerrainGenerator();
 
-	void generateChunk(int x, int y, int z, Block ** blockArray);
+	void generateChunk(int x, int y, int z);
+
+	void setSeed(int seed);
+
+	void setParentWorld(World * parentWorld);
 private:
 	int seed;
 
-	void generateStructures(int genX, int genY, int genZ, BlockType * blockArray);
+	World * parentWorld;
 
 	Noise noiseGenerator;
 };

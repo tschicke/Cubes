@@ -12,8 +12,6 @@
 #include "Renderer.h"
 #include "Player.h"
 
-#include "TerrainGenerator.h"
-
 #include <gl/glew.h>//Only for GL_VERTEX_SHADER and GL_FRAGMENT_SHADER, get them from somewhere else
 #include <glm/glm.hpp>//Temp??
 #include <glm/gtx/transform.hpp>//Temp??
@@ -29,10 +27,6 @@ void Chunk::init(int startX, int startY, int startZ) {
 	chunkPosition = glm::vec3(startX, startY, startZ);
 
 	blockStorage = new BlockStorage(this);
-
-	ts::TerrainGenerator generator;
-
-	generator.generateChunk(startX, startY, startZ, blockStorage->getBlockArray());
 
 	loaded = true;
 

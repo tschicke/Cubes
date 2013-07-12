@@ -13,9 +13,14 @@ namespace ts {
 
 World::World() {
 	mainPlayer = NULL;
+
+	generator = NULL;
 }
 
 World::~World() {
+	for(std::vector<Entity *>::iterator iterator = entityList.begin(); iterator != entityList.end(); ++iterator){
+		delete *iterator;
+	}
 }
 
 Chunk* World::getChunkAt(int x, int y, int z) {
@@ -94,6 +99,10 @@ void World::clearEntities() {
 		Entity * entity = *iterator;
 		if(entity != mainPlayer) entity->deleteEntity();
 	}
+}
+
+TerrainGenerator* World::getWorldGenerator() {
+	return generator;
 }
 
 } /* namespace ts */

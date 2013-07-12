@@ -15,12 +15,14 @@
 
 #include <vector>
 
-class Player;
+namespace ts {
+	class World;
+}
 
 class ChunkManager {
 public:
 	ChunkManager();
-	ChunkManager(Player * mainPlayer);
+	ChunkManager(ts::World * world);
 	virtual ~ChunkManager();
 
 	void update(time_t dt);
@@ -32,7 +34,7 @@ public:
 	Chunk * getChunkWithCoordinate(int x, int y, int z);
 private:
 	std::vector<Chunk *> chunks;
-	Player * mainPlayer;
+	ts::World * parentWorld;
 
 	void loadChunks();
 	void unloadChunks();

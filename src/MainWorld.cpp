@@ -21,10 +21,13 @@ MainWorld::MainWorld() {
 	addEntity(new DynamicEntity(this, glm::vec3(1, 32, 1), glm::vec3()));
 	addEntity(new DynamicEntity(this, glm::vec3(2, 32, 1), glm::vec3()));
 
-	chunkManager = ChunkManager(mainPlayer);
+	chunkManager = ChunkManager(this);
+
+	generator = new TerrainGenerator(this);
 }
 
 MainWorld::~MainWorld() {
+	delete generator;
 }
 
 void MainWorld::handleInput() {
