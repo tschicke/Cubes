@@ -24,6 +24,7 @@ ChunkRenderer::ChunkRenderer() {
 	parentChunk = NULL;
 	numVerticesToDraw = 0;
 	needsIndexBufferRemake = false;
+	blockNeedsUpdate = NULL;
 }
 
 ChunkRenderer::ChunkRenderer(int x, int y, int z, Chunk * parentChunk) {
@@ -49,6 +50,8 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 
 	chunkPosition = glm::vec3(x, y, z);
 	modelMatNeedsUpdate = true;
+
+	blockNeedsUpdate = new bool[Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE];
 
 	int numVerticesPerChunk = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 24 * 3;
 	int numTexCoordsPerChunk = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 24 * 2;
@@ -211,6 +214,8 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3) + 2] = cubeNormalData[(i * 3) + 2];
 					}
 				}
+
+				blockNeedsUpdate[blockIndex] = false;
 			}
 		}
 	}
@@ -364,6 +369,18 @@ void ChunkRenderer::remakeIndexBuffer() {
 void ChunkRenderer::update(time_t dt) {
 	if (parentChunk == NULL)
 		return;
+
+	for(int x = 0; x < Chunk::CHUNK_SIZE; ++x){
+		for(int y = 0; y < Chunk::CHUNK_SIZE; ++y){
+			for(int z = 0; z < Chunk::CHUNK_SIZE; ++z){
+				int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+				if(blockNeedsUpdate[blockIndex] == true){
+					updateBlockAtPosition(x, y, z);
+				}
+				blockNeedsUpdate[blockIndex] = false;
+			}
+		}
+	}
 
 	if(needsIndexBufferRemake){
 		remakeIndexBuffer();
@@ -554,6 +571,16 @@ void ChunkRenderer::updateBlockAtPosition(int x, int y, int z) {
 	substituteDataToVertexBuffer(sizeof(cubeVertexData), vertexIndex * sizeof(float), cubeVertexData);
 	substituteDataToVertexBuffer(sizeof(cubeTexData), (numVerticesPerChunk + texIndex) * sizeof(float), cubeTexData);
 	substituteDataToVertexBuffer(sizeof(cubeNormalData), (numVerticesPerChunk + numTexCoordsPerChunk + normalIndex) * sizeof(float), cubeNormalData);
+}
+
+void ChunkRenderer::markBlockAtPositionDirty(int x, int y, int z) {
+	x %= Chunk::CHUNK_SIZE;
+	x = (x < 0 ? x + Chunk::CHUNK_SIZE : x);
+	y %= Chunk::CHUNK_SIZE;
+	y = (y < 0 ? y + Chunk::CHUNK_SIZE : y);
+	z %= Chunk::CHUNK_SIZE;
+	z = (z < 0 ? z + Chunk::CHUNK_SIZE : z);
+	blockNeedsUpdate[x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z] = true;
 }
 
 void ChunkRenderer::markIndicesDirty() {

@@ -28,7 +28,7 @@ public:
 	void update(time_t dt);
 	void render(Player * player);
 
-	void updateBlockAtPosition(int x, int y, int z);
+	void markBlockAtPositionDirty(int x, int y, int z);
 	void markIndicesDirty();
 
 protected:
@@ -40,6 +40,8 @@ protected:
 
 	int numVerticesToDraw;
 
+	void updateBlockAtPosition(int x, int y, int z);
+	bool * blockNeedsUpdate;
 	void remakeIndexBuffer();
 	bool needsIndexBufferRemake;
 };

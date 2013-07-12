@@ -80,7 +80,7 @@ void Chunk::setBlockTypeAtPosition(int x, int y, int z, BlockType type) {
 	blockStorage->getBlockArray()[blockIndex] = Block::getBlockOfType(type);
 
 	if(type != blockType_Air){
-		chunkRenderer.updateBlockAtPosition(x, y, z);//TODO make flag for this
+		chunkRenderer.markBlockAtPositionDirty(x, y, z);//TODO make flag for this
 	}
 
 	chunkRenderer.markIndicesDirty();
