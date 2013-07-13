@@ -21,6 +21,7 @@ using namespace glm;
 Chunk::Chunk() {
 	loaded = false;
 	blockStorage = NULL;
+	chunkState = initialize;
 }
 
 void Chunk::init(int startX, int startY, int startZ) {
@@ -78,6 +79,10 @@ void Chunk::setBlockTypeAtPosition(int x, int y, int z, BlockType type) {
 	}
 
 	chunkRenderer.markIndicesDirty();
+}
+
+Chunk::State Chunk::getChunkState() {
+	return chunkState;
 }
 
 int Chunk::indexOfBlockAt(int x, int y, int z) {

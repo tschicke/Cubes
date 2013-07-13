@@ -12,7 +12,7 @@
 
 class Block;
 
-enum Face{
+enum Face /*: char*/{
 	face_back, face_front, face_left, face_right, face_bottom, face_top, face_nocollision
 };
 

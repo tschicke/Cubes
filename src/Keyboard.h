@@ -16,7 +16,7 @@ struct KeyEvent;
 
 class Keyboard {
 public:
-	enum Key {
+	enum Key/* : char */{
 		A,            ///< The A key
 		B,            ///< The B key
 		C,            ///< The C key
@@ -121,7 +121,7 @@ public:
 		keyCount
 	};
 
-	enum KeyEventType{
+	enum KeyEventType/* : char*/{
 		defaultEventType,
 		keyPressed,
 		keyReleased

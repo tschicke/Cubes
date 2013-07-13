@@ -22,6 +22,10 @@ class Player;
 
 class Chunk {
 public:
+	enum State/* : char*/ {
+		initialize, rebuild, unload, render
+	};
+
 	Chunk();
 	virtual ~Chunk();
 
@@ -42,6 +46,8 @@ public:
 
 	void setBlockTypeAtPosition(int x, int y, int z, BlockType type);
 
+	State getChunkState();
+
 	friend class BlockStorage; //Need this?
 	friend class ChunkRenderer;
 private:
@@ -54,6 +60,8 @@ private:
 
 	ChunkRenderer chunkRenderer;
 	BlockStorage * blockStorage;
+
+	State chunkState;
 };
 
 #endif /* CHUNK_H_ */

@@ -16,8 +16,8 @@ ChunkManager::ChunkManager() {
 }
 
 ChunkManager::ChunkManager(ts::World * world) {
-	this->parentWorld = parentWorld;
-//	loadChunks(); //Temp?
+	this->parentWorld = world;
+	loadChunks(); //Temp?
 }
 
 ChunkManager::~ChunkManager() {
@@ -36,13 +36,13 @@ void ChunkManager::deleteChunk(int index) {
 }
 
 void ChunkManager::update(time_t dt) {
-//	loadChunks();
+	loadChunks();
 	unloadChunks();
 
 	std::vector<Chunk *>::iterator iterator;
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
 		Chunk *chunk = *iterator;
-		chunk->update(dt);
+//		chunk->update(dt);
 	}
 }
 
@@ -50,7 +50,7 @@ void ChunkManager::draw(glm::mat4 *viewMat) {
 	std::vector<Chunk *>::iterator iterator;
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
 		Chunk *chunk = *iterator;
-		chunk->draw(parentWorld->getMainPlayer());
+//		chunk->draw(parentWorld->getMainPlayer());
 	}
 }
 
@@ -78,7 +78,7 @@ void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per fra
 				if ((currentChunk != NULL && !(currentChunk->isLoaded())) || !currentChunk) {
 					int chunkX = x - (x % Chunk::CHUNK_SIZE), chunkY = y - (y % Chunk::CHUNK_SIZE), chunkZ = z - (z % Chunk::CHUNK_SIZE);
 					addChunk(chunkX, chunkY, chunkZ, 1, 1, 1);
-					parentWorld->getWorldGenerator()->generateChunk(chunkX, chunkY, chunkZ);
+//					parentWorld->getWorldGenerator()->generateChunk(chunkX, chunkY, chunkZ);
 					return;
 				}
 			}

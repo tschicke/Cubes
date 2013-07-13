@@ -12,7 +12,7 @@
 
 #include "../SelectedBlock.h"
 
-enum BlockType{
+enum BlockType/* : char*/{
 	blockType_Grass,
 	blockType_Dirt,
 	blockType_Stone,

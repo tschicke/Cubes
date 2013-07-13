@@ -14,7 +14,7 @@ namespace ts {
 
 class Mouse {
 public:
-	enum Button {
+	enum Button/* : char*/{
 		Button0,
 		Button1,
 		Button2,
@@ -22,7 +22,7 @@ public:
 		buttonCount
 	};
 
-	enum MouseButtonEventType {
+	enum MouseButtonEventType/* : char*/ {
 		defaultEventType,
 		buttonPressed,
 		buttonReleased
