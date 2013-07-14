@@ -27,9 +27,10 @@ public:
 	};
 
 	Chunk();
+	Chunk(int x, int y, int z);
 	virtual ~Chunk();
 
-	void init(int x, int y, int z);
+	void init();
 
 	void update(time_t dt);
 	void draw(Player * player);
@@ -40,12 +41,11 @@ public:
 
 	Block * getBlockAtCoordinate(int x, int y, int z);
 
-	bool isLoaded();
-
 	void setTestColor(float r, float b, float g);
 
 	void setBlockTypeAtPosition(int x, int y, int z, BlockType type);
 
+	void setChunkState(State state);
 	State getChunkState();
 
 	friend class BlockStorage; //Need this?
@@ -55,8 +55,6 @@ private:
 
 	glm::vec3 chunkPosition;
 	glm::vec3 testColor;
-
-	bool loaded;
 
 	ChunkRenderer chunkRenderer;
 	BlockStorage * blockStorage;

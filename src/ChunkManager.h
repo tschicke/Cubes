@@ -37,6 +37,8 @@ private:
 	ts::World * parentWorld;
 
 	void loadChunks();
+	void updateInitializeChunks();
+	void updateRebuildChunks();
 	void unloadChunks();
 };
 

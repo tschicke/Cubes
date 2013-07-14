@@ -19,18 +19,15 @@ using namespace glm;
 //Temp??
 
 Chunk::Chunk() {
-	loaded = false;
 	blockStorage = NULL;
 	chunkState = initialize;
 }
 
-void Chunk::init(int startX, int startY, int startZ) {
-	chunkPosition = glm::vec3(startX, startY, startZ);
-
+Chunk::Chunk(int x, int y, int z){
 	blockStorage = new BlockStorage(this);
+	chunkPosition = glm::vec3(x, y, z);
 
-	loaded = true;
-
+	chunkState = initialize;
 	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, this);
 }
 
@@ -68,15 +65,17 @@ void Chunk::setBlockTypeAtPosition(int x, int y, int z, BlockType type) {
 	z = (z < 0 ? z + CHUNK_SIZE : z);
 
 	int blockIndex = indexOfBlockAt(x, y, z);
-	if(blockStorage->getBlockArray()[blockIndex]->getBlockType() == type){
+	if(blockStorage->getBlockArray()[blockIndex] != NULL && blockStorage->getBlockArray()[blockIndex]->getBlockType() == type){
 		return;
 	}
 
 	blockStorage->getBlockArray()[blockIndex] = Block::getBlockOfType(type);
 
 	if(type != blockType_Air){
-		chunkRenderer.markBlockAtPositionDirty(x, y, z);//TODO make flag for this
+		chunkRenderer.markBlockAtPositionDirty(x, y, z);
 	}
+
+	setChunkState(rebuild);
 
 	chunkRenderer.markIndicesDirty();
 }
@@ -85,12 +84,12 @@ Chunk::State Chunk::getChunkState() {
 	return chunkState;
 }
 
-int Chunk::indexOfBlockAt(int x, int y, int z) {
-	return (x * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + z;
+void Chunk::setChunkState(State state) {
+	chunkState = state;
 }
 
-bool Chunk::isLoaded() {
-	return loaded;
+int Chunk::indexOfBlockAt(int x, int y, int z) {
+	return (x * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + z;
 }
 
 void Chunk::draw(Player * player) {

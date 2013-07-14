@@ -17,6 +17,7 @@ enum BlockType/* : char*/{
 	blockType_Dirt,
 	blockType_Stone,
 	blockType_Tree,
+	blockType_Brick,
 	blockType_Air,
 	blockType_Null,
 	numBlockTypes

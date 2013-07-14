@@ -18,11 +18,12 @@
 
 #include "../VectorHelper.h"
 
-Block * Block::blocks[] = {new BlockGrass, new BlockDirt, new BlockStone, new BlockTree, new BlockAir, new Block};//TODO fix this
+Block * Block::blocks[] = {new BlockGrass, new BlockDirt, new BlockStone, new BlockTree, new BlockBrick, new BlockAir, new Block};//TODO fix this
 //Block * Block::blocks[blockType_Dirt] = new BlockDirt;
 //Block * Block::blocks[blockType_Stone] = new BlockStone;
 //Block * Block::blocks[blockType_Tree] = new BlockTree;
 //Block * Block::blocks[blockType_Air] = new BlockAir;
+//Block * Block::blocks[blockType_Brick] = new BlockBrick;
 //Block * Block::blocks[blockType_Null] = new Block;
 
 Block::Block() {

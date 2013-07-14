@@ -52,6 +52,9 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 	modelMatNeedsUpdate = true;
 
 	blockNeedsUpdate = new bool[Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE];
+	for(int i = 0; i < Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE; ++i){
+		blockNeedsUpdate[i] = false;
+	}
 
 	int numVerticesPerChunk = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 24 * 3;
 	int numTexCoordsPerChunk = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * 24 * 2;
@@ -386,6 +389,8 @@ void ChunkRenderer::update(time_t dt) {
 		remakeIndexBuffer();
 		needsIndexBufferRemake = false;
 	}
+
+	std::cout << "chunk renderer update\n";
 }
 
 void ChunkRenderer::render(Player * player) {

@@ -38,7 +38,7 @@ public:
 
 	void translateModelMatrix(float x, float y, float z);
 
-	void render(Player * player);
+	virtual void render(Player * player);
 
 	static void setProjectionMatrix();
 

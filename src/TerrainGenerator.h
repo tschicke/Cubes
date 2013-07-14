@@ -30,6 +30,8 @@ public:
 
 	void setParentWorld(World * parentWorld);
 private:
+	void genTree(int x, int y, int z);
+
 	int seed;
 
 	World * parentWorld;

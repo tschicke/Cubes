@@ -163,18 +163,14 @@ void Player::input() {
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num1) == ts::Keyboard::keyPressed) {
 		activeBlock = blockType_Grass;
-	}
-
-	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num2) == ts::Keyboard::keyPressed) {
+	} else if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num2) == ts::Keyboard::keyPressed) {
 		activeBlock = blockType_Dirt;
-	}
-
-	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num3) == ts::Keyboard::keyPressed) {
+	} else if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num3) == ts::Keyboard::keyPressed) {
 		activeBlock = blockType_Stone;
-	}
-
-	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num4) == ts::Keyboard::keyPressed) {
+	} else if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num4) == ts::Keyboard::keyPressed) {
 		activeBlock = blockType_Tree;
+	} else if (ts::Keyboard::checkKeyEvent(ts::Keyboard::Num5) == ts::Keyboard::keyPressed) {
+		activeBlock = blockType_Brick;
 	}
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::P) == ts::Keyboard::keyPressed) {

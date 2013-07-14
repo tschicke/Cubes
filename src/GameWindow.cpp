@@ -84,7 +84,7 @@ void GameWindow::run() {
 
 	Clock clock;
 	while (running) {
-		dt = clock.restart().asMilliseconds();
+		dt = clock.restart().asMicroseconds();
 		handleInput();
 		update(dt);
 		render();
@@ -94,7 +94,7 @@ void GameWindow::run() {
 
 		frames++;
 		fpsCounter += dt;
-		if (fpsCounter >= 1000) {
+		if (fpsCounter >= 1000000) {
 			std::cout << frames << std::endl;
 			frames = 0;
 			fpsCounter = 0;

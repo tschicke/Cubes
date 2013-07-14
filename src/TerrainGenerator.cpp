@@ -38,24 +38,27 @@ TerrainGenerator::~TerrainGenerator() {
 void TerrainGenerator::generateChunk(int genX, int genY, int genZ) {
 	byte chunkSize = Chunk::CHUNK_SIZE;
 
-	for (int x = 0; x < chunkSize; ++x) {
-		for (int z = 0; z < chunkSize; ++z) {
-			int height = (noiseGenerator.smoothNoise2D((x + genX) / (float) chunkSize, (z + genZ) / (float) chunkSize) + 1) * chunkSize / 2;
+	for (int x = genX; x < genX + chunkSize; ++x) {
+		for (int z = genZ; z < genZ + chunkSize; ++z) {
+			float height = (noiseGenerator.smoothNoise2D(x / (float) chunkSize, z / (float) chunkSize) + 1) * chunkSize / 2;
 			for (int y = 0; y < chunkSize; ++y) {
 //				int height = (glm::noise1(glm::vec2((x + genX) / (float)chunkSize, (z + genZ) / (float)chunkSize)) + 1) * chunkSize / 2;
 //				float density = glm::noise1(glm::vec3((x + genX) / (float)chunkSize, (y + genY) / (float) chunkSize, (z + genZ) / (float)chunkSize));
 //				float density = noiseGenerator.smoothNoise3D((x + genX) / (float)chunkSize, (y + genY) / (float) chunkSize, (z + genZ) / (float)chunkSize);
 
-				int chunkX = x + genX, chunkY = y + genY, chunkZ = z + genZ;
-
-				if (y + genY == height) {
+				if (y == (int)height) {
 //				if(y + genY < density * chunkSize){
-					parentWorld->setBlockTypeAtPosition(chunkX, chunkY, chunkZ, blockType_Air);
-				} else if (y + genY < height) {
-					parentWorld->setBlockTypeAtPosition(chunkX, chunkY, chunkZ, blockType_Stone);
-				} else {
-					parentWorld->setBlockTypeAtPosition(chunkX, chunkY, chunkZ, blockType_Air);
+					parentWorld->setBlockTypeAtPosition(x, y, z, blockType_Grass);
+				} else if (y + genY < (int)height) {
+					parentWorld->setBlockTypeAtPosition(x, y, z, blockType_Stone);
+				} else if (parentWorld->getBlockAt(x, y, z) == NULL) {
+					parentWorld->setBlockTypeAtPosition(x, y, z, blockType_Air);
 				}
+			}
+			float test = ((x * z) % (int) height) / height;
+			if(test < 0) test = -test;
+			if(test > 0.9f && test < 0.93f){
+				genTree(x, (int)height, z);
 			}
 		}
 	}
@@ -118,6 +121,24 @@ void TerrainGenerator::setSeed(int seed) {
 
 void TerrainGenerator::setParentWorld(World* parentWorld) {
 	this->parentWorld = parentWorld;
+}
+
+void TerrainGenerator::genTree(int startX, int startY, int startZ) {
+	int centerX = startX, centerY = startY + 6, centerZ = startZ;
+	for(int x = centerX - 2; x < centerX + 3; ++x){
+		for(int y = centerY - 2; y < centerY + 3; ++y){
+			for(int z = centerZ - 2; z < centerZ + 3; ++z){
+				int radiusSquared = (x - centerX) * (x - centerX) + (y - centerY) * (y - centerY) + (z - centerZ) * (z - centerZ);
+				if(radiusSquared <= 4){
+					parentWorld->setBlockTypeAtPosition(x, y, z, blockType_Dirt);
+				}
+			}
+		}
+	}
+
+	for(int y = startY; y < startY + 6; ++y){
+		parentWorld->setBlockTypeAtPosition(centerX, y, centerZ, blockType_Tree);
+	}
 }
 
 } /* namespace ts */
