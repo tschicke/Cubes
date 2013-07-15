@@ -14,7 +14,7 @@ public:
 	Texture(const char * texturePath);
 	virtual ~Texture();
 
-	static Texture *grassTexture, *dirtTexture, *stoneTexture, *blockSheet;
+	static Texture *buttonDefault, *buttonMouseOver, *buttonPressed;//, *dirtTexture, *stoneTexture, *blockSheet;
 	static void initTextures();
 	static void unbindTextures();
 

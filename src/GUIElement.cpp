@@ -7,6 +7,8 @@
 
 #include "GUIElement.h"
 
+#include <iostream>
+
 GUIElement::GUIElement() {
 	x = y = 0;
 	width = height = 0;
@@ -29,8 +31,17 @@ void GUIElement::init(int x, int y, int width, int height) {
 	this->height = height;
 
 	needsUpdate = true;
+
+	renderer = GUIRenderer(this, Texture::buttonDefault);
 }
 
 GUIElement::~GUIElement() {
 }
 
+void GUIElement::draw() {
+	renderer.render();
+}
+
+bool GUIElement::isPointInBounds(glm::vec2 point) {
+	return (point.x > x) && (point.x < x + width) && (point.y > y) && (point.y < y + height);
+}

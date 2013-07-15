@@ -26,7 +26,7 @@ public:
 	void setChunkPosition(int x, int y, int z);
 
 	void update(time_t dt);
-	void render(Player * player);
+	void render();
 
 	void markBlockAtPositionDirty(int x, int y, int z);
 	void markIndicesDirty();

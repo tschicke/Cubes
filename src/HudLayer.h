@@ -10,6 +10,8 @@
 
 #include "Layer.h"
 
+#include "GUIButton.h"
+
 class HudLayer: public Layer {
 public:
 	HudLayer();
@@ -18,6 +20,9 @@ public:
 	void draw();
 	void update(time_t dt);
 	void handleInput();
+
+private:
+	GUIButton button;
 };
 
 #endif /* HUDLAYER_H_ */

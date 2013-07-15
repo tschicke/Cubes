@@ -11,6 +11,8 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include "World.h"
+
 #include <iostream>
 
 EntityRenderer::EntityRenderer() {
@@ -197,7 +199,7 @@ void EntityRenderer::loadModel(const char * modelFile) {
 	numVertices = 24;
 }
 
-void EntityRenderer::render(Player* player) {
+void EntityRenderer::render() {
 	if (modelMatNeedsUpdate) {
 		modelMatrix = glm::translate(parentEntity->position);
 		modelMatNeedsUpdate = false;
@@ -206,7 +208,7 @@ void EntityRenderer::render(Player* player) {
 	shaderProgram.useProgram();
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix(), 1);
+	shaderProgram.setUniform("viewMatrix", parentEntity->parentWorld->getMainPlayer()->getCameraViewMatrix(), 1);
 	shaderProgram.setUniform("projectionMatrix", &projectionMatrix, 1);
 
 	glm::vec3 testColor(1.f, 1.f, 1.f);

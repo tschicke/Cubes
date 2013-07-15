@@ -17,6 +17,8 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include "World.h"
+
 #include <vector>
 
 ChunkRenderer::ChunkRenderer() {
@@ -228,6 +230,7 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 //	remakeIndexBuffer();
 //
 //	delete[] vertexArray;
+	numVerticesToDraw = 0;
 }
 
 ChunkRenderer::~ChunkRenderer() {
@@ -389,11 +392,9 @@ void ChunkRenderer::update(time_t dt) {
 		remakeIndexBuffer();
 		needsIndexBufferRemake = false;
 	}
-
-	std::cout << "chunk renderer update\n";
 }
 
-void ChunkRenderer::render(Player * player) {
+void ChunkRenderer::render() {
 	if (modelMatNeedsUpdate) {
 		modelMatrix = glm::translate(chunkPosition);
 		modelMatNeedsUpdate = false;
@@ -404,7 +405,7 @@ void ChunkRenderer::render(Player * player) {
 	ts::SpriteSheet::defaultSpriteSheet->useTexture();
 
 	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", player->getCameraViewMatrix(), 1);
+	shaderProgram.setUniform("viewMatrix", parentChunk->parentWorld->getMainPlayer()->getCameraViewMatrix(), 1);
 	shaderProgram.setUniform("projectionMatrix", &projectionMatrix, 1);
 
 	glm::vec3 testColor(1.f, 1.f, 1.f);

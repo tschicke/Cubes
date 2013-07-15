@@ -41,7 +41,7 @@ void Entity::init(ts::World* world, glm::vec3 position) {
 
 void Entity::draw() {
 	if(parentWorld != NULL){
-		renderer.render(parentWorld->getMainPlayer());
+		renderer.render();
 	}
 }
 

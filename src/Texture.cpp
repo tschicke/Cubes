@@ -12,7 +12,7 @@
 
 #include "Texture.h"
 
-Texture *Texture::grassTexture, *Texture::dirtTexture, *Texture::stoneTexture, *Texture::blockSheet;
+Texture * Texture::buttonDefault, *Texture::buttonMouseOver, *Texture::buttonPressed;
 
 int max(int a, int b) { //Temp?
 	if (a > b)
@@ -37,10 +37,9 @@ Texture::~Texture() {
 }
 
 void Texture::initTextures(){
-	Texture::grassTexture = new Texture("res/Texture.DDS");
-	Texture::dirtTexture = new Texture("res/Texture.DDS");
-	Texture::stoneTexture = new Texture("res/Texture2.DDS");
-//	Texture::blockSheet = new Texture("res/BlockSheet.DDS");
+	buttonDefault = new Texture("res/Button1_default.DDS");
+	buttonMouseOver = new Texture("res/Button1_mouseOver.DDS");
+	buttonPressed = new Texture("res/Button1_pressed.DDS");
 }
 
 bool Texture::loadDDS(const char * texturePath) {

@@ -21,14 +21,17 @@ using namespace glm;
 Chunk::Chunk() {
 	blockStorage = NULL;
 	chunkState = initialize;
+	parentWorld = NULL;
 }
 
-Chunk::Chunk(int x, int y, int z){
+Chunk::Chunk(int x, int y, int z, ts::World * parentWorld){
 	blockStorage = new BlockStorage(this);
 	chunkPosition = glm::vec3(x, y, z);
 
 	chunkState = initialize;
 	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, this);
+
+	this->parentWorld = parentWorld;
 }
 
 Chunk::~Chunk() {
@@ -92,8 +95,8 @@ int Chunk::indexOfBlockAt(int x, int y, int z) {
 	return (x * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + z;
 }
 
-void Chunk::draw(Player * player) {
-	chunkRenderer.render(player);
+void Chunk::draw() {
+	chunkRenderer.render();
 
 }
 

@@ -38,9 +38,10 @@ public:
 
 	void translateModelMatrix(float x, float y, float z);
 
-	virtual void render(Player * player);
+	virtual void render() = 0;
 
 	static void setProjectionMatrix();
+	static void setOrthoMatrix(int width, int height);
 
 protected:
 	uint vertexBufferID, indexBufferID;
@@ -51,6 +52,7 @@ protected:
 	glm::mat4 modelMatrix;
 
 	static glm::mat4 projectionMatrix;
+	static glm::mat4 orthoMatrix;
 
 	static float fov;
 };

@@ -20,7 +20,7 @@ public:
 
 	void init(Entity * parent, const char * modelFile);
 
-	void render(Player * player);
+	void render();
 
 	void markNeedsMatrixUpdate();
 protected:

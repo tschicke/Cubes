@@ -14,6 +14,7 @@
 
 float BaseRenderer::fov = 90.f;
 glm::mat4 BaseRenderer::projectionMatrix = glm::perspective(fov, 600.f / 400.f, 0.1f, 100.f);
+glm::mat4 BaseRenderer::orthoMatrix;
 
 BaseRenderer::BaseRenderer() {
 	vertexBufferID = 0;
@@ -108,8 +109,9 @@ void BaseRenderer::translateModelMatrix(float x, float y, float z) {
 	modelMatrix *= glm::translate(x, y, z);
 }
 
-void BaseRenderer::render(Player * player) {
+void BaseRenderer::setProjectionMatrix() {
 }
 
-void BaseRenderer::setProjectionMatrix() {
+void BaseRenderer::setOrthoMatrix(int width, int height) {
+	orthoMatrix = glm::ortho(0.f, (float)width, 0.f, (float)height, -1.f, 1.f);
 }

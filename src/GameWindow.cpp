@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "SpriteSheet.h"
 #include "FirstPersonCamera.h"
+#include "BaseRenderer.h"
 
 #include "Keyboard.h"
 #include "Mouse.h"
@@ -38,12 +39,13 @@ GameWindow::~GameWindow() {
 void GameWindow::create(int w, int h, const char * title) {
 	width = w;
 	height = h;
+	BaseRenderer::setOrthoMatrix(width, height);
 	this->title = title;
 	running = false;
 	create(VideoMode(w, h, 32), title);
 //	setVerticalSyncEnabled(true);
 	setFramerateLimit(60);
-	setMouseCursorVisible(false);
+//	setMouseCursorVisible(false);
 	init();
 	initGL();
 }

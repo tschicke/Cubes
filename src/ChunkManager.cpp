@@ -23,7 +23,7 @@ ChunkManager::~ChunkManager() {
 }
 
 void ChunkManager::addChunk(int x, int y, int z, float r, float g, float b) {
-	Chunk *chunk = new Chunk(x, y, z);
+	Chunk *chunk = new Chunk(x, y, z, parentWorld);
 	chunks.push_back(chunk);
 }
 
@@ -44,7 +44,7 @@ void ChunkManager::draw(glm::mat4 *viewMat) {
 	for (iterator = chunks.begin(); iterator != chunks.end(); iterator++) { //TODO add max limit per frame
 		Chunk *chunk = *iterator;
 		if (chunk->getChunkState() == Chunk::render) {
-			chunk->draw(parentWorld->getMainPlayer());
+			chunk->draw();
 		}
 	}
 }

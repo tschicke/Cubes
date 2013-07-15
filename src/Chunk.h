@@ -20,6 +20,10 @@
 class Player;
 //should be include?
 
+namespace ts{
+	class World;
+}
+
 class Chunk {
 public:
 	enum State/* : char*/ {
@@ -27,13 +31,13 @@ public:
 	};
 
 	Chunk();
-	Chunk(int x, int y, int z);
+	Chunk(int x, int y, int z, ts::World * parentWorld);
 	virtual ~Chunk();
 
 	void init();
 
 	void update(time_t dt);
-	void draw(Player * player);
+	void draw();
 
 	glm::vec3 getChunkPos();
 
@@ -58,6 +62,8 @@ private:
 
 	ChunkRenderer chunkRenderer;
 	BlockStorage * blockStorage;
+
+	ts::World * parentWorld;
 
 	State chunkState;
 };

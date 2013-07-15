@@ -11,6 +11,7 @@
 
 HudLayer::HudLayer() {
 	glLineWidth(2);
+	button = GUIButton(400, 300, 100, 100);
 }
 
 HudLayer::~HudLayer() {
@@ -18,6 +19,7 @@ HudLayer::~HudLayer() {
 
 void HudLayer::draw() {
 	glDisable(GL_DEPTH_TEST);
+	button.draw();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);
@@ -30,10 +32,12 @@ void HudLayer::draw() {
 	glVertex2f(400, 290);
 	glVertex2f(400, 310);
 	glEnd();
+
 	glEnable(GL_DEPTH_TEST);
 }
 
 void HudLayer::update(time_t dt) {
+	button.update();
 }
 
 void HudLayer::handleInput() {
