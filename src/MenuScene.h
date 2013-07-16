@@ -22,6 +22,8 @@ public:
 	void draw();
 
 private:
+	GUIButton playButton;
+	GUIButton closeButton;
 };
 
 #endif /* MENUSCENE_H_ */

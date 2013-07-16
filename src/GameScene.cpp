@@ -30,6 +30,7 @@ void GameScene::draw() {
 }
 
 void GameScene::update(time_t dt) {
+	hud.update(dt);
 	gameLayer.update(dt);
 }
 

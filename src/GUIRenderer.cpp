@@ -80,6 +80,7 @@ void GUIRenderer::setCurrentTexture(Texture* texture) {
 }
 
 void GUIRenderer::render() {
+	glDisable(GL_DEPTH_TEST);
 	if (modelMatNeedsUpdate) {
 		modelMatrix = glm::translate(glm::vec3(parentElement->x, parentElement->y, 0));
 		modelMatNeedsUpdate = false;
@@ -112,4 +113,5 @@ void GUIRenderer::render() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glUseProgram(0);
+	glEnable(GL_DEPTH_TEST);
 }

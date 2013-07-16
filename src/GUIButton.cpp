@@ -9,6 +9,8 @@
 
 #include "Mouse.h"
 
+#include <iostream>
+
 GUIButton::GUIButton() {
 	pressed = false;
 	renderer.setCurrentTexture(Texture::buttonDefault);
@@ -43,6 +45,8 @@ void GUIButton::update() {
 		if(ts::Mouse::checkMouseButtonEvent(ts::Mouse::Button0) == ts::Mouse::buttonReleased){
 			pressed = true;
 		}
+	} else {
+		renderer.setCurrentTexture(Texture::buttonDefault);
 	}
 }
 

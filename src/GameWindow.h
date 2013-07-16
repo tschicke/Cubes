@@ -25,6 +25,10 @@ public:
 
 	void setScene(Scene * scene);
 	Scene * getCurrentScene();//??
+
+	void stop();
+
+	static GameWindow * getMainWindow();
 private:
 	using sf::Window::create;
 	int width, height, fpsCounter;
@@ -42,6 +46,8 @@ private:
 	void lockMouse(int mouseX, int mouseY);
 
 	Scene * currentScene; //Test
+
+	static GameWindow * mainWindow;
 };
 
 #endif /* GAMEWINDOW_H_ */

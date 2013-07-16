@@ -20,6 +20,8 @@
 
 using namespace sf;
 
+GameWindow * GameWindow::mainWindow = new GameWindow();
+
 GameWindow::GameWindow() {
 	currentScene = NULL;
 	title = NULL;
@@ -71,6 +73,7 @@ void GameWindow::initGL() {
 }
 
 void GameWindow::setScene(Scene * scene) {
+	delete currentScene;//need to save current scene
 	currentScene = scene;
 }
 
@@ -81,8 +84,8 @@ Scene * GameWindow::getCurrentScene() {
 void GameWindow::run() {
 	running = true;
 
-	long dt;
-	int frames;
+	long dt = 0;
+	int frames = 0;
 
 	Clock clock;
 	while (running) {
@@ -118,12 +121,12 @@ void GameWindow::handleInput() {
 		} else if (event.type == sf::Event::MouseMoved) {
 			int dx = 0, dy = 0;
 			dx = (event.mouseMove.x - ts::Mouse::getPosition().x);
-			dy = -(event.mouseMove.y - ts::Mouse::getPosition().y);
+			dy = -(event.mouseMove.y - (height - ts::Mouse::getPosition().y));
 			ts::Mouse::setLastMove(dx, dy);
 			if (ts::Mouse::isLocked()) {
 				lockMouse(event.mouseMove.x, event.mouseMove.y);
 			} else {
-				ts::Mouse::setPosition(event.mouseMove.x, event.mouseMove.y);
+				ts::Mouse::setPosition(event.mouseMove.x, height - event.mouseMove.y);
 			}
 		} else if (event.type == sf::Event::MouseButtonPressed) {
 			ts::Mouse::setButton(event.mouseButton.button, true);
@@ -156,6 +159,14 @@ void GameWindow::render() { //Watch for too high framerate
 	display();
 }
 
+GameWindow* GameWindow::getMainWindow() {
+	return mainWindow;
+}
+
+void GameWindow::stop() {
+	running = false;
+}
+
 void GameWindow::lockMouse(int mouseX, int mouseY) {
 	int xDist = mouseX - (width / 2), yDist = mouseY - (height / 2);
 	int distSqr = (xDist * xDist) + (yDist * yDist);
@@ -163,7 +174,7 @@ void GameWindow::lockMouse(int mouseX, int mouseY) {
 		sf::Mouse::setPosition(sf::Vector2i(width / 2, height / 2), *this);
 		ts::Mouse::setPosition(width / 2, height / 2);
 	} else {
-		ts::Mouse::setPosition(mouseX, mouseY);
+		ts::Mouse::setPosition(mouseX, height - mouseY);
 	}
 }
 

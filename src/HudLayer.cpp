@@ -11,15 +11,17 @@
 
 HudLayer::HudLayer() {
 	glLineWidth(2);
-	button = GUIButton(400, 300, 100, 100);
+//	button = GUIButton(50, 50, 200, 200);
+	/*The issue is that GUIRenderer's parent is being set to the address of GUIButton(50, 50, 200, 200),
+	 *  while button is just a copy of GUIButton(50, 50, 200, 200), at a different address*/
 }
 
 HudLayer::~HudLayer() {
 }
 
 void HudLayer::draw() {
-	glDisable(GL_DEPTH_TEST);
-	button.draw();
+//	glDisable(GL_DEPTH_TEST);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);
@@ -37,7 +39,6 @@ void HudLayer::draw() {
 }
 
 void HudLayer::update(time_t dt) {
-	button.update();
 }
 
 void HudLayer::handleInput() {
