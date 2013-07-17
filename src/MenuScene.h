@@ -11,7 +11,6 @@
 #include "Scene.h"
 
 #include "GUIButton.h"
-#include "StringRenderer.h"
 
 class MenuScene: public Scene {
 public:
@@ -25,7 +24,6 @@ public:
 private:
 	GUIButton playButton;
 	GUIButton closeButton;
-	StringRenderer myString;
 };
 
 #endif /* MENUSCENE_H_ */

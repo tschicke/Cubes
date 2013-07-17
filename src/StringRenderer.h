@@ -17,8 +17,10 @@
 class StringRenderer: public BaseRenderer {
 public:
 	StringRenderer();
-	StringRenderer(int x, int y, const char * string);
+	StringRenderer(int x, int y, const char * string, int fontSize);
 	virtual ~StringRenderer();
+
+	static int getWidthOfString(const char * string, int fontSize);
 
 	void render();
 
@@ -36,6 +38,8 @@ private:
 	void rebuildData();
 
 	std::string renderString;
+
+	int fontSize;
 };
 
 #endif /* STRINGRENDERER_H_ */

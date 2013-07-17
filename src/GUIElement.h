@@ -24,7 +24,7 @@ public:
 
 	virtual void update() = 0;
 
-	void draw();
+	virtual void draw();
 
 	bool isPointInBounds(glm::vec2 point);
 
