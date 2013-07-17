@@ -13,6 +13,7 @@
 MenuScene::MenuScene() {
 	playButton.init(540, 310, 200, 100);
 	closeButton.init(540, 160, 200, 100);
+	myString = StringRenderer(0, 0, "HELLOWORLD");
 }
 
 MenuScene::~MenuScene() {
@@ -37,4 +38,5 @@ void MenuScene::update(time_t dt) {
 void MenuScene::draw() {
 	playButton.draw();
 	closeButton.draw();
+	myString.render();
 }

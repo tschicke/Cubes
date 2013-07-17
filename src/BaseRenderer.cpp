@@ -17,8 +17,8 @@ glm::mat4 BaseRenderer::projectionMatrix = glm::perspective(fov, 600.f / 400.f, 
 glm::mat4 BaseRenderer::orthoMatrix;
 
 BaseRenderer::BaseRenderer() {
-	vertexBufferID = 0;
-	indexBufferID = 0;
+	vertexBufferID = -1;
+	indexBufferID = -1;
 	vertBuffLoaded = false;
 	indexBuffLoaded = false;
 }

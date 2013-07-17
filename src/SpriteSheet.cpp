@@ -12,12 +12,14 @@
 namespace ts {
 
 SpriteSheet *SpriteSheet::defaultSpriteSheet;
+SpriteSheet * SpriteSheet::defaultFontSheet;
 
 SpriteSheet::SpriteSheet() {
 }
 
 void SpriteSheet::initSpriteSheets(){
 	defaultSpriteSheet = new SpriteSheet("res/BlockSheet.DDS");
+	defaultFontSheet = new SpriteSheet("res/FontSheet1.DDS");
 }
 
 SpriteSheet::SpriteSheet(const char * texturePath){
@@ -29,6 +31,14 @@ SpriteSheet::~SpriteSheet() {
 
 void SpriteSheet::init(const char* texturePath) {
 	loaded = loadDDS(texturePath);
+}
+
+int SpriteSheet::numXElements() {
+	return textureWidth / getElementSizePixels();
+}
+
+int SpriteSheet::numYElements() {
+	return textureHeight / getElementSizePixels();
 }
 
 //Default 16 pixels per element

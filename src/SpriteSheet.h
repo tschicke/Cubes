@@ -20,7 +20,11 @@ public:
 
 	void init(const char * texturePath);
 
+	int numXElements();
+	int numYElements();
+
 	static SpriteSheet *defaultSpriteSheet;
+	static SpriteSheet * defaultFontSheet;
 
 	static void initSpriteSheets();//should just be done when first trying to use it and not loaded?
 
