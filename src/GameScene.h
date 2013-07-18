@@ -20,6 +20,10 @@ public:
 	void handleInput();
 	void update(time_t dt);
 	void draw();
+
+	//Should just use friend classes?
+	GameLayer * getGameLayer();
+	HudLayer * getHudLayer();
 private:
 	GameLayer gameLayer;
 	HudLayer hud;

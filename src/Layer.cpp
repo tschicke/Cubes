@@ -10,9 +10,12 @@
 #include "Layer.h"
 
 Layer::Layer() {
-
+	parentScene = NULL;
 }
 
 Layer::~Layer() {
 }
 
+void Layer::setParentScene(GameScene* parent) {
+	parentScene = parent;
+}

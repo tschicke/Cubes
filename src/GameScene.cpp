@@ -9,17 +9,28 @@
 
 #include "GameScene.h"
 
+#include "GameWindow.h"
+
+#include "MenuScene.h"
+
 #include "Keyboard.h"
 #include "Mouse.h"
 
 GameScene::GameScene() {
 	ts::Mouse::setLocked(true);
+
+	hud.setParentScene(this);
+	gameLayer.setParentScene(this);
 }
 
 GameScene::~GameScene() {
 }
 
 void GameScene::handleInput() {
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::M) == ts::Keyboard::keyPressed){
+		GameWindow::getMainWindow()->setScene(new MenuScene);
+	}
+
 	gameLayer.handleInput();
 
 }
@@ -34,3 +45,10 @@ void GameScene::update(time_t dt) {
 	gameLayer.update(dt);
 }
 
+GameLayer* GameScene::getGameLayer() {
+	return &gameLayer;
+}
+
+HudLayer* GameScene::getHudLayer() {
+	return &hud;
+}

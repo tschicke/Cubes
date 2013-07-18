@@ -28,23 +28,23 @@ BaseRenderer::~BaseRenderer() {
 }
 
 void BaseRenderer::initBuffersWithSize(int vertexBufferSize, int indexBufferSize) {
-	if (!vertBuffLoaded) {
-		glGenBuffers(1, &vertexBufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-		glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, NULL, GL_STREAM_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+//	if (!vertBuffLoaded) {
+	glGenBuffers(1, &vertexBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+	glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, NULL, GL_STREAM_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		vertBuffLoaded = true;
-	}
+	vertBuffLoaded = true;
+//	}
 
-	if (!indexBuffLoaded) {
-		glGenBuffers(1, &indexBufferID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexBufferSize, NULL, GL_STREAM_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//	if (!indexBuffLoaded) {
+	glGenBuffers(1, &indexBufferID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexBufferSize, NULL, GL_STREAM_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		indexBuffLoaded = true;
-	}
+	indexBuffLoaded = true;
+//	}
 }
 
 void BaseRenderer::deleteBuffers() {
@@ -113,5 +113,5 @@ void BaseRenderer::setProjectionMatrix() {
 }
 
 void BaseRenderer::setOrthoMatrix(int width, int height) {
-	orthoMatrix = glm::ortho(0.f, (float)width, 0.f, (float)height, -1.f, 1.f);
+	orthoMatrix = glm::ortho(0.f, (float) width, 0.f, (float) height, -1.f, 1.f);
 }

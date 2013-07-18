@@ -12,16 +12,21 @@
 
 #include "Common.h"
 
+class GameScene;
+
 class Layer{
 public:
 	Layer();
 	virtual ~Layer();
 
+	void setParentScene(GameScene * parent);
+
 	virtual void update(time_t dt) = 0;
 	virtual void draw() = 0;
 	virtual void handleInput() = 0;
 
-private:
+protected:
+	GameScene * parentScene;//TODO shouldnt be GameScene
 //	std::vector<Drawable *> children;
 };
 

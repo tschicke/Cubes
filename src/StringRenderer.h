@@ -24,6 +24,8 @@ public:
 
 	void render();
 
+	void setPosition(int x, int y);
+
 	void setString(const char * string);
 	void appendToString(const char * string, int numChars);
 private:

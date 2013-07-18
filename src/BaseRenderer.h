@@ -44,7 +44,7 @@ public:
 	static void setOrthoMatrix(int width, int height);
 
 protected:
-	uint vertexBufferID, indexBufferID;
+	GLuint vertexBufferID, indexBufferID;
 	bool vertBuffLoaded, indexBuffLoaded;
 
 	ShaderProgram shaderProgram;

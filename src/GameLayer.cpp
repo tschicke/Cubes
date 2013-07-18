@@ -32,3 +32,7 @@ void GameLayer::handleInput() {
 void GameLayer::draw() {
 	world->draw();
 }
+
+Player* GameLayer::getWorldMainPlayer() {
+	return world->getMainPlayer();
+}

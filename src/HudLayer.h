@@ -10,6 +10,8 @@
 
 #include "Layer.h"
 
+#include "StringRenderer.h"
+
 class HudLayer: public Layer {
 public:
 	HudLayer();
@@ -20,6 +22,7 @@ public:
 	void handleInput();
 
 private:
+	StringRenderer playerPosString;
 };
 
 #endif /* HUDLAYER_H_ */

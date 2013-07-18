@@ -28,14 +28,14 @@ StringRenderer::StringRenderer() {
 StringRenderer::~StringRenderer() {
 }
 
-StringRenderer::StringRenderer(int x, int y, const char * string, int fontSize) {
+StringRenderer::StringRenderer(int x, int y, const char * string, int fontSize) {//TODO finish FontSheet
 	this->x = x;
 	this->y = y;
 	this->fontSize = fontSize;
 
 	renderString = string;
 
-	allocLength = 2;//TODO Fix this initialization
+	allocLength = renderString.size();
 
 	modelMatNeedsUpdate = true;
 
@@ -53,21 +53,36 @@ StringRenderer::StringRenderer(int x, int y, const char * string, int fontSize) 
 	vertexShader.deleteShader();
 	fragmentShader.deleteShader();
 
+	int vertexBufferSize = allocLength * 4 * 4 * sizeof(float);
+	int indexBufferSize = allocLength * 6 * sizeof(unsigned int);
+
+	initBuffersWithSize(vertexBufferSize, indexBufferSize);
+
 	rebuildData();
+}
+
+void StringRenderer::setPosition(int x, int y) {
+	this->x = x;
+	this->y = y;
+
+	modelMatNeedsUpdate = true;
 }
 
 void StringRenderer::rebuildData() {
 	if (renderString.length() > allocLength) {
 		glDeleteBuffers(1, &vertexBufferID);
+		vertexBufferID = 0;
 		glDeleteBuffers(1, &indexBufferID);
+		indexBufferID = 0;
 
-		allocLength *= 2;
+		while(renderString.length() > allocLength){
+			allocLength *= 2;
+		}
 
 		int vertexBufferSize = allocLength * 4 * 4 * sizeof(float);
 		int indexBufferSize = allocLength * 6 * sizeof(unsigned int);
 
 		initBuffersWithSize(vertexBufferSize, indexBufferSize);
-		std::cout << "test\n";
 	}
 
 	int vertexArrayLength = renderString.size() * 2 * 4;
@@ -80,24 +95,11 @@ void StringRenderer::rebuildData() {
 
 	float texSize = (float) ts::SpriteSheet::defaultFontSheet->getElementSizePixels() / ts::SpriteSheet::defaultFontSheet->getWidth();
 
-	float letterVertexData[] = {
-			0, 0,
-			fontSize, 0,
-			fontSize, fontSize,
-			0, fontSize,
-	};
+	float letterVertexData[] = { 0, 0, fontSize, 0, fontSize, fontSize, 0, fontSize, };
 
-	float letterTextureData[] = {
-			0, texSize,
-			texSize, texSize,
-			texSize, 0,
-			0, 0,
-	};
+	float letterTextureData[] = { 0, texSize, texSize, texSize, texSize, 0, 0, 0, };
 
-	unsigned int letterIndexData[] = {
-			0, 1, 2,
-			0, 2, 3
-	};
+	unsigned int letterIndexData[] = { 0, 1, 2, 0, 2, 3 };
 
 	for (unsigned int i = 0; i < renderString.size(); ++i) {
 		int letterVertexIndex = i * 4 * 2;

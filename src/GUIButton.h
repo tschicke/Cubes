@@ -24,6 +24,8 @@ public:
 	void update();
 	void draw();
 
+	void setText(const char * text);
+
 	bool wasPressed();
 private:
 	bool pressed;

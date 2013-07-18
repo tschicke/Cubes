@@ -10,7 +10,11 @@
 
 #include "GameWindow.h"
 
+#include "Mouse.h"
+
 MenuScene::MenuScene() {
+	ts::Mouse::setLocked(false);
+
 	playButton.init(540, 310, 200, 100, "PLAY");
 	closeButton.init(540, 160, 200, 100, "EXIT");
 }

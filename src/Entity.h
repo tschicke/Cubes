@@ -35,6 +35,8 @@ public:
 
 	CollisionBox getCollisionBox();
 
+	glm::vec3 getPosition();
+
 	bool shouldBeDeleted();
 	void deleteEntity();
 protected:

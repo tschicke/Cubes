@@ -9,11 +9,21 @@
 
 #include <gl/glew.h>
 
+#include <sstream>
+
+#include "Player.h"
+
+#include "GameScene.h"
+
 HudLayer::HudLayer() {
 	glLineWidth(2);
 //	button = GUIButton(50, 50, 200, 200);
 	/*The issue is that GUIRenderer's parent is being set to the address of GUIButton(50, 50, 200, 200),
 	 *  while button is just a copy of GUIButton(50, 50, 200, 200), at a different address*/
+
+	std::stringstream formattedString;
+	formattedString << 0 << ' ' << 0 << ' ' << 0;
+	playerPosString = StringRenderer(16, 688, formattedString.str().c_str(), 32);
 }
 
 HudLayer::~HudLayer() {
@@ -36,9 +46,16 @@ void HudLayer::draw() {
 	glEnd();
 
 	glEnable(GL_DEPTH_TEST);
+
+	playerPosString.render();
 }
 
 void HudLayer::update(time_t dt) {
+	Player * mainPlayer = parentScene->getGameLayer()->getWorldMainPlayer();
+	glm::vec3 playerPos = mainPlayer->getPosition();
+	std::stringstream formattedString;
+	formattedString << playerPos.x << ' ' << playerPos.y << ' ' << playerPos.z;
+	playerPosString.setString(formattedString.str().c_str());
 }
 
 void HudLayer::handleInput() {

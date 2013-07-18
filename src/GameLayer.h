@@ -19,6 +19,8 @@ public:
 	void draw();
 	void update(time_t dt);
 	void handleInput();
+
+	Player * getWorldMainPlayer();
 private:
 	ts::World * world;
 };

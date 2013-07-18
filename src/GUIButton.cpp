@@ -60,6 +60,12 @@ void GUIButton::draw() {
 	buttonString.render();
 }
 
+void GUIButton::setText(const char* text) {
+	int stringWidth = StringRenderer::getWidthOfString(text, 32);
+	buttonString.setPosition(((width - stringWidth) / 2) + x, ((height - 32) / 2) + y);
+	buttonString.setString(text);
+}
+
 bool GUIButton::wasPressed() {
 	return pressed;
 }

@@ -56,6 +56,10 @@ bool Entity::shouldBeDeleted() {
 	return flagShouldBeDeleted;
 }
 
+glm::vec3 Entity::getPosition() {
+	return position;
+}
+
 void Entity::deleteEntity() {
 	flagShouldBeDeleted = true;
 }
