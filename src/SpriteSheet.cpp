@@ -19,7 +19,7 @@ SpriteSheet::SpriteSheet() {
 
 void SpriteSheet::initSpriteSheets(){
 	defaultSpriteSheet = new SpriteSheet("res/BlockSheet.DDS");
-	defaultFontSheet = new SpriteSheet("res/FontSheet1.DDS");
+	defaultFontSheet = new SpriteSheet("res/FontSheet.DDS");
 }
 
 SpriteSheet::SpriteSheet(const char * texturePath){

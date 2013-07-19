@@ -24,6 +24,8 @@ public:
 private:
 	GUIButton playButton;
 	GUIButton closeButton;
+
+	StringRenderer title;
 };
 
 #endif /* MENUSCENE_H_ */

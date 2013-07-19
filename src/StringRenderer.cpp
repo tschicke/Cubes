@@ -40,10 +40,10 @@ StringRenderer::StringRenderer(int x, int y, const char * string, int fontSize) 
 	modelMatNeedsUpdate = true;
 
 	Shader vertexShader;
-	vertexShader.loadShader("shaders/guiShader.vert", GL_VERTEX_SHADER);
+	vertexShader.loadShader("shaders/textShader.vert", GL_VERTEX_SHADER);
 
 	Shader fragmentShader;
-	fragmentShader.loadShader("shaders/guiShader.frag", GL_FRAGMENT_SHADER);
+	fragmentShader.loadShader("shaders/textShader.frag", GL_FRAGMENT_SHADER);
 
 	shaderProgram.createProgram();
 	shaderProgram.addShader(&vertexShader);
@@ -95,18 +95,31 @@ void StringRenderer::rebuildData() {
 
 	float texSize = (float) ts::SpriteSheet::defaultFontSheet->getElementSizePixels() / ts::SpriteSheet::defaultFontSheet->getWidth();
 
-	float letterVertexData[] = { 0, 0, fontSize, 0, fontSize, fontSize, 0, fontSize, };
+	float letterVertexData[] = {
+			0, 0,
+			fontSize, 0,
+			fontSize, fontSize,
+			0, fontSize,
+	};
 
-	float letterTextureData[] = { 0, texSize, texSize, texSize, texSize, 0, 0, 0, };
+	float letterTextureData[] = {
+			0, texSize,
+			texSize, texSize,
+			texSize, 0,
+			0, 0,
+	};
 
-	unsigned int letterIndexData[] = { 0, 1, 2, 0, 2, 3 };
+	unsigned int letterIndexData[] = {
+			0, 1, 2,
+			0, 2, 3
+	};
 
 	for (unsigned int i = 0; i < renderString.size(); ++i) {
 		int letterVertexIndex = i * 4 * 2;
 		int letterIndexIndex = i * 6;
 
-		float texOffsetX = ((renderString[i] - 'A') % ts::SpriteSheet::defaultFontSheet->numXElements()) / (float) ts::SpriteSheet::defaultFontSheet->numXElements();
-		float texOffsetY = ((renderString[i] - 'A') / ts::SpriteSheet::defaultFontSheet->numYElements()) / (float) ts::SpriteSheet::defaultFontSheet->numYElements();
+		float texOffsetX = ((renderString[i] - ' ') % ts::SpriteSheet::defaultFontSheet->numXElements()) / (float) ts::SpriteSheet::defaultFontSheet->numXElements();
+		float texOffsetY = ((renderString[i] - ' ') / ts::SpriteSheet::defaultFontSheet->numYElements()) / (float) ts::SpriteSheet::defaultFontSheet->numYElements();
 
 		for (int k = 0; k < 4; ++k) {
 			vertexData[letterVertexIndex + (k * 2)] = letterVertexData[(k * 2)] + (i * fontSize);
@@ -135,6 +148,9 @@ void StringRenderer::rebuildData() {
 
 void StringRenderer::render() {
 	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	if (modelMatNeedsUpdate) {
 		modelMatrix = glm::translate(glm::vec3(x, y, 0));
 		modelMatNeedsUpdate = false;
@@ -167,6 +183,8 @@ void StringRenderer::render() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glUseProgram(0);
+
+	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 }
 

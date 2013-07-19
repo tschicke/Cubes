@@ -22,7 +22,8 @@ HudLayer::HudLayer() {
 	 *  while button is just a copy of GUIButton(50, 50, 200, 200), at a different address*/
 
 	std::stringstream formattedString;
-	formattedString << 0 << ' ' << 0 << ' ' << 0;
+	formattedString.precision(2);
+	formattedString << std::fixed << 0 << ' ' << 0 << ' ' << 0;
 	playerPosString = StringRenderer(16, 688, formattedString.str().c_str(), 32);
 }
 
@@ -54,7 +55,8 @@ void HudLayer::update(time_t dt) {
 	Player * mainPlayer = parentScene->getGameLayer()->getWorldMainPlayer();
 	glm::vec3 playerPos = mainPlayer->getPosition();
 	std::stringstream formattedString;
-	formattedString << playerPos.x << ' ' << playerPos.y << ' ' << playerPos.z;
+	formattedString.precision(2);
+	formattedString << std::fixed << playerPos.x << ' ' << playerPos.y << ' ' << playerPos.z;
 	playerPosString.setString(formattedString.str().c_str());
 }
 
