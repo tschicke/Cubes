@@ -28,7 +28,7 @@ StringRenderer::StringRenderer() {
 StringRenderer::~StringRenderer() {
 }
 
-StringRenderer::StringRenderer(int x, int y, const char * string, int fontSize) {//TODO finish FontSheet
+StringRenderer::StringRenderer(int x, int y, const char * string, int fontSize) {
 	this->x = x;
 	this->y = y;
 	this->fontSize = fontSize;

@@ -66,7 +66,7 @@ Chunk * ChunkManager::getChunkWithCoordinate(int x, int y, int z) {
 }
 
 void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per frame
-	for (int x = floorf(parentWorld->getMainPlayer()->getPosition().x - (2 * Chunk::CHUNK_SIZE)); x < floorf(parentWorld->getMainPlayer()->getPosition().x + (2 * Chunk::CHUNK_SIZE)); x += Chunk::CHUNK_SIZE) { //TODO should this be done this way? or should flags be used
+	for (int x = floorf(parentWorld->getMainPlayer()->getPosition().x - (2 * Chunk::CHUNK_SIZE)); x < floorf(parentWorld->getMainPlayer()->getPosition().x + (2 * Chunk::CHUNK_SIZE)); x += Chunk::CHUNK_SIZE) {
 		for (int y = floorf(parentWorld->getMainPlayer()->getPosition().y - (1 * Chunk::CHUNK_SIZE)); y < floorf(parentWorld->getMainPlayer()->getPosition().y + (0 * Chunk::CHUNK_SIZE)); y += Chunk::CHUNK_SIZE) {
 			for (int z = floorf(parentWorld->getMainPlayer()->getPosition().z - (2 * Chunk::CHUNK_SIZE)); z < floorf(parentWorld->getMainPlayer()->getPosition().z + (2 * Chunk::CHUNK_SIZE)); z += Chunk::CHUNK_SIZE) {
 				Chunk * currentChunk = getChunkWithCoordinate(x - (x % Chunk::CHUNK_SIZE), y - (y % Chunk::CHUNK_SIZE), z - (z % Chunk::CHUNK_SIZE));

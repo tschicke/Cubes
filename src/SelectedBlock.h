@@ -10,17 +10,24 @@
 
 #include <glm/glm.hpp>
 
+#include "BaseRenderer.h"
+
 class Block;
+class Player;
 
 enum Face /*: char*/{
 	face_back, face_front, face_left, face_right, face_bottom, face_top, face_nocollision
 };
 
-class SelectedBlock {
+class SelectedBlock : public BaseRenderer {
 public:
 	SelectedBlock();
-	SelectedBlock(int x, int y, int z, Block * block, Face face);
+	SelectedBlock(int x, int y, int z, Block * block, Face face, bool drawable, Player * parentPlayer);
 	virtual ~SelectedBlock();
+
+	void setDrawable(bool drawable);
+
+	void copy(const SelectedBlock& copy);
 
 	int x, y, z;
 	Block * block;
@@ -29,10 +36,17 @@ public:
 
 	glm::vec3 getAddBlockPosition();
 
-	void draw();
+	void render();
 
 private:
 	void loadModel();
+
+	int numVertices, numVerticesToDraw;
+	bool modelMatNeedsUpdate;
+
+	Player * parentPlayer;
+
+	bool drawable;
 };
 
 #endif /* SELECTEDBLOCK_H_ */

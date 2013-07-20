@@ -26,7 +26,7 @@ public:
 	virtual void handleInput() = 0;
 
 protected:
-	GameScene * parentScene;//TODO shouldnt be GameScene
+	GameScene * parentScene;//FIXME shouldnt be GameScene
 //	std::vector<Drawable *> children;
 };
 

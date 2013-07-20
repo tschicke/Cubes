@@ -67,7 +67,7 @@ SelectedBlock World::raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos) {
 				if (currentBlock && currentBlock->getBlockType() != blockType_Air) {
 					Face face = currentBlock->raytrace(x, y, z, startPos, endPos);
 					if (face != face_nocollision) {
-						return SelectedBlock(x, y, z, currentBlock, face);
+						return SelectedBlock(x, y, z, currentBlock, face, false, NULL);
 					}
 				}
 			}

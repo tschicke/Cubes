@@ -20,7 +20,7 @@ namespace ts{
 class World;
 }
 
-class Entity {//TODO gravity and collisions
+class Entity {
 public:
 	Entity();
 	Entity(ts::World * world, glm::vec3 position);
