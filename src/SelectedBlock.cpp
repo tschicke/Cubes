@@ -20,38 +20,31 @@ SelectedBlock::SelectedBlock() {
 	block = NULL;
 	x = y = z = 0;
 	face = 0;
-	drawable = false;
 	parentPlayer = NULL;
 	modelMatNeedsUpdate = false;
 	numVertices = 0;
 	numVerticesToDraw = 0;
 }
 
-SelectedBlock::SelectedBlock(int x, int y, int z, Block* block, Face face, bool drawable, Player * parentPlayer) {
-	this->block = block;
-	this->x = x;
-	this->y = y;
-	this->z = z;
-	this->face = face;
-	this->drawable = drawable;
-	this->parentPlayer = parentPlayer;
-	modelMatNeedsUpdate = false;
-	numVertices = 0;
-	numVerticesToDraw = 0;
-
-	if(drawable){
-		loadModel();
-	}
+SelectedBlock::SelectedBlock(int x, int y, int z, Block* block, Face face, Player* parentPlayer) {
+	init(x, y, z, block, face, parentPlayer);
 }
 
 SelectedBlock::~SelectedBlock() {
 }
 
-void SelectedBlock::setDrawable(bool drawable) {
-	if(this->drawable == false && drawable == true){
-		loadModel();
-	}
-	this->drawable = drawable;
+void SelectedBlock::init(int x, int y, int z, Block* block, Face face, Player * parentPlayer) {
+	this->block = block;
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->face = face;
+	this->parentPlayer = parentPlayer;
+	modelMatNeedsUpdate = false;
+	numVertices = 0;
+	numVerticesToDraw = 0;
+
+	loadModel();
 }
 
 glm::vec3 SelectedBlock::getAddBlockPosition() {
@@ -73,14 +66,15 @@ glm::vec3 SelectedBlock::getAddBlockPosition() {
 	return addBlockPosition;
 }
 
-void SelectedBlock::copy(const SelectedBlock& copy) {
-	this->x = copy.x;
-	this->y = copy.y;
-	this->z = copy.z;
-	this->block = copy.block;
-	this->face = copy.face;
-
-	modelMatNeedsUpdate = true;
+void SelectedBlock::set(int x, int y, int z, Block* block, Face face) {
+	if(this->x != x || this->y != y || this->z != z){
+		modelMatNeedsUpdate = true;
+	}
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->block = block;
+	this->face = face;
 }
 
 void SelectedBlock::loadModel() {
@@ -99,8 +93,9 @@ void SelectedBlock::loadModel() {
 	fragmentShader.deleteShader();
 
 	int vertexBufferSize = 8 * 3;
+	int colorBufferSize = 8 * 3;
 	int indexBufferSize = 12 * 2;
-	initBuffersWithSize(vertexBufferSize * sizeof(float), indexBufferSize * sizeof(unsigned int));
+	initBuffersWithSize((vertexBufferSize + colorBufferSize) * sizeof(float), indexBufferSize * sizeof(unsigned int));
 
 	float vertexData[] = {//TODO change extra amount on block
 			-0.005f, -0.005f, -0.005f,
@@ -111,6 +106,17 @@ void SelectedBlock::loadModel() {
 			1.005f, -0.005f, 1.005f,
 			1.005f, 1.005f, 1.005f,
 			-0.005f, 1.005f, 1.005f,
+	};
+
+	float colorData[] = {
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
+			0, 0, 0,
 	};
 
 	unsigned int indexData[] = {
@@ -131,6 +137,7 @@ void SelectedBlock::loadModel() {
 	};
 
 	substituteDataToVertexBuffer(vertexBufferSize * sizeof(float), 0, vertexData);
+	substituteDataToVertexBuffer(colorBufferSize * sizeof(float), vertexBufferSize * sizeof(float), colorData);
 	substituteDataToIndexBuffer(indexBufferSize * sizeof(unsigned int), 0, indexData);
 
 	numVertices = 8;
@@ -139,7 +146,7 @@ void SelectedBlock::loadModel() {
 }
 
 void SelectedBlock::render() {
-	if(drawable && (block != NULL)){
+	if(vertBuffLoaded && indexBuffLoaded && (block != NULL)){
 		if (modelMatNeedsUpdate) {
 			modelMatrix = glm::translate(x, y, z);
 			modelMatNeedsUpdate = false;
@@ -156,12 +163,15 @@ void SelectedBlock::render() {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 3 * sizeof(float))); //Color
 
 		glDrawElements(GL_LINES, numVerticesToDraw, GL_UNSIGNED_INT, 0);
 
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 

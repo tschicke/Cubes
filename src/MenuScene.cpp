@@ -18,7 +18,7 @@ MenuScene::MenuScene() {
 	int stringWidth = StringRenderer::getWidthOfString("CUBES", 128);
 	int windowWidth = GameWindow::getMainWindow()->getSize().x;
 	int windowHeight = GameWindow::getMainWindow()->getSize().y;
-	title = StringRenderer((windowWidth - stringWidth) / 2, windowHeight - 192, "CUBES", 128);
+	title.init((windowWidth - stringWidth) / 2, windowHeight - 192, "CUBES", 128);
 
 	playButton.init(540, 310, 200, 100, "PLAY");
 	closeButton.init(540, 160, 200, 100, "EXIT");

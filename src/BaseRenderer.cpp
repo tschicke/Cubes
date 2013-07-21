@@ -24,41 +24,42 @@ BaseRenderer::BaseRenderer() {
 }
 
 BaseRenderer::~BaseRenderer() {
-
+	deleteBuffers();
+	shaderProgram.deleteProgram();
 }
 
 void BaseRenderer::initBuffersWithSize(int vertexBufferSize, int indexBufferSize) {
-//	if (!vertBuffLoaded) {
-	glGenBuffers(1, &vertexBufferID);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-	glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, NULL, GL_STREAM_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	if (!vertBuffLoaded) {
+		glGenBuffers(1, &vertexBufferID);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+		glBufferData(GL_ARRAY_BUFFER, vertexBufferSize, NULL, GL_STREAM_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	vertBuffLoaded = true;
-//	}
+		vertBuffLoaded = true;
+	}
 
-//	if (!indexBuffLoaded) {
-	glGenBuffers(1, &indexBufferID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexBufferSize, NULL, GL_STREAM_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	if (!indexBuffLoaded) {
+		glGenBuffers(1, &indexBufferID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBufferSize, NULL, GL_STREAM_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	indexBuffLoaded = true;
-//	}
+		indexBuffLoaded = true;
+	}
 }
 
 void BaseRenderer::deleteBuffers() {
 	if (vertBuffLoaded) {
 		glDeleteBuffers(1, &vertexBufferID);
+		vertexBufferID = -1;
 		vertBuffLoaded = false;
 	}
 
 	if (indexBuffLoaded) {
 		glDeleteBuffers(1, &indexBufferID);
+		indexBufferID = -1;
 		indexBuffLoaded = false;
 	}
-
-	shaderProgram.deleteProgram();
 }
 
 void BaseRenderer::substituteDataToVertexBuffer(int size, int offset, float* data) {

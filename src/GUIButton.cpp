@@ -30,7 +30,7 @@ void GUIButton::init(int x, int y, int width, int height, const char* string) {
 	renderer.setCurrentTexture(Texture::buttonDefault);
 
 	int stringWidth = StringRenderer::getWidthOfString(string, 32);
-	buttonString = StringRenderer(((width - stringWidth) / 2) + x, ((height - 32) / 2) + y, string, 32);
+	buttonString.init(((width - stringWidth) / 2) + x, ((height - 32) / 2) + y, string, 32);
 }
 
 GUIButton::~GUIButton() {

@@ -1,3 +1,4 @@
+//colorShader.vert
 #version 330
 
 uniform mat4 modelMatrix, viewMatrix, projectionMatrix;

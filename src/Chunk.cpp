@@ -9,7 +9,6 @@
 #include "Chunk.h"
 #include "Shader.h"
 #include "SpriteSheet.h"
-#include "Renderer.h"
 #include "Player.h"
 
 #include <gl/glew.h>//Only for GL_VERTEX_SHADER and GL_FRAGMENT_SHADER, get them from somewhere else
@@ -29,7 +28,7 @@ Chunk::Chunk(int x, int y, int z, ts::World * parentWorld){
 	chunkPosition = glm::vec3(x, y, z);
 
 	chunkState = initialize;
-	chunkRenderer = ChunkRenderer(chunkPosition.x, chunkPosition.y, chunkPosition.z, this);
+	chunkRenderer.init(chunkPosition.x, chunkPosition.y, chunkPosition.z, this);
 
 	this->parentWorld = parentWorld;
 }

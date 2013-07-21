@@ -11,7 +11,6 @@
 #include <SFML/Window.hpp>
 
 #include "Scene.h"
-#include "Renderer.h"
 #include "Common.h"
 
 class GameWindow : public sf::Window{

@@ -32,7 +32,7 @@ void GUIElement::init(int x, int y, int width, int height) {
 
 	needsUpdate = true;
 
-	renderer = GUIRenderer(this, Texture::buttonDefault);
+	renderer.init(this, Texture::buttonDefault);
 }
 
 GUIElement::~GUIElement() {

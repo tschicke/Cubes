@@ -22,12 +22,12 @@ enum Face /*: char*/{
 class SelectedBlock : public BaseRenderer {
 public:
 	SelectedBlock();
-	SelectedBlock(int x, int y, int z, Block * block, Face face, bool drawable, Player * parentPlayer);
+	SelectedBlock(int x, int y, int z, Block * block, Face face, Player * parentPlayer);
 	virtual ~SelectedBlock();
 
-	void setDrawable(bool drawable);
+	void init(int x, int y, int z, Block * block, Face face, Player * parentPlayer);
 
-	void copy(const SelectedBlock& copy);
+	void set(int x, int y, int z, Block * block, Face face);
 
 	int x, y, z;
 	Block * block;
@@ -45,8 +45,6 @@ private:
 	bool modelMatNeedsUpdate;
 
 	Player * parentPlayer;
-
-	bool drawable;
 };
 
 #endif /* SELECTEDBLOCK_H_ */

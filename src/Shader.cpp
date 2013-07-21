@@ -25,6 +25,7 @@ Shader::Shader() {
 }
 
 Shader::~Shader() {
+	deleteShader();
 }
 
 bool Shader::loadShader(const char * filePath, shader_type_t shaderType) {
@@ -92,7 +93,7 @@ ShaderProgram::ShaderProgram() {
 }
 
 ShaderProgram::~ShaderProgram() {
-
+	deleteProgram();
 }
 
 void ShaderProgram::createProgram() {
@@ -101,7 +102,7 @@ void ShaderProgram::createProgram() {
 }
 
 void ShaderProgram::deleteProgram() {
-	if (!linked) {
+	if (!linked || !created) {
 		return;
 	}
 

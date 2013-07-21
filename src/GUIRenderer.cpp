@@ -26,10 +26,6 @@ GUIRenderer::GUIRenderer() {
 GUIRenderer::~GUIRenderer() {
 }
 
-GUIRenderer::GUIRenderer(GUIElement* parentElement, Texture * texture) {
-	init(parentElement, texture);
-}
-
 void GUIRenderer::init(GUIElement* parentElement, Texture * texture) {
 	this->parentElement = parentElement;
 

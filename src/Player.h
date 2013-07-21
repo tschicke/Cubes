@@ -12,7 +12,6 @@
 
 #include "FirstPersonCamera.h"
 
-#include "Renderer.h"
 #include "Shader.h"
 
 #include "SelectedBlock.h"
@@ -62,7 +61,6 @@ private:
 	static const float CAMERA_HEIGHT = 1.5f, PLAYER_WIDTH = 0.75f, PLAYER_HEIGHT = 1.8f;
 	float moveSpeed;
 
-	MeshID playerModelID;
 	ShaderProgram shaderProgram;
 
 	void loadPlayerModel();

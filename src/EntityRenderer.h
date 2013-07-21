@@ -15,7 +15,6 @@ class Entity;
 class EntityRenderer: public BaseRenderer {
 public:
 	EntityRenderer();
-	EntityRenderer(Entity * parent, const char * modelFile);
 	virtual ~EntityRenderer();
 
 	void init(Entity * parent, const char * modelFile);

@@ -28,7 +28,7 @@ StringRenderer::StringRenderer() {
 StringRenderer::~StringRenderer() {
 }
 
-StringRenderer::StringRenderer(int x, int y, const char * string, int fontSize) {
+void StringRenderer::init(int x, int y, const char * string, int fontSize) {
 	this->x = x;
 	this->y = y;
 	this->fontSize = fontSize;
@@ -70,10 +70,7 @@ void StringRenderer::setPosition(int x, int y) {
 
 void StringRenderer::rebuildData() {
 	if (renderString.length() > allocLength) {
-		glDeleteBuffers(1, &vertexBufferID);
-		vertexBufferID = 0;
-		glDeleteBuffers(1, &indexBufferID);
-		indexBufferID = 0;
+		deleteBuffers();
 
 		while(renderString.length() > allocLength){
 			allocLength *= 2;
@@ -147,45 +144,47 @@ void StringRenderer::rebuildData() {
 }
 
 void StringRenderer::render() {
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	if (vertBuffLoaded && indexBuffLoaded) {
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	if (modelMatNeedsUpdate) {
-		modelMatrix = glm::translate(glm::vec3(x, y, 0));
-		modelMatNeedsUpdate = false;
+		if (modelMatNeedsUpdate) {
+			modelMatrix = glm::translate(glm::vec3(x, y, 0));
+			modelMatNeedsUpdate = false;
+		}
+
+		shaderProgram.useProgram();
+
+		ts::SpriteSheet::defaultFontSheet->useTexture();
+
+		shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
+		shaderProgram.setUniform("projectionMatrix", &orthoMatrix, 1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (sizeof(float) * numVertices * 2)); //TexCoords
+
+		glDrawElements(GL_TRIANGLES, numVerticesToDraw, GL_UNSIGNED_INT, 0);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glUseProgram(0);
+
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
 	}
-
-	shaderProgram.useProgram();
-
-	ts::SpriteSheet::defaultFontSheet->useTexture();
-
-	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("projectionMatrix", &orthoMatrix, 1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (sizeof(float) * numVertices * 2)); //TexCoords
-
-	glDrawElements(GL_TRIANGLES, numVerticesToDraw, GL_UNSIGNED_INT, 0);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glUseProgram(0);
-
-	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
 }
 
 void StringRenderer::setString(const char* string) {

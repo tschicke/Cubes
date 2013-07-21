@@ -17,8 +17,9 @@
 class StringRenderer: public BaseRenderer {
 public:
 	StringRenderer();
-	StringRenderer(int x, int y, const char * string, int fontSize);
 	virtual ~StringRenderer();
+
+	void init(int x, int y, const char * string, int fontSize);
 
 	static int getWidthOfString(const char * string, int fontSize);
 

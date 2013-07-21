@@ -24,7 +24,7 @@ HudLayer::HudLayer() {
 	std::stringstream formattedString;
 	formattedString.precision(2);
 	formattedString << std::fixed << 0 << ' ' << 0 << ' ' << 0;
-	playerPosString = StringRenderer(16, 688, formattedString.str().c_str(), 32);
+	playerPosString.init(16, 688, formattedString.str().c_str(), 32);
 }
 
 HudLayer::~HudLayer() {

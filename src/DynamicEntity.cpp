@@ -35,8 +35,10 @@ DynamicEntity::~DynamicEntity() {
 }
 
 void DynamicEntity::move(glm::vec3 moveVec) {
-	position += moveVec;
-	renderer.markNeedsMatrixUpdate();
+	if (moveVec.x != 0 || moveVec.y != 0 || moveVec.z != 0) {
+		position += moveVec;
+		renderer.markNeedsMatrixUpdate();
+	}
 }
 
 void DynamicEntity::addYaw(float yaw) {

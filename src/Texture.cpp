@@ -33,7 +33,7 @@ Texture::Texture(const char * texturePath) {
 }
 
 Texture::~Texture() {
-
+	glDeleteTextures(1, &texID);
 }
 
 void Texture::initTextures(){

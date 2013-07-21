@@ -36,7 +36,7 @@ void Entity::init(ts::World* world, glm::vec3 position) {
 	yaw = 0;
 	pitch = 0;
 
-	renderer = EntityRenderer(this, NULL);
+	renderer.init(this, NULL);
 }
 
 void Entity::draw() {

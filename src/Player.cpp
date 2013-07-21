@@ -51,63 +51,11 @@ void Player::init(ts::World * parentWorld) {
 	activeBlock = blockType_Grass;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
 	halfDimentions = glm::vec3(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2, PLAYER_WIDTH / 2);
-	selectedBlock = SelectedBlock(0, 0, 0, NULL, face_nocollision, true, this);
+	selectedBlock.init(0, 0, 0, NULL, face_nocollision, this);
 	loadPlayerModel();
 }
 
 void Player::loadPlayerModel() {
-	if (!loaded) {
-		Shader vertexShader;
-		vertexShader.loadShader("shaders/colorShader.vert", GL_VERTEX_SHADER);
-
-		Shader fragmentShader;
-		fragmentShader.loadShader("shaders/colorShader.frag", GL_FRAGMENT_SHADER);
-
-		shaderProgram.createProgram();
-		shaderProgram.addShader(&vertexShader);
-		shaderProgram.addShader(&fragmentShader);
-		shaderProgram.linkProgram();
-
-		vertexShader.deleteShader();
-		fragmentShader.deleteShader();
-
-		playerModelID.setColorType(ColorType_Color);
-
-		int v0, v1, v2, v3, v4, v5, v6, v7;
-
-		Renderer& renderer = Renderer::getMainRenderer();
-		renderer.createMesh(&playerModelID);
-
-		v0 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), 0, 0, 0);
-		v1 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 0, 0), glm::vec3(0, 0, 1), 0, 0, 0);
-		v2 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 1, 0), glm::vec3(0, 0, 1), 0, 0, 0);
-		v3 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 1, 0), glm::vec3(0, 0, 1), 0, 0, 0);
-		v4 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 0, 1), glm::vec3(0, 0, 1), 0, 0, 0);
-		v5 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 0, 1), glm::vec3(0, 0, 1), 0, 0, 0);
-		v6 = renderer.addVertexToMesh(playerModelID, glm::vec3(1, 1, 1), glm::vec3(0, 0, 1), 0, 0, 0);
-		v7 = renderer.addVertexToMesh(playerModelID, glm::vec3(0, 1, 1), glm::vec3(0, 0, 1), 0, 0, 0);
-
-		renderer.addLineToMesh(playerModelID, v0, v1);
-		renderer.addLineToMesh(playerModelID, v1, v2);
-		renderer.addLineToMesh(playerModelID, v2, v3);
-		renderer.addLineToMesh(playerModelID, v3, v0);
-
-		renderer.addLineToMesh(playerModelID, v4, v5);
-		renderer.addLineToMesh(playerModelID, v5, v6);
-		renderer.addLineToMesh(playerModelID, v6, v7);
-		renderer.addLineToMesh(playerModelID, v7, v4);
-
-		renderer.addLineToMesh(playerModelID, v0, v4);
-		renderer.addLineToMesh(playerModelID, v1, v5);
-		renderer.addLineToMesh(playerModelID, v2, v6);
-		renderer.addLineToMesh(playerModelID, v3, v7);
-
-//		renderer.createPrism(playerModelID, glm::vec3(0.f, 0.f, 0.f), 1.f, 1.f, 1.f);
-
-		renderer.endMesh(&playerModelID);
-
-		loaded = true;
-	}
 }
 
 void Player::input() {
@@ -199,7 +147,7 @@ void Player::update(time_t dt) {
 	//if(needsRaytrace)
 	glm::vec3 startVec = camera.getPosition();
 	glm::vec3 endVec = startVec + ((camera.getLook() - startVec) * 4.f); //12 = block break range
-	selectedBlock.copy(parentWorld->raytraceBlocks(startVec, endVec));
+	parentWorld->raytraceBlocks(startVec, endVec, &selectedBlock);
 
 	input();
 	gravity();
@@ -233,7 +181,7 @@ void Player::setPosition(glm::vec3 newPos) {
 }
 
 void Player::move(glm::vec3 moveVector) {
-	position += moveVector;
+	DynamicEntity::move(moveVector);
 	camera.move(moveVector);
 }
 

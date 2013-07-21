@@ -18,7 +18,6 @@ class Chunk;
 class ChunkRenderer : public BaseRenderer{
 public:
 	ChunkRenderer();
-	ChunkRenderer(int x, int y, int z, Chunk * parentChunk);
 	virtual ~ChunkRenderer();
 
 	void init(int x, int y, int z, Chunk * parentChunk);

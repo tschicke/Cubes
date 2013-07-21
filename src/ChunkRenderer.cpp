@@ -29,10 +29,6 @@ ChunkRenderer::ChunkRenderer() {
 	blockNeedsUpdate = NULL;
 }
 
-ChunkRenderer::ChunkRenderer(int x, int y, int z, Chunk * parentChunk) {
-	init(x, y, z, parentChunk);
-}
-
 void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 	this->parentChunk = parentChunk;
 
@@ -65,176 +61,175 @@ void ChunkRenderer::init(int x, int y, int z, Chunk * parentChunk) {
 
 	initBuffersWithSize((numVerticesPerChunk + numTexCoordsPerChunk + numNormalsPerChunk) * sizeof(float), numIndicesPerChunk * sizeof(unsigned int));
 
-//	float * vertexArray = new float[numVerticesPerChunk + numTexCoordsPerChunk + numNormalsPerChunk];
-//
-//	/*   Cube Diagram
-//	 *
-//	 * 		  p7__________p6
-//	 * 		   /|		 /|
-//	 * 		p3/_|_____p2/ |
-//	 * 		 |  |	   |  |
-//	 * 		 |	|p4____|__|p5
-//	 * 		 | /	   | /
-//	 * 	   p0|/________|/p1
-//	 */
-//
-//	float cubeSize = Block::cubeSize;
-//
-//	float cubeVertexData[] = {
-//			//Front
-//			0, 0, cubeSize,
-//			cubeSize, 0, cubeSize,
-//			cubeSize, cubeSize, cubeSize,
-//			0, cubeSize, cubeSize,
-//
-//			//Back
-//			cubeSize, 0, 0,
-//			0, 0, 0,
-//			0, cubeSize, 0,
-//			cubeSize, cubeSize, 0,
-//
-//			//Left
-//			0, 0, 0,
-//			0, 0, cubeSize,
-//			0, cubeSize, cubeSize,
-//			0, cubeSize, 0,
-//
-//			//Right
-//			cubeSize, 0, cubeSize,
-//			cubeSize, 0, 0,
-//			cubeSize, cubeSize, 0,
-//			cubeSize, cubeSize, cubeSize,
-//
-//			//Top
-//			0, cubeSize, cubeSize,
-//			cubeSize, cubeSize, cubeSize,
-//			cubeSize, cubeSize, 0,
-//			0, cubeSize, 0,
-//
-//			//Bottom
-//			0, 0, 0,
-//			cubeSize, 0, 0,
-//			cubeSize, 0, cubeSize,
-//			0, 0, cubeSize
-//	};
-//
-//	float texElementSize = ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getWidth();
-//
-//	float cubeTexData[] = {
-//			//Front
-//			0, 2 * texElementSize,
-//			texElementSize, 2 * texElementSize,
-//			texElementSize, texElementSize,
-//			0, texElementSize,
-//
-//			//Back
-//			0, 2 * texElementSize,
-//			texElementSize, 2 * texElementSize,
-//			texElementSize, texElementSize,
-//			0, texElementSize,
-//
-//			//Left
-//			0, 2 * texElementSize,
-//			texElementSize, 2 * texElementSize,
-//			texElementSize, texElementSize,
-//			0, texElementSize,
-//
-//			//Right
-//			0, 2 * texElementSize,
-//			texElementSize, 2 * texElementSize,
-//			texElementSize, texElementSize,
-//			0, texElementSize,
-//
-//			//Top
-//			0, texElementSize,
-//			texElementSize, texElementSize,
-//			texElementSize, 0,
-//			0, 0,
-//
-//			//Bottom
-//			texElementSize, texElementSize,
-//			2 * texElementSize,
-//			texElementSize, 2 * texElementSize,
-//			0, texElementSize, 0
-//	};
-//
-//	float cubeNormalData[] = {
-//			0, 0, 1,
-//			0, 0, 1,
-//			0, 0, 1,
-//			0, 0, 1,
-//
-//			0, 0, -1,
-//			0, 0, -1,
-//			0, 0, -1,
-//			0, 0, -1,
-//
-//			-1, 0, 0,
-//			-1, 0, 0,
-//			-1, 0, 0,
-//			-1, 0, 0,
-//
-//			1, 0, 0,
-//			1, 0, 0,
-//			1, 0, 0,
-//			1, 0, 0,
-//
-//			0, 1, 0,
-//			0, 1, 0,
-//			0, 1, 0,
-//			0, 1, 0,
-//
-//			0, -1, 0,
-//			0, -1, 0,
-//			0, -1, 0,
-//			0, -1, 0
-//	};
-//
-//	Block ** blockArray = parentChunk->blockStorage->getBlockArray();
-//
-//	for (int x = 0; x < Chunk::CHUNK_SIZE; ++x) {
-//		for (int y = 0; y < Chunk::CHUNK_SIZE; ++y) {
-//			for (int z = 0; z < Chunk::CHUNK_SIZE; ++z) {
-//				int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
-//
-//				int numVerticesPerCube = 24;
-//
-//				int vertexIndex = blockIndex * numVerticesPerCube * 3;
-//				int texIndex = blockIndex * numVerticesPerCube * 2;
-//				int normalIndex = blockIndex * numVerticesPerCube * 3;
-//
-//				Block * block = blockArray[blockIndex];
-//
-//				if (block != NULL && block->isDrawn()) {
-//					for (int i = 0; i < numVerticesPerCube; ++i) {
-//						vertexArray[vertexIndex + (i * 3)] = cubeVertexData[(i * 3)] + x;
-//						vertexArray[vertexIndex + (i * 3) + 1] = cubeVertexData[(i * 3) + 1] + y;
-//						vertexArray[vertexIndex + (i * 3) + 2] = cubeVertexData[(i * 3) + 2] + z;
-//
-//						vertexArray[numVerticesPerChunk + texIndex + (i * 2)] = cubeTexData[(i * 2)] + block->getBaseTextureX();
-//						vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1] + block->getBaseTextureY();
-//
-//						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3)] = cubeNormalData[(i * 3)];
-//						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3) + 1] = cubeNormalData[(i * 3) + 1];
-//						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3) + 2] = cubeNormalData[(i * 3) + 2];
-//					}
-//				}
-//
-//				blockNeedsUpdate[blockIndex] = false;
-//			}
-//		}
-//	}
-//
-//	substituteDataToVertexBuffer((numVerticesPerChunk + numTexCoordsPerChunk + numNormalsPerChunk) * sizeof(float), 0, vertexArray);
-//
-//	remakeIndexBuffer();
-//
-//	delete[] vertexArray;
+	//	float * vertexArray = new float[numVerticesPerChunk + numTexCoordsPerChunk + numNormalsPerChunk];
+	//
+	//	/*   Cube Diagram
+	//	 *
+	//	 * 		  p7__________p6
+	//	 * 		   /|		 /|
+	//	 * 		p3/_|_____p2/ |
+	//	 * 		 |  |	   |  |
+	//	 * 		 |	|p4____|__|p5
+	//	 * 		 | /	   | /
+	//	 * 	   p0|/________|/p1
+	//	 */
+	//
+	//	float cubeSize = Block::cubeSize;
+	//
+	//	float cubeVertexData[] = {
+	//			//Front
+	//			0, 0, cubeSize,
+	//			cubeSize, 0, cubeSize,
+	//			cubeSize, cubeSize, cubeSize,
+	//			0, cubeSize, cubeSize,
+	//
+	//			//Back
+	//			cubeSize, 0, 0,
+	//			0, 0, 0,
+	//			0, cubeSize, 0,
+	//			cubeSize, cubeSize, 0,
+	//
+	//			//Left
+	//			0, 0, 0,
+	//			0, 0, cubeSize,
+	//			0, cubeSize, cubeSize,
+	//			0, cubeSize, 0,
+	//
+	//			//Right
+	//			cubeSize, 0, cubeSize,
+	//			cubeSize, 0, 0,
+	//			cubeSize, cubeSize, 0,
+	//			cubeSize, cubeSize, cubeSize,
+	//
+	//			//Top
+	//			0, cubeSize, cubeSize,
+	//			cubeSize, cubeSize, cubeSize,
+	//			cubeSize, cubeSize, 0,
+	//			0, cubeSize, 0,
+	//
+	//			//Bottom
+	//			0, 0, 0,
+	//			cubeSize, 0, 0,
+	//			cubeSize, 0, cubeSize,
+	//			0, 0, cubeSize
+	//	};
+	//
+	//	float texElementSize = ts::SpriteSheet::defaultSpriteSheet->getElementSizePixels() / (float) ts::SpriteSheet::defaultSpriteSheet->getWidth();
+	//
+	//	float cubeTexData[] = {
+	//			//Front
+	//			0, 2 * texElementSize,
+	//			texElementSize, 2 * texElementSize,
+	//			texElementSize, texElementSize,
+	//			0, texElementSize,
+	//
+	//			//Back
+	//			0, 2 * texElementSize,
+	//			texElementSize, 2 * texElementSize,
+	//			texElementSize, texElementSize,
+	//			0, texElementSize,
+	//
+	//			//Left
+	//			0, 2 * texElementSize,
+	//			texElementSize, 2 * texElementSize,
+	//			texElementSize, texElementSize,
+	//			0, texElementSize,
+	//
+	//			//Right
+	//			0, 2 * texElementSize,
+	//			texElementSize, 2 * texElementSize,
+	//			texElementSize, texElementSize,
+	//			0, texElementSize,
+	//
+	//			//Top
+	//			0, texElementSize,
+	//			texElementSize, texElementSize,
+	//			texElementSize, 0,
+	//			0, 0,
+	//
+	//			//Bottom
+	//			texElementSize, texElementSize,
+	//			2 * texElementSize,
+	//			texElementSize, 2 * texElementSize,
+	//			0, texElementSize, 0
+	//	};
+	//
+	//	float cubeNormalData[] = {
+	//			0, 0, 1,
+	//			0, 0, 1,
+	//			0, 0, 1,
+	//			0, 0, 1,
+	//
+	//			0, 0, -1,
+	//			0, 0, -1,
+	//			0, 0, -1,
+	//			0, 0, -1,
+	//
+	//			-1, 0, 0,
+	//			-1, 0, 0,
+	//			-1, 0, 0,
+	//			-1, 0, 0,
+	//
+	//			1, 0, 0,
+	//			1, 0, 0,
+	//			1, 0, 0,
+	//			1, 0, 0,
+	//
+	//			0, 1, 0,
+	//			0, 1, 0,
+	//			0, 1, 0,
+	//			0, 1, 0,
+	//
+	//			0, -1, 0,
+	//			0, -1, 0,
+	//			0, -1, 0,
+	//			0, -1, 0
+	//	};
+	//
+	//	Block ** blockArray = parentChunk->blockStorage->getBlockArray();
+	//
+	//	for (int x = 0; x < Chunk::CHUNK_SIZE; ++x) {
+	//		for (int y = 0; y < Chunk::CHUNK_SIZE; ++y) {
+	//			for (int z = 0; z < Chunk::CHUNK_SIZE; ++z) {
+	//				int blockIndex = x * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE + y * Chunk::CHUNK_SIZE + z;
+	//
+	//				int numVerticesPerCube = 24;
+	//
+	//				int vertexIndex = blockIndex * numVerticesPerCube * 3;
+	//				int texIndex = blockIndex * numVerticesPerCube * 2;
+	//				int normalIndex = blockIndex * numVerticesPerCube * 3;
+	//
+	//				Block * block = blockArray[blockIndex];
+	//
+	//				if (block != NULL && block->isDrawn()) {
+	//					for (int i = 0; i < numVerticesPerCube; ++i) {
+	//						vertexArray[vertexIndex + (i * 3)] = cubeVertexData[(i * 3)] + x;
+	//						vertexArray[vertexIndex + (i * 3) + 1] = cubeVertexData[(i * 3) + 1] + y;
+	//						vertexArray[vertexIndex + (i * 3) + 2] = cubeVertexData[(i * 3) + 2] + z;
+	//
+	//						vertexArray[numVerticesPerChunk + texIndex + (i * 2)] = cubeTexData[(i * 2)] + block->getBaseTextureX();
+	//						vertexArray[numVerticesPerChunk + texIndex + (i * 2) + 1] = cubeTexData[(i * 2) + 1] + block->getBaseTextureY();
+	//
+	//						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3)] = cubeNormalData[(i * 3)];
+	//						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3) + 1] = cubeNormalData[(i * 3) + 1];
+	//						vertexArray[numVerticesPerChunk + numTexCoordsPerChunk + normalIndex + (i * 3) + 2] = cubeNormalData[(i * 3) + 2];
+	//					}
+	//				}
+	//
+	//				blockNeedsUpdate[blockIndex] = false;
+	//			}
+	//		}
+	//	}
+	//
+	//	substituteDataToVertexBuffer((numVerticesPerChunk + numTexCoordsPerChunk + numNormalsPerChunk) * sizeof(float), 0, vertexArray);
+	//
+	//	remakeIndexBuffer();
+	//
+	//	delete[] vertexArray;
 	numVerticesToDraw = 0;
 }
 
 ChunkRenderer::~ChunkRenderer() {
-//	deleteBuffers();
 }
 
 void ChunkRenderer::setChunkPosition(int x, int y, int z) {
@@ -395,50 +390,52 @@ void ChunkRenderer::update(time_t dt) {
 }
 
 void ChunkRenderer::render() {
-	if (modelMatNeedsUpdate) {
-		modelMatrix = glm::translate(chunkPosition);
-		modelMatNeedsUpdate = false;
+	if (vertBuffLoaded && indexBuffLoaded) {
+		if (modelMatNeedsUpdate) {
+			modelMatrix = glm::translate(chunkPosition);
+			modelMatNeedsUpdate = false;
+		}
+
+		shaderProgram.useProgram();
+
+		ts::SpriteSheet::defaultSpriteSheet->useTexture();
+
+		shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
+		shaderProgram.setUniform("viewMatrix", parentChunk->parentWorld->getMainPlayer()->getCameraViewMatrix(), 1);
+		shaderProgram.setUniform("projectionMatrix", &projectionMatrix, 1);
+
+		glm::vec3 testColor(1.f, 1.f, 1.f);
+		shaderProgram.setUniform("testColor", &testColor, 1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+
+		int numCubes = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE;
+		int numVertices = numCubes * 24;
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 3 * sizeof(float))); //Texture Coordinates
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 5 * sizeof(float))); //Normals
+
+		glDrawElements(GL_TRIANGLES, numVerticesToDraw, GL_UNSIGNED_INT, 0);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glUseProgram(0);
+
+		ts::SpriteSheet::unbindTextures();
 	}
-
-	shaderProgram.useProgram();
-
-	ts::SpriteSheet::defaultSpriteSheet->useTexture();
-
-	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", parentChunk->parentWorld->getMainPlayer()->getCameraViewMatrix(), 1);
-	shaderProgram.setUniform("projectionMatrix", &projectionMatrix, 1);
-
-	glm::vec3 testColor(1.f, 1.f, 1.f);
-	shaderProgram.setUniform("testColor", &testColor, 1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-
-	int numCubes = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE;
-	int numVertices = numCubes * 24;
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 3 * sizeof(float))); //Texture Coordinates
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) (numVertices * 5 * sizeof(float))); //Normals
-
-	glDrawElements(GL_TRIANGLES, numVerticesToDraw, GL_UNSIGNED_INT, 0);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glUseProgram(0);
-
-	ts::SpriteSheet::unbindTextures();
 }
 
 void ChunkRenderer::updateBlockAtPosition(int x, int y, int z) {

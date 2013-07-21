@@ -22,10 +22,6 @@ EntityRenderer::EntityRenderer() {
 	parentEntity = NULL;
 }
 
-EntityRenderer::EntityRenderer(Entity * parent, const char * modelFile) {
-	init(parent, modelFile);
-}
-
 EntityRenderer::~EntityRenderer() {
 }
 
@@ -200,41 +196,43 @@ void EntityRenderer::loadModel(const char * modelFile) {
 }
 
 void EntityRenderer::render() {
-	if (modelMatNeedsUpdate) {
-		modelMatrix = glm::translate(parentEntity->position);
-		modelMatNeedsUpdate = false;
+	if (vertBuffLoaded && indexBuffLoaded) {
+		if (modelMatNeedsUpdate) {
+			modelMatrix = glm::translate(parentEntity->position);
+			modelMatNeedsUpdate = false;
+		}
+
+		shaderProgram.useProgram();
+
+		shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
+		shaderProgram.setUniform("viewMatrix", parentEntity->parentWorld->getMainPlayer()->getCameraViewMatrix(), 1);
+		shaderProgram.setUniform("projectionMatrix", &projectionMatrix, 1);
+
+		glm::vec3 testColor(1.f, 1.f, 1.f);
+		shaderProgram.setUniform("testColor", &testColor, 1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *) (sizeof(float) * numVertices * 3)); //Colors
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) (sizeof(float) * numVertices * 3 * 2)); //Normals
+
+		glDrawElements(GL_TRIANGLES, numVerticesToDraw, GL_UNSIGNED_INT, 0);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glUseProgram(0);
 	}
-
-	shaderProgram.useProgram();
-
-	shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
-	shaderProgram.setUniform("viewMatrix", parentEntity->parentWorld->getMainPlayer()->getCameraViewMatrix(), 1);
-	shaderProgram.setUniform("projectionMatrix", &projectionMatrix, 1);
-
-	glm::vec3 testColor(1.f, 1.f, 1.f);
-	shaderProgram.setUniform("testColor", &testColor, 1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0); //Vertices
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *) (sizeof(float) * numVertices * 3)); //Colors
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *) (sizeof(float) * numVertices * 3 * 2)); //Normals
-
-	glDrawElements(GL_TRIANGLES, numVerticesToDraw, GL_UNSIGNED_INT, 0);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glUseProgram(0);
 }

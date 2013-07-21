@@ -19,6 +19,8 @@ GameLayer::GameLayer() {
 }
 
 GameLayer::~GameLayer() {
+	std::cout << this << ' ' << world << '\n';
+//	delete world;
 }
 
 void GameLayer::update(time_t dt) {

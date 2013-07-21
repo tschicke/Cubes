@@ -40,7 +40,7 @@ Block* World::getBlockAt(int x, int y, int z) {
 	}
 }
 
-SelectedBlock World::raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos) {
+void World::raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos, SelectedBlock * selectedBlock) {
 	bool posXChange = endPos.x > startPos.x;
 	bool posYChange = endPos.y > startPos.y;
 	bool posZChange = endPos.z > startPos.z;
@@ -67,13 +67,15 @@ SelectedBlock World::raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos) {
 				if (currentBlock && currentBlock->getBlockType() != blockType_Air) {
 					Face face = currentBlock->raytrace(x, y, z, startPos, endPos);
 					if (face != face_nocollision) {
-						return SelectedBlock(x, y, z, currentBlock, face, false, NULL);
+						selectedBlock->set(x, y, z, currentBlock, face);
+						return;
 					}
 				}
 			}
 		}
 	}
-	return SelectedBlock();
+
+	selectedBlock->set(0, 0, 0, NULL, face_nocollision);
 }
 
 void World::setBlockTypeAtPosition(int x, int y, int z, BlockType type){

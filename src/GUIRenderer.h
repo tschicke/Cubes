@@ -17,10 +17,10 @@ class GUIElement;
 class GUIRenderer : public BaseRenderer {
 public:
 	GUIRenderer();
-	GUIRenderer(GUIElement * parentElement, Texture * texture);
+
+	virtual ~GUIRenderer();
 
 	void init(GUIElement * parentElement, Texture * texture);
-	virtual ~GUIRenderer();
 
 	void setCurrentTexture(Texture * texture);
 
