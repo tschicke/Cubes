@@ -41,6 +41,11 @@ int SpriteSheet::numYElements() {
 	return textureHeight / getElementSizePixels();
 }
 
+void SpriteSheet::cleanupSpriteSheets() {
+	delete defaultFontSheet;
+	delete defaultSpriteSheet;
+}
+
 //Default 16 pixels per element
 int SpriteSheet::getElementSizePixels() {
 	return 16;

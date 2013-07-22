@@ -16,12 +16,14 @@ public:
 
 	static Texture *buttonDefault, *buttonMouseOver, *buttonPressed;//, *dirtTexture, *stoneTexture, *blockSheet;
 	static void initTextures();
+	static void cleanupTextures();
 	static void unbindTextures();
 
 	void useTexture();
 
 	int getHeight(), getWidth();
 
+	void deleteTexture();
 protected:
 	bool loadDDS(const char * texturePath);
 

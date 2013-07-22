@@ -27,12 +27,12 @@ GameScene::~GameScene() {
 }
 
 void GameScene::handleInput() {
-	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::M) == ts::Keyboard::keyPressed){
-		GameWindow::getMainWindow()->setScene(new MenuScene);
-	}
-
 	gameLayer.handleInput();
 
+	if(ts::Keyboard::checkKeyEvent(ts::Keyboard::M) == ts::Keyboard::keyPressed){
+		GameWindow::getMainWindow()->setScene(new MenuScene);
+		return;
+	}
 }
 
 void GameScene::draw() {

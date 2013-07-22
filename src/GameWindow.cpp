@@ -180,5 +180,8 @@ void GameWindow::lockMouse(int mouseX, int mouseY) {
 
 void GameWindow::cleanUp() {
 	delete currentScene;
+
+	Texture::cleanupTextures();
+	ts::SpriteSheet::cleanupSpriteSheets();
 }
 

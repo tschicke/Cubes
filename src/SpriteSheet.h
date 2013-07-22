@@ -27,6 +27,7 @@ public:
 	static SpriteSheet * defaultFontSheet;
 
 	static void initSpriteSheets();//should just be done when first trying to use it and not loaded?
+	static void cleanupSpriteSheets();
 
 	int getElementSizePixels();
 protected:

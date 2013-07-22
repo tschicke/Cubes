@@ -33,13 +33,17 @@ Texture::Texture(const char * texturePath) {
 }
 
 Texture::~Texture() {
-	glDeleteTextures(1, &texID);
+	deleteTexture();
 }
 
 void Texture::initTextures(){
 	buttonDefault = new Texture("res/Button1_default.DDS");
 	buttonMouseOver = new Texture("res/Button1_mouseOver.DDS");
 	buttonPressed = new Texture("res/Button1_pressed.DDS");
+}
+
+void Texture::deleteTexture() {
+	glDeleteTextures(1, &texID);
 }
 
 bool Texture::loadDDS(const char * texturePath) {
@@ -135,4 +139,10 @@ void Texture::useTexture(){
 
 void Texture::unbindTextures(){
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::cleanupTextures() {
+	delete buttonDefault;
+	delete buttonMouseOver;
+	delete buttonPressed;
 }

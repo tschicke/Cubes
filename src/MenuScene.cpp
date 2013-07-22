@@ -34,12 +34,14 @@ void MenuScene::update(time_t dt) {
 	playButton.update();
 	closeButton.update();
 
-	if(playButton.wasPressed()){
-		GameWindow::getMainWindow()->setScene(new GameScene);
-	}
-
 	if(closeButton.wasPressed()){
 		GameWindow::getMainWindow()->stop();
+		return;
+	}
+
+	if(playButton.wasPressed()){
+		GameWindow::getMainWindow()->setScene(new GameScene);
+		return;
 	}
 }
 
