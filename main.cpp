@@ -6,12 +6,12 @@
  */
 
 #include "src/GameWindow.h"
-#include "src/GameScene.h"
+#include "src/MenuScene.h"
 
 int main() {
 	GameWindow * window = GameWindow::getMainWindow();
 	window->create(1280, 720, "Cubes Textured");
-	window->setScene(new GameScene);
+	window->setScene(new MenuScene);
 	window->run();
 
 	delete window;

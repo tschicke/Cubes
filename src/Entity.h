@@ -13,6 +13,7 @@
 #include "Common.h"
 
 #include "EntityRenderer.h"
+#include "CubeModel.h"
 
 #include "CollisionBox.h"
 
@@ -32,6 +33,7 @@ public:
 	virtual void draw();//TODO should be virtual?
 
 	friend class EntityRenderer;
+	friend class CubeModel;
 
 	CollisionBox getCollisionBox();
 
@@ -41,7 +43,7 @@ public:
 	void deleteEntity();
 protected:
 	glm::vec3 position;
-	glm::vec3 halfDimentions;
+	glm::vec3 halfDimentions;//TODO why is this half dimentions instead of full dimentions
 	float yaw, pitch;
 
 	ts::World * parentWorld;

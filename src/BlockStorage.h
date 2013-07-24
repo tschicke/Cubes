@@ -10,17 +10,14 @@
 
 #include "BlockTypes.h"
 
-class Chunk;
-
 class BlockStorage {
 public:
 	BlockStorage();
-	BlockStorage(Chunk * parentChunk);
+	BlockStorage(int width, int height, int depth);
 	virtual ~BlockStorage();
 
-	void setParentChunk(Chunk * parentChunk);
+	void init(int width, int height, int depth);
 
-	bool hasParentChunk();
 	int getBlockArrayLength();
 	Block** getBlockArray();
 
@@ -32,11 +29,7 @@ private:
 	Block ** blockArray;
 	int blockArrayLength;
 
-	void init(Chunk * parentChunk);
-
-	bool parentChunkLoaded;
-
-	Chunk * parentChunk;
+	bool loaded;
 };
 
 #endif /* BLOCKSTORAGE_H_ */

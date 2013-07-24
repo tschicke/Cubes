@@ -12,40 +12,35 @@
 #include "Chunk.h"
 
 BlockStorage::BlockStorage() {
-	init(NULL);
+	blockArray = NULL;
+	blockArrayLength = 0;
+	loaded = false;
 }
 
-BlockStorage::BlockStorage(Chunk* parentChunk) {
-	init(parentChunk);
+BlockStorage::BlockStorage(int width, int height, int depth) {
+	loaded = false;
+	init(width, height, depth);
 }
 
-void BlockStorage::init(Chunk * parentChunk) {
+void BlockStorage::init(int width, int height, int depth) {
+	if(loaded){
+		freeArray();
+	}
 	blockArrayLength = Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE * Chunk::CHUNK_SIZE;
 	blockArray = new Block *[blockArrayLength];
 	for (int i = 0; i < blockArrayLength; ++i) {
 		blockArray[i] = NULL;
 	}
-	if (parentChunk != NULL) {
-		parentChunkLoaded = true;
-	} else {
-		parentChunkLoaded = false;
-	}
-	this->parentChunk = parentChunk;
+	loaded = true;
 }
 
 BlockStorage::~BlockStorage() {
-	if (parentChunkLoaded) {
-		for (int i = 0; i < blockArrayLength; ++i) {
-			blockArray[i] = NULL;
-		}
-
-		delete[] blockArray;
-		blockArray = NULL;
+	for (int i = 0; i < blockArrayLength; ++i) {
+		blockArray[i] = NULL;
 	}
-}
 
-bool BlockStorage::hasParentChunk() {
-	return parentChunkLoaded;
+	delete[] blockArray;
+	blockArray = NULL;
 }
 
 int BlockStorage::getBlockArrayLength() {
@@ -56,19 +51,12 @@ Block** BlockStorage::getBlockArray() {
 	return blockArray;
 }
 
-void BlockStorage::setParentChunk(Chunk* parentChunk) {
-	if (parentChunk != NULL) {
-		this->parentChunk = parentChunk;
-		parentChunkLoaded = true;
-	}
-}
-
 void BlockStorage::freeArray() {
-	if (parentChunkLoaded) {
-		for (int i = 0; i < blockArrayLength; ++i) {
-			delete blockArray[i];
-		}
-
-		delete[] blockArray;
+	for (int i = 0; i < blockArrayLength; ++i) {
+		delete blockArray[i];
 	}
+
+	delete[] blockArray;
+
+	loaded = false;
 }

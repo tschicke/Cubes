@@ -24,7 +24,7 @@ Chunk::Chunk() {
 }
 
 Chunk::Chunk(int x, int y, int z, ts::World * parentWorld){
-	blockStorage = new BlockStorage(this);
+	blockStorage = new BlockStorage(CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
 	chunkPosition = glm::vec3(x, y, z);
 
 	chunkState = initialize;
