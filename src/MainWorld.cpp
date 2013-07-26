@@ -18,7 +18,6 @@ MainWorld::MainWorld() {
 	mainPlayer = new Player(this);
 	mainPlayer->setPosition(glm::vec3(0, 32, 0));
 	addEntity(mainPlayer);
-	addEntity(new DynamicEntity(this, glm::vec3(1, 32, 1), glm::vec3()));
 	addEntity(new DynamicEntity(this, glm::vec3(2, 32, 1), glm::vec3()));
 
 	chunkManager = ChunkManager(this);

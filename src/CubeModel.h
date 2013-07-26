@@ -25,11 +25,19 @@ public:
 	void markNeedsMatrixUpdate();
 
 	void render();
+	void update();
 
 	void loadModel(const char * fileName);
 	void saveModel();
 private:
 	Entity * parentEntity;
+
+	void remakeIndexBuffer();
+	void updateBlockAtPosition(int x, int y, int z);
+	void markDirty();
+
+	int modelWidth, modelHeight, modelDepth;
+	float scale;
 
 	int numVertices, numVerticesToDraw;
 
@@ -37,7 +45,7 @@ private:
 
 	ColorBlock * blockArray;
 
-	bool modelMatNeedsUpdate;
+	bool modelMatNeedsUpdate, needsIndexBufferUpdate;
 
 	const char * fileName;
 };

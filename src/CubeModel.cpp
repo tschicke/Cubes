@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include "Entity.h"
 
@@ -22,9 +23,12 @@ CubeModel::CubeModel() {
 	parentEntity = NULL;
 	modelLoaded = false;
 	modelMatNeedsUpdate = false;
+	needsIndexBufferUpdate = false;
 	numVertices = 0;
 	numVerticesToDraw = 0;
 	blockArray = NULL;
+	scale = 1;
+	modelWidth = modelHeight = modelDepth = 0;
 }
 
 CubeModel::CubeModel(const char* fileName, Entity * parentEnity) {
@@ -32,7 +36,7 @@ CubeModel::CubeModel(const char* fileName, Entity * parentEnity) {
 }
 
 CubeModel::~CubeModel() {
-//	saveModel();
+	//	saveModel();
 }
 
 void CubeModel::init(const char* fileName, Entity* parentEnity) {
@@ -44,7 +48,9 @@ void CubeModel::init(const char* fileName, Entity* parentEnity) {
 	numVerticesToDraw = 0;
 	blockArray = NULL;
 
-	loadModel(fileName);
+	if (fileName != NULL) {
+		loadModel(fileName);
+	}
 }
 
 void CubeModel::render() {
@@ -89,10 +95,31 @@ void CubeModel::render() {
 	}
 }
 
+void CubeModel::update() {
+	if(needsIndexBufferUpdate){
+		remakeIndexBuffer();
+		needsIndexBufferUpdate = false;
+	}
+}
+
 void CubeModel::loadModel(const char* fileName) {
 	if (modelLoaded || fileName == NULL) {
 		return;
 	}
+
+	Shader vertexShader;
+	vertexShader.loadShader("shaders/colorShader.vert", GL_VERTEX_SHADER);
+
+	Shader fragmentShader;
+	fragmentShader.loadShader("shaders/colorShader.frag", GL_FRAGMENT_SHADER);
+
+	shaderProgram.createProgram();
+	shaderProgram.addShader(&vertexShader);
+	shaderProgram.addShader(&fragmentShader);
+	shaderProgram.linkProgram();
+
+	vertexShader.deleteShader();
+	fragmentShader.deleteShader();
 
 	std::ifstream file(fileName, std::ios::binary);
 	if (!file.is_open()) {
@@ -108,26 +135,41 @@ void CubeModel::loadModel(const char* fileName) {
 		return;
 	}
 
-	int width = *(int *) &header[2]; //FIXME fix the way these are changed to ints
-	int height = *(int *) &header[6];
-	int depth = *(int *) &header[10];
+	modelWidth = *(int *) &header[2]; //FIXME fix the way these are changed to ints
+	modelHeight = *(int *) &header[6];
+	modelDepth = *(int *) &header[10];
+
+	scale = 1/32.f;//TODO load this from file
+
 
 	delete blockArray;
-	blockArray = new ColorBlock[width * height * depth];
-	parentEntity->halfDimentions = glm::vec3(width / 2, height / 2, depth / 2);
+	blockArray = new ColorBlock[modelWidth * modelHeight * modelDepth];
+	parentEntity->halfDimentions = glm::vec3(modelWidth / 2.f, modelHeight / 2.f, modelDepth / 2.f) * scale;//TODO make collision bounding box more accurate
 
-	int numCubes = width * height * depth;
+	int numCubes = modelWidth * modelHeight * modelDepth;
 	int bytesPerCube = 4; //1 byte for each color channel, 1 byte for drawn;
 	int bufferSize = numCubes * bytesPerCube;
 	char * buffer = new char[bufferSize];
 
 	file.read(buffer, bufferSize);
 
-	for (int x = 0; x < width; ++x) {
-		for (int y = 0; y < height; ++y) {
-			for (int z = 0; z < depth; ++z) {
-				int blockIndex = x * height * depth + y * depth + z;
-				ColorBlock currentBlock = blockArray[blockIndex];
+	numVertices = numCubes * 24;
+	int numVertices = numCubes * 24 * 3;//Numvertices * 3 floats per vertex
+	int numColors = numCubes * 24 * 3;
+	int numNormals = numCubes * 24 * 3;
+	int numIndices = numCubes * 36;
+
+	if(vertBuffLoaded || indexBuffLoaded){
+		deleteBuffers();
+	}
+
+	initBuffersWithSize((numVertices + numColors + numNormals) * sizeof(float), numIndices * sizeof(unsigned int));
+
+	for (int x = 0; x < modelWidth; ++x) {
+		for (int y = 0; y < modelHeight; ++y) {
+			for (int z = 0; z < modelDepth; ++z) {
+				int blockIndex = x * modelHeight * modelDepth + y * modelDepth + z;
+				ColorBlock currentBlock;
 
 				bool drawn = *(bool *) &buffer[blockIndex * bytesPerCube];
 				glm::vec3 blockColor;
@@ -143,10 +185,14 @@ void CubeModel::loadModel(const char* fileName) {
 				currentBlock.setDrawn(drawn);
 				currentBlock.setColor(blockColor);
 
-//				updateBlockAtPosition(x, y, z);//TODO implement this function and finish the rendering part of this class
+				blockArray[blockIndex] = currentBlock;
+
+				updateBlockAtPosition(x, y, z);
 			}
 		}
 	}
+
+	remakeIndexBuffer();
 
 	delete[] buffer;
 	modelLoaded = true;
@@ -158,4 +204,237 @@ void CubeModel::markNeedsMatrixUpdate() {
 }
 
 void CubeModel::saveModel() {
+	//TODO implement model saving
+}
+
+void CubeModel::remakeIndexBuffer() {
+	std::vector<unsigned int> indices;
+
+	unsigned int cubeIndexData[] = {
+			//Front
+			0, 1, 2,
+			0, 2, 3,
+
+			//Back
+			4, 5, 6,
+			4, 6, 7,
+
+			//Left
+			8, 9, 10,
+			8, 10, 11,
+
+			//Right
+			12, 13, 14,
+			12, 14, 15,
+
+			//Top
+			16, 17, 18,
+			16, 18, 19,
+
+			//Bottom
+			20, 21, 22,
+			20, 22, 23
+	};
+
+	for (int x = 0; x < modelWidth; ++x) {
+		for (int y = 0; y < modelHeight; ++y) {
+			for (int z = 0; z < modelDepth; ++z) {
+				int blockIndex = x * modelHeight * modelDepth + y * modelDepth + z;
+				int blockIndexXMinusOne = (x - 1) * modelHeight * modelDepth + y * modelDepth + z;
+				int blockIndexXPlusOne = (x + 1) * modelHeight * modelDepth + y * modelDepth + z;
+				int blockIndexYMinusOne = x * modelHeight * modelDepth + (y - 1) * modelDepth + z;
+				int blockIndexYPlusOne = x * modelHeight * modelDepth + (y + 1) * modelDepth + z;
+				int blockIndexZMinusOne = x * modelHeight * modelDepth + y * modelDepth + z - 1;
+				int blockIndexZPlusOne = x * modelHeight * modelDepth + y * modelDepth + z + 1;
+
+				int indexOffset = blockIndex * 24;
+
+				ColorBlock block = blockArray[blockIndex];
+
+				if (block.isDrawn()) {
+					if (z != modelDepth - 1) {
+						if (!blockArray[blockIndexZPlusOne].isDrawn()) { //Front
+							for (int i = 0; i < 6; ++i) {
+								indices.push_back(cubeIndexData[i] + indexOffset);
+							}
+						}
+					} else {
+						for (int i = 0; i < 6; ++i) {
+							indices.push_back(cubeIndexData[i] + indexOffset);
+						}
+					}
+
+					if (z != 0) {
+						if (!blockArray[blockIndexZMinusOne].isDrawn()) { //Back
+							for (int i = 6; i < 12; ++i) {
+								indices.push_back(cubeIndexData[i] + indexOffset);
+							}
+						}
+					} else {
+						for (int i = 6; i < 12; ++i) {
+							indices.push_back(cubeIndexData[i] + indexOffset);
+						}
+					}
+
+					if (x != 0) {
+						if (!blockArray[blockIndexXMinusOne].isDrawn()) { //Left
+							for (int i = 12; i < 18; ++i) {
+								indices.push_back(cubeIndexData[i] + indexOffset);
+							}
+						}
+					} else {
+						for (int i = 12; i < 18; ++i) {
+							indices.push_back(cubeIndexData[i] + indexOffset);
+						}
+					}
+
+					if (x != modelWidth - 1) {
+						if (!blockArray[blockIndexXPlusOne].isDrawn()) { //Right
+							for (int i = 18; i < 24; ++i) {
+								indices.push_back(cubeIndexData[i] + indexOffset);
+							}
+						}
+					} else {
+						for (int i = 18; i < 24; ++i) {
+							indices.push_back(cubeIndexData[i] + indexOffset);
+						}
+					}
+
+					if (y != modelHeight - 1) {
+						if (!blockArray[blockIndexYPlusOne].isDrawn()) { //Top
+							for (int i = 24; i < 30; ++i) {
+								indices.push_back(cubeIndexData[i] + indexOffset);
+							}
+						}
+					} else {
+						for (int i = 24; i < 30; ++i) {
+							indices.push_back(cubeIndexData[i] + indexOffset);
+						}
+					}
+
+					if (y != 0) {
+						if (!blockArray[blockIndexYMinusOne].isDrawn()) { //Bottom
+							for (int i = 30; i < 36; ++i) {
+								indices.push_back(cubeIndexData[i] + indexOffset);
+							}
+						}
+					} else {
+						for (int i = 30; i < 36; ++i) {
+							indices.push_back(cubeIndexData[i] + indexOffset);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	numVerticesToDraw = indices.size();
+	needsIndexBufferUpdate = false;
+
+	substituteDataToIndexBuffer(numVerticesToDraw * sizeof(unsigned int), 0, &indices[0]);
+}
+
+void CubeModel::updateBlockAtPosition(int x, int y, int z) {
+	float cubeSize = scale;
+	int blockIndex = x * modelHeight * modelDepth + y * modelDepth + z;
+	int modelSize = modelWidth * modelHeight * modelDepth;
+
+	int numVerticesPerCube = 24;
+	int numVerticesPerModel = numVerticesPerCube * modelSize * 3; //num floats in vertex portion of data
+	int numColorsPerModel = numVerticesPerCube * modelSize * 3; //num floats in texture portion of data
+
+	int vertexIndex = blockIndex * numVerticesPerCube * 3;
+	int colorIndex = blockIndex * numVerticesPerCube * 3;
+	int normalIndex = blockIndex * numVerticesPerCube * 3;
+
+	float cubeVertexData[] = {
+			//Front
+			0, 0, cubeSize,
+			cubeSize, 0, cubeSize,
+			cubeSize, cubeSize, cubeSize,
+			0, cubeSize, cubeSize,
+
+			//Back
+			cubeSize, 0, 0,
+			0, 0, 0,
+			0, cubeSize, 0,
+			cubeSize, cubeSize, 0,
+
+			//Left
+			0, 0, 0,
+			0, 0, cubeSize,
+			0, cubeSize, cubeSize,
+			0, cubeSize, 0,
+
+			//Right
+			cubeSize, 0, cubeSize,
+			cubeSize, 0, 0,
+			cubeSize, cubeSize, 0,
+			cubeSize, cubeSize, cubeSize,
+
+			//Top
+			0, cubeSize, cubeSize,
+			cubeSize, cubeSize, cubeSize,
+			cubeSize, cubeSize, 0,
+			0, cubeSize, 0,
+
+			//Bottom
+			0, 0, 0,
+			cubeSize, 0, 0,
+			cubeSize, 0, cubeSize,
+			0, 0, cubeSize
+	};
+
+	float cubeColorData[24 * 3];
+
+	float cubeNormalData[] = {
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+
+			0, 0, -1,
+			0, 0, -1,
+			0, 0, -1,
+			0, 0, -1,
+
+			-1, 0, 0,
+			-1, 0, 0,
+			-1, 0, 0,
+			-1, 0, 0,
+
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0,
+			1, 0, 0,
+
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+			0, 1, 0,
+
+			0, -1, 0,
+			0, -1, 0,
+			0, -1, 0,
+			0, -1, 0
+	};
+
+	for (int i = 0; i < 24; ++i) {
+		cubeVertexData[(i * 3)] += x * scale;
+		cubeVertexData[(i * 3) + 1] += y * scale;
+		cubeVertexData[(i * 3) + 2] += z * scale;
+
+		cubeColorData[(i * 3)] = blockArray[blockIndex].getColor().r;
+		cubeColorData[(i * 3) + 1] = blockArray[blockIndex].getColor().g;
+		cubeColorData[(i * 3) + 2] = blockArray[blockIndex].getColor().b;
+	}
+
+	substituteDataToVertexBuffer(sizeof(cubeVertexData), vertexIndex * sizeof(float), cubeVertexData);
+	substituteDataToVertexBuffer(sizeof(cubeColorData), (numVerticesPerModel + colorIndex) * sizeof(float), (float *)cubeColorData);
+	substituteDataToVertexBuffer(sizeof(cubeNormalData), (numVerticesPerModel + numColorsPerModel + normalIndex) * sizeof(float), cubeNormalData);
+	markDirty();
+}
+
+void CubeModel::markDirty() {
+	needsIndexBufferUpdate = true;
 }

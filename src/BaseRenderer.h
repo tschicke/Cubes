@@ -45,7 +45,7 @@ public:
 
 protected:
 	GLuint vertexBufferID, indexBufferID;
-	bool vertBuffLoaded, indexBuffLoaded;
+	bool vertBuffLoaded, indexBuffLoaded;//TODO change to buffersLoaded
 
 	ShaderProgram shaderProgram;
 

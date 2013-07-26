@@ -25,7 +25,7 @@ Entity::Entity(ts::World* world, glm::vec3 position) {
 }
 
 Entity::~Entity() {
-	renderer.deleteBuffers();
+	model.deleteBuffers();
 }
 
 void Entity::init(ts::World* world, glm::vec3 position) {
@@ -36,12 +36,12 @@ void Entity::init(ts::World* world, glm::vec3 position) {
 	yaw = 0;
 	pitch = 0;
 
-	renderer.init(this, NULL);
+	model.init("models/Sword.model", this);
 }
 
 void Entity::draw() {
 	if(parentWorld != NULL){
-		renderer.render();
+		model.render();
 	}
 }
 
@@ -50,6 +50,7 @@ CollisionBox Entity::getCollisionBox() {
 }
 
 void Entity::update(time_t dt) {
+	model.update();
 }
 
 bool Entity::shouldBeDeleted() {

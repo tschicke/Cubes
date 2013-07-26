@@ -12,7 +12,6 @@
 
 #include "Common.h"
 
-#include "EntityRenderer.h"
 #include "CubeModel.h"
 
 #include "CollisionBox.h"
@@ -32,8 +31,8 @@ public:
 	virtual void update(time_t dt) = 0;
 	virtual void draw();//TODO should be virtual?
 
-	friend class EntityRenderer;
 	friend class CubeModel;
+	friend class EntityRenderer;//Temp
 
 	CollisionBox getCollisionBox();
 
@@ -48,7 +47,7 @@ protected:
 
 	ts::World * parentWorld;
 
-	EntityRenderer renderer;
+	CubeModel model;
 
 	bool flagShouldBeDeleted;
 };

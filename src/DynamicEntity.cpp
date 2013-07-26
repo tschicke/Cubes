@@ -37,7 +37,7 @@ DynamicEntity::~DynamicEntity() {
 void DynamicEntity::move(glm::vec3 moveVec) {
 	if (moveVec.x != 0 || moveVec.y != 0 || moveVec.z != 0) {
 		position += moveVec;
-		renderer.markNeedsMatrixUpdate();
+		model.markNeedsMatrixUpdate();
 	}
 }
 
@@ -46,6 +46,7 @@ void DynamicEntity::addYaw(float yaw) {
 }
 
 void DynamicEntity::update(time_t dt) {
+	Entity::update(dt);
 	if (affectedByGravity) {
 		velocity.y -= 0.005f;
 	}

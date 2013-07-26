@@ -29,7 +29,6 @@ Player::Player() {
 	gravityStrength = 0.f;
 	jumpStrength = 0.f;
 	onGround = false;
-	loaded = false;
 	activeBlock = blockType_Null;
 }
 
@@ -52,10 +51,6 @@ void Player::init(ts::World * parentWorld) {
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
 	halfDimentions = glm::vec3(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2, PLAYER_WIDTH / 2);
 	selectedBlock.init(0, 0, 0, NULL, face_nocollision, this);
-	loadPlayerModel();
-}
-
-void Player::loadPlayerModel() {
 }
 
 void Player::input() {
@@ -167,7 +162,7 @@ void Player::update(time_t dt) {
 }
 
 void Player::draw() {
-	renderer.render();
+	model.render();
 	selectedBlock.render();
 }
 

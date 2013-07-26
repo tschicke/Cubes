@@ -63,9 +63,6 @@ private:
 
 	ShaderProgram shaderProgram;
 
-	void loadPlayerModel();
-	bool loaded;
-
 	SelectedBlock selectedBlock;
 };
 
