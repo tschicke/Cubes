@@ -29,6 +29,7 @@ CubeModel::CubeModel() {
 	blockArray = NULL;
 	scale = 1;
 	modelWidth = modelHeight = modelDepth = 0;
+	yaw = pitch = 0;
 }
 
 CubeModel::CubeModel(const char* fileName, Entity * parentEnity) {
@@ -47,6 +48,7 @@ void CubeModel::init(const char* fileName, Entity* parentEnity) {
 	numVertices = 0;
 	numVerticesToDraw = 0;
 	blockArray = NULL;
+	yaw = pitch = 0;
 
 	if (fileName != NULL) {
 		loadModel(fileName);
@@ -56,7 +58,11 @@ void CubeModel::init(const char* fileName, Entity* parentEnity) {
 void CubeModel::render() {
 	if (modelLoaded && vertBuffLoaded && indexBuffLoaded) {
 		if (modelMatNeedsUpdate) {
-			modelMatrix = glm::translate(parentEntity->position);
+			modelMatrix = glm::translate(glm::vec3(parentEntity->position))
+			* glm::rotate((float)pitch, sinf(yaw * 3.1415f / 180), 0.f, cosf(yaw * 3.1415f / 180)) * glm::rotate((float)yaw, 0.f, 1.f, 0.f);//Temp
+			//TODO make yaw and pitch in Entity not in CubeModel
+			//TODO look into using quaternions for rotation
+//			modelMatrix = glm::translate(parentEntity->position);
 			modelMatNeedsUpdate = false;
 		}
 
@@ -65,9 +71,6 @@ void CubeModel::render() {
 		shaderProgram.setUniform("modelMatrix", &modelMatrix, 1);
 		shaderProgram.setUniform("viewMatrix", parentEntity->parentWorld->getMainPlayer()->getCameraViewMatrix(), 1);
 		shaderProgram.setUniform("projectionMatrix", &projectionMatrix, 1);
-
-		glm::vec3 testColor(1.f, 1.f, 1.f);
-		shaderProgram.setUniform("testColor", &testColor, 1);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
 
@@ -420,9 +423,9 @@ void CubeModel::updateBlockAtPosition(int x, int y, int z) {
 	};
 
 	for (int i = 0; i < 24; ++i) {
-		cubeVertexData[(i * 3)] += x * scale;
+		cubeVertexData[(i * 3)] += (x - (modelWidth / 2.f)) * scale;//TODO should this be done like this?
 		cubeVertexData[(i * 3) + 1] += y * scale;
-		cubeVertexData[(i * 3) + 2] += z * scale;
+		cubeVertexData[(i * 3) + 2] += (z - (modelDepth / 2.f)) * scale;
 
 		cubeColorData[(i * 3)] = blockArray[blockIndex].getColor().r;
 		cubeColorData[(i * 3) + 1] = blockArray[blockIndex].getColor().g;
@@ -438,3 +441,4 @@ void CubeModel::updateBlockAtPosition(int x, int y, int z) {
 void CubeModel::markDirty() {
 	needsIndexBufferUpdate = true;
 }
+

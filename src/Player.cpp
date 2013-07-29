@@ -166,10 +166,6 @@ void Player::draw() {
 	selectedBlock.render();
 }
 
-glm::vec3 Player::getPosition() {
-	return position;
-}
-
 void Player::setPosition(glm::vec3 newPos) {
 	glm::vec3 moveVector = newPos - position;
 	move(moveVector);
@@ -178,6 +174,10 @@ void Player::setPosition(glm::vec3 newPos) {
 void Player::move(glm::vec3 moveVector) {
 	DynamicEntity::move(moveVector);
 	camera.move(moveVector);
+}
+
+const char* Player::getModelPath() {
+	return "models/test.model";
 }
 
 void Player::move(float x, float y, float z) {

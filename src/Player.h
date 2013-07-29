@@ -39,8 +39,9 @@ public:
 
 	void draw();
 
-	glm::vec3 getPosition();
 	void setPosition(glm::vec3 newPos);
+
+	const char * getModelPath();
 
 	glm::mat4 * getCameraViewMatrix(); //should be different??
 private:

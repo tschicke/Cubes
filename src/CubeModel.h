@@ -29,6 +29,7 @@ public:
 
 	void loadModel(const char * fileName);
 	void saveModel();
+
 private:
 	Entity * parentEntity;
 
@@ -38,6 +39,7 @@ private:
 
 	int modelWidth, modelHeight, modelDepth;
 	float scale;
+	int yaw, pitch;
 
 	int numVertices, numVerticesToDraw;
 

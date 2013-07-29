@@ -16,7 +16,7 @@
 
 #include "CollisionBox.h"
 
-namespace ts{
+namespace ts {
 class World;
 }
 
@@ -29,21 +29,32 @@ public:
 	void init(ts::World * world, glm::vec3 position);
 
 	virtual void update(time_t dt) = 0;
-	virtual void draw();//TODO should be virtual?
+	virtual void draw(); //TODO should be virtual?
 
 	friend class CubeModel;
-	friend class EntityRenderer;//Temp
+	friend class EntityRenderer; //Temp
+
+	virtual const char * getModelPath();
 
 	CollisionBox getCollisionBox();
 
 	glm::vec3 getPosition();
+	virtual void setPosition(glm::vec3 position);
 
 	bool shouldBeDeleted();
 	void deleteEntity();
+
+	int getYaw();
+	int getPitch();
+
+	void setYaw(int yaw);
+	void setPitch(int pitch);
+	void incrementYaw(int delta);
+	void incrementPitch(int delta);
 protected:
 	glm::vec3 position;
-	glm::vec3 halfDimentions;//TODO why is this half dimentions instead of full dimentions
-	float yaw, pitch;
+	glm::vec3 halfDimentions; //TODO why is this half dimentions instead of full dimentions
+	int yaw, pitch;
 
 	ts::World * parentWorld;
 
