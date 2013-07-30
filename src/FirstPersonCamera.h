@@ -32,13 +32,14 @@ public:
 
 	glm::mat4 * getViewMatrix();
 
+	float getYaw();
+	float getPitch();
+
 private:
 	glm::vec3 position, lookAt;
 	glm::mat4 viewMatrix; //Temp??
 	float yaw, pitch;
 	float lookSpeed;
-
-	float toRadians(float degrees);
 
 	bool flag_shouldUpdate;
 };

@@ -49,7 +49,7 @@ void Player::init(ts::World * parentWorld) {
 	onGround = false;
 	activeBlock = blockType_Grass;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
-	halfDimentions = glm::vec3(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2, PLAYER_WIDTH / 2);
+//	halfDimentions = glm::vec3(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2, PLAYER_WIDTH / 2);
 	selectedBlock.init(0, 0, 0, NULL, face_nocollision, this);
 }
 
@@ -126,6 +126,7 @@ void Player::input() {
 	mouseDX = ts::Mouse::getLastMove().x;
 	mouseDY = ts::Mouse::getLastMove().y;
 	camera.rotateWithMove(mouseDX, mouseDY);
+	setYaw(-camera.getYaw() + 90);
 }
 
 void Player::gravity() {
@@ -177,7 +178,7 @@ void Player::move(glm::vec3 moveVector) {
 }
 
 const char* Player::getModelPath() {
-	return "models/test.model";
+	return "models/Human.model";
 }
 
 void Player::move(float x, float y, float z) {

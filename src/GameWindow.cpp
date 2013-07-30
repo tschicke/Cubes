@@ -14,6 +14,7 @@
 #include "SpriteSheet.h"
 #include "FirstPersonCamera.h"
 #include "BaseRenderer.h"
+#include "MathHelper.h"
 
 #include "Keyboard.h"
 #include "Mouse.h"
@@ -55,6 +56,7 @@ void GameWindow::create(int w, int h, const char * title) {
 void GameWindow::init() {
 	ts::Keyboard::init();
 	ts::Mouse::init();
+	MathHelper::init();
 //	setMouseCursorVisible(false);
 }
 
@@ -183,5 +185,6 @@ void GameWindow::cleanUp() {
 
 	Texture::cleanupTextures();
 	ts::SpriteSheet::cleanupSpriteSheets();
+	MathHelper::cleanup();
 }
 

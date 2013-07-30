@@ -98,7 +98,7 @@ void Entity::incrementYaw(int delta) {
 }
 
 const char* Entity::getModelPath() {
-	return "models/Sword.model";//TODO should be a default/NULL model
+	return "models/Human.model";//TODO should be a default/NULL model
 }
 
 void Entity::setPosition(glm::vec3 position) {

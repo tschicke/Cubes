@@ -9,6 +9,8 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include "MathHelper.h"
+
 #include <iostream>
 
 namespace ts {
@@ -91,11 +93,11 @@ void FirstPersonCamera::rotateWithMove(int dx, int dy) {
 
 		glm::vec3 lookDirection;
 
-		float yawR = toRadians(yaw), pitchR = toRadians(pitch);
+		float yawR = MathHelper::toRadians(yaw), pitchR = MathHelper::toRadians(pitch);
 
-		lookDirection.x = cosf(yawR) * cosf(pitchR);
-		lookDirection.y = sinf(pitchR);
-		lookDirection.z = sinf(yawR) * cosf(pitchR);
+		lookDirection.x = MathHelper::cos_float(yawR) * MathHelper::cos_float(pitchR);
+		lookDirection.y = MathHelper::sin_float(pitchR);
+		lookDirection.z = MathHelper::sin_float(yawR) * MathHelper::cos_float(pitchR);
 
 		lookAt = position + lookDirection;
 
@@ -119,8 +121,12 @@ glm::vec3 FirstPersonCamera::getLook() {
 	return lookAt;
 }
 
-float FirstPersonCamera::toRadians(float degrees) {
-	return (degrees * 3.141592) / 180.f;
+float FirstPersonCamera::getYaw() {
+	return yaw;
+}
+
+float FirstPersonCamera::getPitch() {
+	return pitch;
 }
 
 } /* namespace ts */

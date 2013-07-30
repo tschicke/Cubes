@@ -16,6 +16,8 @@
 #include <fstream>
 #include <vector>
 
+#include "MathHelper.h"
+
 #include "Entity.h"
 
 CubeModel::CubeModel() {
@@ -59,7 +61,7 @@ void CubeModel::render() {
 	if (modelLoaded && vertBuffLoaded && indexBuffLoaded) {
 		if (modelMatNeedsUpdate) {
 			modelMatrix = glm::translate(glm::vec3(parentEntity->position))
-			* glm::rotate((float)pitch, sinf(yaw * 3.1415f / 180), 0.f, cosf(yaw * 3.1415f / 180)) * glm::rotate((float)yaw, 0.f, 1.f, 0.f);//Temp
+			* glm::rotate((float)parentEntity->pitch, MathHelper::sin_float(parentEntity->yaw * 3.1415f / 180), 0.f, MathHelper::cos_float(parentEntity->yaw * 3.1415f / 180)) * glm::rotate((float)parentEntity->yaw, 0.f, 1.f, 0.f);//Temp
 			//TODO make yaw and pitch in Entity not in CubeModel
 			//TODO look into using quaternions for rotation
 //			modelMatrix = glm::translate(parentEntity->position);
@@ -143,7 +145,6 @@ void CubeModel::loadModel(const char* fileName) {
 	modelDepth = *(int *) &header[10];
 
 	scale = 1/32.f;//TODO load this from file
-
 
 	delete blockArray;
 	blockArray = new ColorBlock[modelWidth * modelHeight * modelDepth];
