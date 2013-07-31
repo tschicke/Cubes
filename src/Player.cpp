@@ -15,6 +15,8 @@
 
 #include "World.h"
 
+#include "Arrow.h"
+
 #include "Keyboard.h"
 #include "Mouse.h"
 
@@ -118,7 +120,9 @@ void Player::input() {
 	}
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::P) == ts::Keyboard::keyPressed) {
-		Entity * entity = new DynamicEntity(parentWorld, camera.getPosition(), (camera.getLook() - camera.getPosition()) * 0.2f);
+		Entity * entity = new Arrow(parentWorld, camera.getPosition(), (camera.getLook() - camera.getPosition()) * 0.2f);
+		entity->setYaw(-camera.getYaw());
+		entity->setPitch(camera.getPitch() - 90);
 		parentWorld->addEntity(entity);
 	}
 
@@ -126,7 +130,7 @@ void Player::input() {
 	mouseDX = ts::Mouse::getLastMove().x;
 	mouseDY = ts::Mouse::getLastMove().y;
 	camera.rotateWithMove(mouseDX, mouseDY);
-	setYaw(-camera.getYaw() + 90);
+	setYaw(-camera.getYaw());
 }
 
 void Player::gravity() {

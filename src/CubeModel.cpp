@@ -61,7 +61,7 @@ void CubeModel::render() {
 	if (modelLoaded && vertBuffLoaded && indexBuffLoaded) {
 		if (modelMatNeedsUpdate) {
 			modelMatrix = glm::translate(glm::vec3(parentEntity->position))
-			* glm::rotate((float)parentEntity->pitch, MathHelper::sin_float(parentEntity->yaw * 3.1415f / 180), 0.f, MathHelper::cos_float(parentEntity->yaw * 3.1415f / 180)) * glm::rotate((float)parentEntity->yaw, 0.f, 1.f, 0.f);//Temp
+			* glm::rotate((float)parentEntity->yaw, 0.f, 1.f, 0.f) * glm::rotate((float)parentEntity->pitch, 0.f, 0.f, 1.f);//Temp
 			//TODO make yaw and pitch in Entity not in CubeModel
 			//TODO look into using quaternions for rotation
 //			modelMatrix = glm::translate(parentEntity->position);

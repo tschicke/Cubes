@@ -23,9 +23,6 @@ public:
 
 	void update(time_t dt);
 
-	void addYaw(float yaw);
-	void addPitch(float pitch);
-
 	void checkCollisions();
 
 protected:

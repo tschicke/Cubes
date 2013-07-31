@@ -41,10 +41,6 @@ void DynamicEntity::move(glm::vec3 moveVec) {
 	}
 }
 
-void DynamicEntity::addYaw(float yaw) {
-	this->yaw += yaw;
-}
-
 void DynamicEntity::update(time_t dt) {
 	Entity::update(dt);
 	if (affectedByGravity) {
@@ -63,10 +59,6 @@ void DynamicEntity::update(time_t dt) {
 	}
 
 	moveVector = glm::vec3();
-}
-
-void DynamicEntity::addPitch(float pitch) {
-	this->pitch += pitch;
 }
 
 void DynamicEntity::checkCollisions() {
