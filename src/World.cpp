@@ -80,6 +80,13 @@ void World::raytraceBlocks(glm::vec3 startPos, glm::vec3 endPos, SelectedBlock *
 
 void World::setBlockTypeAtPosition(int x, int y, int z, BlockType type){
 	Chunk * chunk = chunkManager.getChunkWithCoordinate(x, y, z);
+
+//	if(chunk == NULL){
+//		chunkManager.addChunk(x, y, z, 1, 1, 1);
+//	}
+//
+//	chunk = chunkManager.getChunkWithCoordinate(x, y, z);
+
 	if(chunk != NULL){
 		chunk->setBlockTypeAtPosition(x, y, z, type);
 	}

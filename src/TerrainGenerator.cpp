@@ -41,7 +41,7 @@ void TerrainGenerator::generateChunk(int genX, int genY, int genZ) {
 	for (int x = genX; x < genX + chunkSize; ++x) {
 		for (int z = genZ; z < genZ + chunkSize; ++z) {
 			float height = (noiseGenerator.smoothNoise2D(x / (float) chunkSize, z / (float) chunkSize) + 1) * chunkSize / 2;
-			for (int y = 0; y < chunkSize; ++y) {
+			for (int y = genY; y < genY + chunkSize; ++y) {
 //				int height = (glm::noise1(glm::vec2((x + genX) / (float)chunkSize, (z + genZ) / (float)chunkSize)) + 1) * chunkSize / 2;
 //				float density = glm::noise1(glm::vec3((x + genX) / (float)chunkSize, (y + genY) / (float) chunkSize, (z + genZ) / (float)chunkSize));
 //				float density = noiseGenerator.smoothNoise3D((x + genX) / (float)chunkSize, (y + genY) / (float) chunkSize, (z + genZ) / (float)chunkSize);
@@ -57,7 +57,7 @@ void TerrainGenerator::generateChunk(int genX, int genY, int genZ) {
 			}
 			float test = ((x * z) % (int) height) / height;
 			if(test < 0) test = -test;
-			if(test > 0.9f && test < 0.93f){
+			if(test > 0.5f && test < 0.52f){
 				genTree(x, (int)height, z);
 			}
 		}

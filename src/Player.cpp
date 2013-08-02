@@ -150,8 +150,8 @@ void Player::update(time_t dt) {
 	parentWorld->raytraceBlocks(startVec, endVec, &selectedBlock);
 
 	input();
-	gravity();
- 	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
+//	gravity();
+// 	checkCollisions(); //Check collisions last, after movevector and velocity have been completely changed
 
 	if(floorColl){
 		onGround = true;

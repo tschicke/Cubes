@@ -28,6 +28,10 @@ ChunkManager::~ChunkManager() {
 }
 
 void ChunkManager::addChunk(int x, int y, int z, float r, float g, float b) {
+	x -= x % Chunk::CHUNK_SIZE;
+	y -= y % Chunk::CHUNK_SIZE;
+	z -= z % Chunk::CHUNK_SIZE;
+
 	Chunk *chunk = new Chunk(x, y, z, parentWorld);
 	chunks.push_back(chunk);
 }
@@ -89,8 +93,8 @@ void ChunkManager::loadChunks() { //TODO add max limit for chunks loaded per fra
 }
 
 void ChunkManager::updateInitializeChunks() {
-	for (std::vector<Chunk*>::iterator iterator = chunks.begin(); iterator != chunks.end(); ++iterator) {
-		Chunk * chunk = *iterator;
+	for (unsigned int i = 0; i < chunks.size(); ++i) {
+		Chunk * chunk = chunks[i];
 		if (chunk->getChunkState() == Chunk::initialize) {
 			parentWorld->getWorldGenerator()->generateChunk(chunk->getChunkPos().x, chunk->getChunkPos().y, chunk->getChunkPos().z);
 		}
