@@ -51,7 +51,7 @@ void Player::init(ts::World * parentWorld) {
 	onGround = false;
 	activeBlock = blockType_Grass;
 	camera.setPosition(glm::vec3(position.x, position.y + CAMERA_HEIGHT, position.z));
-//	halfDimentions = glm::vec3(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2, PLAYER_WIDTH / 2);
+	halfDimentions = glm::vec3(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2, PLAYER_WIDTH / 2);
 	selectedBlock.init(0, 0, 0, NULL, face_nocollision, this);
 }
 
@@ -121,8 +121,8 @@ void Player::input() {
 
 	if (ts::Keyboard::checkKeyEvent(ts::Keyboard::P) == ts::Keyboard::keyPressed) {
 		Entity * entity = new Arrow(parentWorld, camera.getPosition(), (camera.getLook() - camera.getPosition()) * 0.2f);
-		entity->setYaw(-camera.getYaw());
-		entity->setPitch(camera.getPitch() - 90);
+		entity->setYaw(-camera.getYaw() - 90);
+		entity->setPitch(camera.getPitch());
 		parentWorld->addEntity(entity);
 	}
 
@@ -130,7 +130,7 @@ void Player::input() {
 	mouseDX = ts::Mouse::getLastMove().x;
 	mouseDY = ts::Mouse::getLastMove().y;
 	camera.rotateWithMove(mouseDX, mouseDY);
-	setYaw(-camera.getYaw());
+	setYaw(-camera.getYaw() - 90);
 }
 
 void Player::gravity() {

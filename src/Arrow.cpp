@@ -28,5 +28,5 @@ void Arrow::update(time_t dt) {
 }
 
 const char* Arrow::getModelPath() {
-	return "models/test.model";
+	return "models/Arrow.model";
 }
